@@ -1,0 +1,144 @@
+* {
+margin:0;
+padding:0;
+}
+
+.xbutton {
+position:fixed;
+cursor:pointer;
+z-index:1000;
+right:20px;
+top:12px;
+transition:all .4s ease-in-out;
+}
+
+.xbutton:hover {
+opacity:100%;
+top:13px;
+}
+
+#nav-bar-wrapper {
+width:100%;
+height:100%;
+position:absolute;
+overflow:hidden;
+z-index:1;
+}
+
+.horizontal-bar {
+float:left;
+margin:0;
+padding:0;
+width:100%;
+height:25%;
+animation-delay:.7s;
+animation-duration:2s;
+animation-fill-mode:forwards;
+position:relative;
+box-shadow:0 3px 15px rgba(0,0,0,0.3);
+}
+
+.pink-nav {
+background:#fc60ff;
+background:linear-gradient(214deg,rgba(252,96,255,1) 0%,rgba(249,152,251,1) 100%);
+}
+
+.green-nav {
+background:#18a22a;
+background:linear-gradient(214deg,rgba(24,162,42,1) 0%,rgba(56,218,76,1) 100%);
+}
+
+.yellow-nav {
+background:#e8cd0b;
+background:linear-gradient(214deg,rgba(232,205,11,1) 0%,rgba(255,227,25,1) 100%);
+}
+
+.blue-nav {
+background:#61c2ff;
+background:linear-gradient(214deg,rgba(97,194,255,1) 0%,rgba(18,145,224,1) 100%);
+}
+
+.bar1,.bar2,.bar3 {
+width:35px;
+height:3px;
+background-color:#fff;
+margin:6px 0;
+transition:.4s;
+}
+
+.change .bar1 {
+-webkit-transform:rotate(-45deg) translate(-5px,6px);
+transform:rotate(-45deg) translate(-5px,6px);
+}
+
+.change .bar2 {
+opacity:0;
+}
+
+.change .bar3 {
+-webkit-transform:rotate(45deg) translate(-6px,-8px);
+transform:rotate(45deg) translate(-6px,-8px);
+}
+
+.overlay {
+height:0;
+width:100%;
+position:fixed;
+padding:0;
+margin:0;
+z-index:999;
+top:0;
+left:0;
+background-color:#000;
+background-color:rgba(0,0,0,0.9);
+overflow-x:hidden;
+transition:.5s;
+}
+
+.overlay-content {
+position:relative;
+width:100%;
+text-align:center;
+margin-top:30px;
+}
+
+.overlay a {
+text-decoration:none;
+height:auto;
+display:flex;
+justify-content:center;
+align-items:center;
+transition:.3s;
+height:100%;
+font-size:250%;
+font-weight:700;
+color:#fff;
+}
+
+.overlay a:hover,.overlay a:focus {
+letter-spacing:1.5px;
+}
+
+.overlay a:hover .outbound {
+opacity:1;
+margin-left:8px;
+}
+
+.overlay .closebtn {
+position:absolute;
+top:20px;
+right:45px;
+font-size:60px;
+}
+
+@media screen and (max-height: 450px) {
+.overlay a {
+font-size:20px;
+}
+
+.overlay .closebtn {
+font-size:40px;
+top:15px;
+right:35px;
+}
+}

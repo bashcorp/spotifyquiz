@@ -1,0 +1,183 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	width: 100%;
+	max-width: 1680px;
+	margin: 0 auto;
+	font-family: "Raleway","sans-serif";
+	background-color: #f6f6f6;
+}
+
+.head-content {
+	height: 90vh;
+	overflow: auto;
+}
+
+a {
+	text-decoration: none;
+}
+
+.center-wrapper {
+	position: absolute;
+	left: 50%;
+	top: 45%;
+	-ms-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	text-align: center;
+	width: 500px;
+}
+
+
+.description-wrapper {
+	margin-top: 12px;
+	font-size: 2.0em;
+
+}
+
+.title-wrapper {
+	font-size: 3.0em;
+}
+
+.head-b-wrapper {
+	margin-top: 96px;
+}
+
+.head-b-generate-quiz {
+	font-size: 1.5em;
+	padding: 24px;
+	background-color: #51dd00;
+	border-radius: 30px;
+	font-weight: 700;
+	color: #f6f6f6;
+	margin-top: 0;
+	transition: all .5s ease;
+}
+
+.head-b-generate-quiz:hover {
+	color: white;
+	margin-top: 1px;
+	background-color: #47c200;
+}
+
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row-reverse;
+  justify-content: space-around;
+  align-content: flex-start; 
+  align-items: stretch;
+}
+
+.flex-child {
+	flex: 1 0 auto;
+	max-width: 50%;
+}
+
+.right {
+	background-color: #e3e3e3;
+}
+
+.left {
+	background-color: #f15922;
+	font-size: 1.9em;
+	line-height: 170%;
+	text-align: center;
+	color: white;
+	font-weight: 700;
+}
+
+.pastel-body-p {
+	padding: 96px;
+}
+
+.head-img-wrapper img{
+	height: 110px;
+	width: 110px;
+	position: absolute;
+	animation-iteration-count: infinite;
+	animation-direction: alternate-reverse;
+	animation-fill-mode: both;
+	transition-timing-function: linear;
+	opacity: 60%;
+}
+
+
+
+#music-note-1 {
+	top: 30%;
+	left: 10%;
+	animation-duration: 3s;
+	animation-name: "music-note-bobbing-1";
+
+}
+
+#music-note-2 {
+	top: 4%;
+	right: 15%;
+	animation-duration: 4s;
+	animation-name: "music-note-bobbing-2";
+	opacity: 90%;
+
+}
+
+#music-note-3 {
+	top: 60%;
+	right: 10%;
+	animation-duration: 4.5s;
+	animation-delay: .6s;
+	animation-name: "music-note-bobbing-3";
+
+}
+
+
+@keyframes music-note-bobbing-1 {
+	0% {
+		top: 30%;
+		transform: rotate(-9deg);
+	}
+	100% {
+		top: 31%;
+		transform: rotate(-10deg);
+	}
+}
+
+@keyframes music-note-bobbing-2 {
+	0% {
+		top: 4%;
+		transform: rotate(-15deg);
+		transform: scale(.9);
+	}
+	100% {
+		top: 5%;
+		transform: rotate(-14deg);
+		transform: scale(.9);
+
+	}
+}
+
+
+@keyframes music-note-bobbing-3 {
+	0% {
+		top: 60%;
+		transform: rotate(-20deg);
+		transform: scale(.8);
+
+	}
+	100% {
+		top: 61%;
+		transform: rotate(-19deg);
+		transform: scale(.8);
+
+	}
+}
+
+
+
+
+
+
+
+
