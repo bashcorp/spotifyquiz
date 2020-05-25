@@ -33,7 +33,7 @@
 						<h1>Taste Quiz</h1>
 					</div>
 					<div class="description-wrapper">
-						<p>Friend seem to know your music taste better than you? Put it to the test!</p>
+						<p>Who knows your listening habits the best? Quiz yourself. Quiz your friends.</p>
 					</div>
 
 					<div class="head-b-wrapper">
