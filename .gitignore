@@ -1,0 +1,22 @@
+info.txt
+
+*.swp
+
+# Universal CTags specific
+*.taghl
+tags
+
+# Python specific ignores, taken from https://github.com/github/gitignore/blob/master/Python.gitignore
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+
+# Django specific ignores, taken from https://djangowaves.com/tips-tricks/gitignore-for-a-django-project/
+*.log
+*.pot
+db.sqlite3
+*.pyc
+migrations/
+
+*.DS_Store

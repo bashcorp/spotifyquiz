@@ -2,18 +2,20 @@
 <html lang="en">
 
 <head> 
+    {% load static %}
+
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="">
-	<link rel="stylesheet" type="text/css" href="css/styles.css">
-	<link rel="stylesheet" type="text/css" href="css/nav.css">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/nav.css' %}">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap"> 
 </head>
 
 <nav>
 	<ul>
 		<li>
-			<a href="#"><img src="img/logo.png"></a>
+			<a href="#"><img src="{% static 'img/logo.png' %}"></a>
 		</li>
 		<li>
 			<a class="top-sign-in" href="#">Sign in</a>
@@ -26,7 +28,7 @@
 		<div class="center-wrapper">
 			<div class="flex-container">
 				<div class="flex-child right">
-					<img src="img/demo-1.png">
+					<img src="{% static 'img/demo-1.png' %}">
 				</div>
 				<div class="flex-child left" id="wcsa-section">
 					<div class="title-wrapper">
