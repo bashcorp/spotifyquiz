@@ -22,3 +22,20 @@ I've included a `requirements.txt` in the github repository, so you should insta
 
 # Starting the Server
 `source` into your virtual environment and then run `python manage.py runserver`. This will start the server, which will be on localhost:8000
+
+
+# Adding Front-End Resources
+
+## HTML/PHP Pages
+Django has what it calls an overall project, which is the main directory of the repo. There is one 'app' inside of the project, which is the folder called `quiz`. Inside that, there's a `templates` folder, which is where you put your html and php files.
+
+## Static Files (css, javascript, images)
+Inside the quiz app, there's a folder called `static`. There you can put all your static files.
+
+### Loading static files
+Django has a fancy system to refer to static files. To use it, you'll need to load them first. Put `{% load static %}` in your `<head>`.
+
+### Referring to static files (can you tell I'm enjoying these headers)
+In place of a url, put `{% static path %}`, where `path` is the path of the file relative to the `static` folder.
+So for a css file, you would write `<link ... href="{% static 'css/styles.css' %}">`
+
