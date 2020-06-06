@@ -27,9 +27,11 @@ I've included a `requirements.txt` in the github repository, so you should insta
 # Adding Front-End Resources
 
 ## HTML/PHP Pages
+(See https://docs.djangoproject.com/en/3.0/intro/tutorial06/)
 Django has what it calls an overall project, which is the main directory of the repo. There is one 'app' inside of the project, which is the folder called `quiz`. Inside that, there's a `templates` folder, which is where you put your html and php files.
 
 ## Static Files (css, javascript, images)
+(See https://docs.djangoproject.com/en/3.0/howto/static-files/)
 Inside the quiz app, there's a folder called `static`. There you can put all your static files.
 
 ### Loading static files
