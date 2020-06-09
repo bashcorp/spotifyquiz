@@ -1,7 +1,17 @@
 from django.test import TestCase
 from django.test.client import RequestFactory
 
+import requests
+import urllib
+from unittest import mock
+
 from quiz import spotify
+
+class MockResponse:
+    def __init__(self, json_data, status_code):
+        self.json_data = json_data
+        self.status_code = status_code
+
 
 class LoginRedirectUriTests(TestCase):
     def test_login_redirect_uri_initialized(self):
@@ -11,7 +21,7 @@ class LoginRedirectUriTests(TestCase):
         set.
         """
         session = self.client.session
-        self.assertIs(session.get(spotify.LOGIN_REDIRECT_URI), None)
+        self.assertIsNone(session.get(spotify.LOGIN_REDIRECT_URI))
 
     def test_set_redirect_uri(self):
         """
@@ -29,9 +39,9 @@ class LoginRedirectUriTests(TestCase):
         """
         session = self.client.session
         result = spotify.pop_redirect_uri(session)
-        self.assertIs(result, None)
+        self.assertIsNone(result)
 
-    def test_pop_redirect_uri(self):
+    def test_pop_redirect_uri_existing(self):
         """
         pop_redirect_uri() should return the variable stored in
         session[LOGIN_REDIRECT_URI] and delete it from the session, if the
@@ -41,7 +51,7 @@ class LoginRedirectUriTests(TestCase):
         spotify.set_redirect_uri(session, 'this_is_a_uri')
         result = spotify.pop_redirect_uri(session)
         self.assertIs(result, 'this_is_a_uri')
-        self.assertIs(session.get(spotify.LOGIN_REDIRECT_URI), None)
+        self.assertIsNone(session.get(spotify.LOGIN_REDIRECT_URI))
 
 
 class AuthorizationCodeRefreshTests(TestCase):
@@ -53,7 +63,7 @@ class AuthorizationCodeRefreshTests(TestCase):
         set.
         """
         session = self.client.session
-        self.assertIs(session.get(spotify.AUTHORIZATION_CODE), None)
+        self.assertIsNone(session.get(spotify.AUTHORIZATION_CODE))
 
     def test_is_refresh_initialized(self):
         """
@@ -62,7 +72,7 @@ class AuthorizationCodeRefreshTests(TestCase):
         should not be set.
         """
         session = self.client.session
-        self.assertIs(session.get(spotify.AUTHORIZATION_IS_REFRESH), None)
+        self.assertIsNone(session.get(spotify.AUTHORIZATION_IS_REFRESH))
 
     def test_set_authorization_code(self):
         """
@@ -73,7 +83,7 @@ class AuthorizationCodeRefreshTests(TestCase):
         session = self.client.session
         spotify.set_authorization_code(session, 'this_is_a_code')
         self.assertIs(session.get(spotify.AUTHORIZATION_CODE), 'this_is_a_code')
-        self.assertIs(session.get(spotify.AUTHORIZATION_IS_REFRESH), False)
+        self.assertFalse(session.get(spotify.AUTHORIZATION_IS_REFRESH))
 
     def test_set_refresh_code(self):
         """
@@ -84,7 +94,7 @@ class AuthorizationCodeRefreshTests(TestCase):
         session = self.client.session
         spotify.set_refresh_code(session, 'this_is_a_code')
         self.assertIs(session.get(spotify.AUTHORIZATION_CODE), 'this_is_a_code')
-        self.assertIs(session.get(spotify.AUTHORIZATION_IS_REFRESH), True)
+        self.assertTrue(session.get(spotify.AUTHORIZATION_IS_REFRESH))
 
 
 class RequestAuthorizedTokenTests(TestCase):
@@ -97,7 +107,7 @@ class RequestAuthorizedTokenTests(TestCase):
         """
         session = self.client.session
         result = spotify.request_authorized_token(session)
-        self.assertIs(result, None)
+        self.assertIsNone(result)
 
     def test_request_authorized_token_bad_authorization_code(self):
         """
@@ -110,9 +120,9 @@ class RequestAuthorizedTokenTests(TestCase):
         session = self.client.session
         spotify.set_authorization_code(session, 'bad_code')
         result = spotify.request_authorized_token(session)
-        self.assertIs(result, None)
+        self.assertIsNone(result)
         self.assertIs(session.get(spotify.AUTHORIZATION_CODE), 'bad_code')
-        self.assertIs(session.get(spotify.AUTHORIZATION_IS_REFRESH), False)
+        self.assertFalse(session.get(spotify.AUTHORIZATION_IS_REFRESH))
 
     def test_request_authorized_token_bad_refresh_code(self):
         """
@@ -125,11 +135,53 @@ class RequestAuthorizedTokenTests(TestCase):
         session = self.client.session
         spotify.set_refresh_code(session, 'bad_code')
         result = spotify.request_authorized_token(session)
-        self.assertIs(result, None)
+        self.assertIsNone(result)
         self.assertIs(session.get(spotify.AUTHORIZATION_CODE), 'bad_code')
-        self.assertIs(session.get(spotify.AUTHORIZATION_IS_REFRESH), True)
-
-class LoginTests(TestCase):
+        self.assertTrue(session.get(spotify.AUTHORIZATION_IS_REFRESH))
 
 
+class LogoutTest(TestCase):
+    def test_logout_not_logged_in(self):
+        """
+        logout() should set session[AUTHORIZATION_CODE] to None and
+        session[AUTHORIZATION_IS_REFRESH] to False
+        """
+        session = self.client.session
+        spotify.logout(session)
+        self.assertIsNone(session.get(spotify.AUTHORIZATION_CODE))
+        self.assertFalse(session.get(spotify.AUTHORIZATION_IS_REFRESH))
 
+    def test_logout_logged_in_authorization_code(self):
+        """
+        logout() should set session[AUTHORIZATION_CODE] to None and
+        session[AUTHORIZATION_IS_REFRESH] to False
+        """
+        session = self.client.session
+        spotify.set_authorization_code(session, 'this_is_a_code')
+        spotify.logout(session)
+        self.assertIsNone(session.get(spotify.AUTHORIZATION_CODE))
+        self.assertFalse(session.get(spotify.AUTHORIZATION_IS_REFRESH))
+
+    def test_logout_logged_in_refresh_code(self):
+        """
+        logout() should set session[AUTHORIZATION_CODE] to None and
+        session[AUTHORIZATION_IS_REFRESH] to False
+        """
+        session = self.client.session
+        spotify.set_refresh_code(session, 'this_is_a_code')
+        spotify.logout(session)
+        self.assertIsNone(session.get(spotify.AUTHORIZATION_CODE))
+        self.assertFalse(session.get(spotify.AUTHORIZATION_IS_REFRESH))
+
+class RequestNoauthAccessTokenTest(TestCase):
+    def test_request_noauth_access_token_returns_token(self):
+        token = spotify.request_noauth_access_token()
+        self.assertIsNotNone(token)
+
+        headers = {
+            'Authorization': 'Bearer ' + token
+        }
+        url = 'https://api.spotify.com/v1/browse/new-releases'
+        response = requests.get(url, headers=headers)
+        #response = self.client.get(url, **{'Authorization': 'Bearer ' + token})
+        self.assertIs(response.status_code, 200)

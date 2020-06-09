@@ -8,19 +8,20 @@ AUTHORIZATION_CODE = 'authorization_code'
 AUTHORIZATION_IS_REFRESH = 'authorization_code_is_refresh'
 LOGIN_REDIRECT_URI = 'login_redirect_uri'
 
-def set_authorization_code(request, code):
-    request.session[AUTHORIZATION_CODE] = code
-    request.session[AUTHORIZATION_IS_REFRESH] = False
+def set_authorization_code(session, code):
+    session[AUTHORIZATION_CODE] = code
+    session[AUTHORIZATION_IS_REFRESH] = False
 
-def set_refresh_code(request, code):
-    request.session[AUTHORIZATION_CODE] = code
-    request.session[AUTHORIZATION_IS_REFRESH] = True
+def set_refresh_code(session, code):
+    session[AUTHORIZATION_CODE] = code
+    session[AUTHORIZATION_IS_REFRESH] = True
 
-def request_authorized_token(request):
-    code = request.session.get(AUTHORIZATION_CODE)
+def request_authorized_token(session):
+    code = session.get(AUTHORIZATION_CODE)
     if not code:
         return None
-    if request.session.get(AUTHORIZATION_IS_REFRESH):
+
+    if session.get(AUTHORIZATION_IS_REFRESH):
         data = {
             'grant_type': 'refresh_token',
             'refresh_token': code 
@@ -49,33 +50,18 @@ def request_authorized_token(request):
     return access_token
         
 
-def set_redirect_uri(request, uri):
-    request.session[LOGIN_REDIRECT_URI] = uri
+def set_redirect_uri(session, uri):
+    session[LOGIN_REDIRECT_URI] = uri
 
-def pop_redirect_uri(request):
-    redirect_uri = request.session.get(LOGIN_REDIRECT_URI)
+def pop_redirect_uri(session):
+    redirect_uri = session.get(LOGIN_REDIRECT_URI)
     if redirect_uri:
-        del request.session[LOGIN_REDIRECT_URI]
+        del session[LOGIN_REDIRECT_URI]
     return redirect_uri
 
 
-
-def login(redirect_uri):
-    query_args = {
-        'client_id': '70be5e3cac9044b4951ace6b5d2475e1',
-        'response_type': 'code',
-        'show_dialog': 'true',
-        'redirect_uri': redirect_uri,
-        'scope': 'user-read-private user-read-email',
-    }
-    query_string = urllib.parse.urlencode(query_args)
-
-    url = 'https://accounts.spotify.com/authorize?' + query_string
-
-    return redirect(url)
-
-def logout(request):
-    set_authorization_code(request, None)
+def logout(session):
+    set_authorization_code(session, None)
 
 
 def request_noauth_access_token():

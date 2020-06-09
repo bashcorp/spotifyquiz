@@ -2,6 +2,12 @@ info.txt
 
 *.swp
 
+# Coverage Testing
+htmlcov/
+.coveragerc
+.coverage
+run_coverage
+
 # Universal CTags specific
 *.taghl
 tags
