@@ -1,0 +1,5 @@
+python credentials/unlock_credentials.py
+coverage run manage.py test -v 2
+coverage html
+firefox htmlcov/index.html
+rm -f credentials/key.txt

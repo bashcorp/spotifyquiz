@@ -6,8 +6,6 @@ info.txt
 htmlcov/
 .coveragerc
 .coverage
-run_coverage
-run_tests
 
 # Universal CTags specific
 *.taghl

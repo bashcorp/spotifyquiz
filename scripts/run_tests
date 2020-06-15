@@ -1,0 +1,4 @@
+#!/bin/bash
+python credentials/unlock_credentials.py
+python manage.py test tests.test_models -v2
+rm -f credentials/key.txt
