@@ -16,11 +16,14 @@ receive an access token. Then include that token along with your request for
 data.
 
 To get personal data, you send your client authentication to the API and
-receive an authentication code. Then include that code along with a request
-for data. Sometimes, the data returned to you will include a refresh token.
-These codes time out after a certain amount of time, so the refresh tokens
-will be provided to retain access to this personal data. The next time you
-request data, include the refresh token in place of the authentication code.
+receive an authentication code. Use that code to request for an access token,
+and then use the access token to request personal data. 
+
+These codes time out after a certain amount of time, so when you request an
+access token, Spotify may also return to you a refresh token. This token is
+your new code to request further access tokens. Next time you request an
+access token, provide the newest refresh token instead of the authorization
+code.
 """
 
 
@@ -31,9 +34,7 @@ request data, include the refresh token in place of the authentication code.
 The tokens and codes described above are different for each user, so they're
 stored in the user's session. The below variables are keys to access the session
 variables where they are stored.
-"""
 
-"""
 AUTHORIZATION_CODE stores either the given authorization code (to access a user's
 personal data), or a refresh token that is given subsequently.
 AUTHORIZATION_IS_REFRESH stores a boolean of whether or not AUTHORIZATION_CODE
@@ -42,8 +43,6 @@ you have to use them in slightly different ways.
 """
 AUTHORIZATION_CODE = 'authorization_code'
 AUTHORIZATION_IS_REFRESH = 'authorization_code_is_refresh'
-
-
 
 
 
@@ -69,17 +68,20 @@ def set_refresh_code(session, code):
 
 def request_authorized_token(session):
     """
-    Sends a request to the Spotify API to get an authorization code
-    to access a user's Spotify account. If they are not logged in, it will
-    prompt them to log in. It will always ask them to confirm they want to
-    share their data with this website.
-
-    On success
+    Requests an access token from Spotify, which is used to request personal
+    data, and returns that access token. If Spotify also returns a refresh
+    token, saves that in the user session.
     """
+
+    # If there is no authorization code or refresh token, you can't get an
+    # access token, so return None
     code = session.get(AUTHORIZATION_CODE)
     if not code:
         return None
 
+
+    # The request data is different depending on if you're sending an
+    # authorization code or a refresh token
     if session.get(AUTHORIZATION_IS_REFRESH):
         data = {
             'grant_type': 'refresh_token',
@@ -92,6 +94,7 @@ def request_authorized_token(session):
             'redirect_uri': 'http://localhost:8000/logged_in'
         }
 
+    # The rest of the request's data (client authentication)
     auth = '70be5e3cac9044b4951ace6b5d2475e1:870dc2491458410ebe2d9f6f578d24ef'
     encoded_auth = base64.b64encode(auth.encode("utf-8"))
     headers = {
@@ -99,21 +102,37 @@ def request_authorized_token(session):
     }
     url = 'https://accounts.spotify.com/api/token'
 
+    # Make the request
     result = requests.post(url, data=data, headers=headers)
 
-    access_token = result.json().get('access_token')
+    # If Spotify returned a refresh token, save it in the session
     refresh_token = result.json().get('refresh_token')
     if refresh_token:
         set_refresh_code(request, refresh_token)
 
+    # Get the access token and return in
+    access_token = result.json().get('access_token')
     return access_token
         
 
 def logout(session):
+    """
+    Logs the user out from the given session. In other words, removes any
+    authorization code or refresh token from the session, so the user will
+    have to login next time they do something that requires that authorization. 
+    """
     set_authorization_code(session, None)
 
 
 def request_noauth_access_token():
+    """
+    Returns an access token used for accessing public data, not associated
+    with a user.
+    All the authentication needed for this request is the client authentication
+    of this app.
+    """
+
+    # The request data and headers
     auth = '70be5e3cac9044b4951ace6b5d2475e1:870dc2491458410ebe2d9f6f578d24ef'
     encoded_auth = base64.b64encode(auth.encode("utf-8"))
 
@@ -125,7 +144,9 @@ def request_noauth_access_token():
     }
     url = 'https://accounts.spotify.com/api/token'
      
+    # Make the request
     result = requests.post(url, data=data, headers=headers)
 
+    # Get the access token and return it
     access_token = result.json().get('access_token')
     return access_token
