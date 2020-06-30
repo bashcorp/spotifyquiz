@@ -9,6 +9,7 @@ from .models import *
 class QuestionInline(admin.TabularInline):
     model = Question
 
+# Register the database models so they show up on the admin dashboard
 admin.site.register(Quiz)
 admin.site.register(Question)
 admin.site.register(MultipleChoiceQuestion)

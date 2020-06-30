@@ -7,54 +7,30 @@ from unittest import mock
 
 from quiz import spotify
 
-class MockResponse:
-    def __init__(self, json_data, status_code):
-        self.json_data = json_data
-        self.status_code = status_code
-
-
-class LoginRedirectUriTests(TestCase):
-    def test_login_redirect_uri_initialized(self):
-        """
-        The spotify module stores seperate data for each session. Initially,
-        the session variable associated with LOGIN_REDIRECT_URI should not be
-        set.
-        """
-        session = self.client.session
-        self.assertIsNone(session.get(spotify.LOGIN_REDIRECT_URI))
-
-    def test_set_redirect_uri(self):
-        """
-        set_redirect_uri() should set the variable accessed with
-        LOGIN_REDIRECT_URI in the given session to the given uri.
-        """
-        session = self.client.session
-        spotify.set_redirect_uri(session, 'this_is_a_uri')
-        self.assertIs(session.get(spotify.LOGIN_REDIRECT_URI), 'this_is_a_uri')
-
-    def test_pop_redirect_uri_none_set(self):
-        """
-        pop_redirect_uri() should return None if no redirect_uri is set in
-        session[LOGIN_REDIRECT_URI].
-        """
-        session = self.client.session
-        result = spotify.pop_redirect_uri(session)
-        self.assertIsNone(result)
-
-    def test_pop_redirect_uri_existing(self):
-        """
-        pop_redirect_uri() should return the variable stored in
-        session[LOGIN_REDIRECT_URI] and delete it from the session, if the
-        variable exists.
-        """
-        session = self.client.session
-        spotify.set_redirect_uri(session, 'this_is_a_uri')
-        result = spotify.pop_redirect_uri(session)
-        self.assertIs(result, 'this_is_a_uri')
-        self.assertIsNone(session.get(spotify.LOGIN_REDIRECT_URI))
+# AuthorizationCodeRefreshTests
+#   test_authorization_code_initialized
+#   test_is_refresh_initialized
+#   test_set_authorization_code
+#   test_set_refresh_code
+# RequestAuthorizedTokenTests
+#   test_request_authorized_token_no_authorization_code
+#   test_request_authorized_token_bad_authorization_code
+#   test_request_authorized_token_bad_refresh_code
+# LogoutTest
+#   test_logout_not_logged_in
+#   test_logout_logged_in_authorization_code
+#   test_logout_logged_in_refresh_code
+# RequestNoauthAccessTokenTest
+#   test_request_noauth_access_token_returns_token
+    
 
 
 class AuthorizationCodeRefreshTests(TestCase):
+    """
+    The Spotify module stores the authorization code or refresh token used to
+    access a user's personal data in that user's session. Test the functions
+    for getting and setting these codes.
+    """
 
     def test_authorization_code_initialized(self):
         """
@@ -65,6 +41,7 @@ class AuthorizationCodeRefreshTests(TestCase):
         session = self.client.session
         self.assertIsNone(session.get(spotify.AUTHORIZATION_CODE))
 
+
     def test_is_refresh_initialized(self):
         """
         The spotify module stores seperate data for each session. Initially,
@@ -73,6 +50,7 @@ class AuthorizationCodeRefreshTests(TestCase):
         """
         session = self.client.session
         self.assertIsNone(session.get(spotify.AUTHORIZATION_IS_REFRESH))
+
 
     def test_set_authorization_code(self):
         """
@@ -84,6 +62,7 @@ class AuthorizationCodeRefreshTests(TestCase):
         spotify.set_authorization_code(session, 'this_is_a_code')
         self.assertIs(session.get(spotify.AUTHORIZATION_CODE), 'this_is_a_code')
         self.assertFalse(session.get(spotify.AUTHORIZATION_IS_REFRESH))
+
 
     def test_set_refresh_code(self):
         """
@@ -97,7 +76,13 @@ class AuthorizationCodeRefreshTests(TestCase):
         self.assertTrue(session.get(spotify.AUTHORIZATION_IS_REFRESH))
 
 
+
 class RequestAuthorizedTokenTests(TestCase):
+    """
+    request_authorized_token() returns an access token that can be used to
+    request personal data about a user. It uses the currently stored
+    authorization code or refresh token to request this access token.
+    """
 
     def test_request_authorized_token_no_authorization_code(self):
         """
@@ -108,6 +93,7 @@ class RequestAuthorizedTokenTests(TestCase):
         session = self.client.session
         result = spotify.request_authorized_token(session)
         self.assertIsNone(result)
+
 
     def test_request_authorized_token_bad_authorization_code(self):
         """
@@ -123,6 +109,7 @@ class RequestAuthorizedTokenTests(TestCase):
         self.assertIsNone(result)
         self.assertIs(session.get(spotify.AUTHORIZATION_CODE), 'bad_code')
         self.assertFalse(session.get(spotify.AUTHORIZATION_IS_REFRESH))
+
 
     def test_request_authorized_token_bad_refresh_code(self):
         """
@@ -140,7 +127,13 @@ class RequestAuthorizedTokenTests(TestCase):
         self.assertTrue(session.get(spotify.AUTHORIZATION_IS_REFRESH))
 
 
+
 class LogoutTest(TestCase):
+    """
+    logout() logs a user out of their session by deleting any authorization
+    code or refresh token stored in that session.
+    """
+
     def test_logout_not_logged_in(self):
         """
         logout() should set session[AUTHORIZATION_CODE] to None and
@@ -150,6 +143,7 @@ class LogoutTest(TestCase):
         spotify.logout(session)
         self.assertIsNone(session.get(spotify.AUTHORIZATION_CODE))
         self.assertFalse(session.get(spotify.AUTHORIZATION_IS_REFRESH))
+
 
     def test_logout_logged_in_authorization_code(self):
         """
@@ -162,6 +156,7 @@ class LogoutTest(TestCase):
         self.assertIsNone(session.get(spotify.AUTHORIZATION_CODE))
         self.assertFalse(session.get(spotify.AUTHORIZATION_IS_REFRESH))
 
+
     def test_logout_logged_in_refresh_code(self):
         """
         logout() should set session[AUTHORIZATION_CODE] to None and
@@ -173,8 +168,19 @@ class LogoutTest(TestCase):
         self.assertIsNone(session.get(spotify.AUTHORIZATION_CODE))
         self.assertFalse(session.get(spotify.AUTHORIZATION_IS_REFRESH))
 
+
+
 class RequestNoauthAccessTokenTest(TestCase):
+    """
+    request_noauth_access_token() returns an access token that is used to
+    request public Spotify data.
+    """
+
     def test_request_noauth_access_token_returns_token(self):
+        """
+        request_noauth_access_token() should return a valid access token
+        that can be used to request public data from Spotify.
+        """
         token = spotify.request_noauth_access_token()
         self.assertIsNotNone(token)
 
