@@ -4,19 +4,78 @@ import urllib
 import requests
 import base64
 
+"""
+There are two ways to interact with the Spotify API: one involves getting
+a user's personal data, and the other involves getting non-personal data,
+such as song and artist data.
+
+This app is registered with Spotify and has it's own authentication.
+
+To get non-personal data, you send your client authentication to the API and
+receive an access token. Then include that token along with your request for
+data.
+
+To get personal data, you send your client authentication to the API and
+receive an authentication code. Then include that code along with a request
+for data. Sometimes, the data returned to you will include a refresh token.
+These codes time out after a certain amount of time, so the refresh tokens
+will be provided to retain access to this personal data. The next time you
+request data, include the refresh token in place of the authentication code.
+"""
+
+
+
+
+
+"""
+The tokens and codes described above are different for each user, so they're
+stored in the user's session. The below variables are keys to access the session
+variables where they are stored.
+"""
+
+"""
+AUTHORIZATION_CODE stores either the given authorization code (to access a user's
+personal data), or a refresh token that is given subsequently.
+AUTHORIZATION_IS_REFRESH stores a boolean of whether or not AUTHORIZATION_CODE
+is currently holding an authorization code or a refresh token. This is because
+you have to use them in slightly different ways.
+"""
 AUTHORIZATION_CODE = 'authorization_code'
 AUTHORIZATION_IS_REFRESH = 'authorization_code_is_refresh'
-LOGIN_REDIRECT_URI = 'login_redirect_uri'
+
+
+
+
+
+
 
 def set_authorization_code(session, code):
+    """
+    Stores an authorization code in the given user session. Makes sure it's
+    identified as an authorization code and not a refresh token.
+    """
     session[AUTHORIZATION_CODE] = code
     session[AUTHORIZATION_IS_REFRESH] = False
 
+
 def set_refresh_code(session, code):
+    """
+    Stores a refresh token in the given user session. Makes sure it's
+    identified as a refresh token and not an authorization code.
+    """
     session[AUTHORIZATION_CODE] = code
     session[AUTHORIZATION_IS_REFRESH] = True
 
+
 def request_authorized_token(session):
+    """
+    Sends a request to the Spotify API to get an authorization code
+    to access a user's Spotify account. If they are not logged in, it will
+    prompt them to log in. It will always ask them to confirm they want to
+    share their data with this website.
+
+    On success
+    """
     code = session.get(AUTHORIZATION_CODE)
     if not code:
         return None
@@ -49,16 +108,6 @@ def request_authorized_token(session):
 
     return access_token
         
-
-def set_redirect_uri(session, uri):
-    session[LOGIN_REDIRECT_URI] = uri
-
-def pop_redirect_uri(session):
-    redirect_uri = session.get(LOGIN_REDIRECT_URI)
-    if redirect_uri:
-        del session[LOGIN_REDIRECT_URI]
-    return redirect_uri
-
 
 def logout(session):
     set_authorization_code(session, None)
