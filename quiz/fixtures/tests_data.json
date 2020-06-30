@@ -1,0 +1,468 @@
+[
+{
+  "model": "quiz.quiz",
+  "pk": "5a0ce787-8dde-4eda-a3f4-ceb539580efa",
+  "fields": {}
+},
+{
+  "model": "quiz.quiz",
+  "pk": "d8f49ba6-ccd8-4a9d-a15c-42daba014842",
+  "fields": {}
+},
+{
+  "model": "quiz.question",
+  "pk": 1,
+  "fields": {
+    "polymorphic_ctype": [
+      "quiz",
+      "sliderquestion"
+    ],
+    "quiz": "d8f49ba6-ccd8-4a9d-a15c-42daba014842",
+    "question_text": "Question 1.1"
+  }
+},
+{
+  "model": "quiz.question",
+  "pk": 2,
+  "fields": {
+    "polymorphic_ctype": [
+      "quiz",
+      "sliderquestion"
+    ],
+    "quiz": "d8f49ba6-ccd8-4a9d-a15c-42daba014842",
+    "question_text": "Question 1.2"
+  }
+},
+{
+  "model": "quiz.question",
+  "pk": 3,
+  "fields": {
+    "polymorphic_ctype": [
+      "quiz",
+      "multiplechoicequestion"
+    ],
+    "quiz": "d8f49ba6-ccd8-4a9d-a15c-42daba014842",
+    "question_text": "Question 1.3"
+  }
+},
+{
+  "model": "quiz.question",
+  "pk": 4,
+  "fields": {
+    "polymorphic_ctype": [
+      "quiz",
+      "multiplechoicequestion"
+    ],
+    "quiz": "d8f49ba6-ccd8-4a9d-a15c-42daba014842",
+    "question_text": "Question 1.4"
+  }
+},
+{
+  "model": "quiz.question",
+  "pk": 5,
+  "fields": {
+    "polymorphic_ctype": [
+      "quiz",
+      "sliderquestion"
+    ],
+    "quiz": "5a0ce787-8dde-4eda-a3f4-ceb539580efa",
+    "question_text": "Question 2.1"
+  }
+},
+{
+  "model": "quiz.question",
+  "pk": 6,
+  "fields": {
+    "polymorphic_ctype": [
+      "quiz",
+      "multiplechoicequestion"
+    ],
+    "quiz": "5a0ce787-8dde-4eda-a3f4-ceb539580efa",
+    "question_text": "Question 2.2"
+  }
+},
+{
+  "model": "quiz.question",
+  "pk": 7,
+  "fields": {
+    "polymorphic_ctype": [
+      "quiz",
+      "multiplechoicequestion"
+    ],
+    "quiz": "5a0ce787-8dde-4eda-a3f4-ceb539580efa",
+    "question_text": "Question 2.3"
+  }
+},
+{
+  "model": "quiz.multiplechoicequestion",
+  "pk": 3,
+  "fields": {}
+},
+{
+  "model": "quiz.multiplechoicequestion",
+  "pk": 4,
+  "fields": {}
+},
+{
+  "model": "quiz.multiplechoicequestion",
+  "pk": 6,
+  "fields": {}
+},
+{
+  "model": "quiz.multiplechoicequestion",
+  "pk": 7,
+  "fields": {}
+},
+{
+  "model": "quiz.choice",
+  "pk": 1,
+  "fields": {
+    "question": 3,
+    "answer": false,
+    "text": "Choice 1.1"
+  }
+},
+{
+  "model": "quiz.choice",
+  "pk": 2,
+  "fields": {
+    "question": 3,
+    "answer": true,
+    "text": "Choice 1.2"
+  }
+},
+{
+  "model": "quiz.choice",
+  "pk": 3,
+  "fields": {
+    "question": 3,
+    "answer": false,
+    "text": "Choice 1.3"
+  }
+},
+{
+  "model": "quiz.choice",
+  "pk": 4,
+  "fields": {
+    "question": 3,
+    "answer": false,
+    "text": "Choice 1.4"
+  }
+},
+{
+  "model": "quiz.choice",
+  "pk": 5,
+  "fields": {
+    "question": 4,
+    "answer": true,
+    "text": "Choice 2.1"
+  }
+},
+{
+  "model": "quiz.choice",
+  "pk": 6,
+  "fields": {
+    "question": 4,
+    "answer": false,
+    "text": "Choice 2.2"
+  }
+},
+{
+  "model": "quiz.choice",
+  "pk": 7,
+  "fields": {
+    "question": 4,
+    "answer": false,
+    "text": "Choice 2.3"
+  }
+},
+{
+  "model": "quiz.choice",
+  "pk": 8,
+  "fields": {
+    "question": 4,
+    "answer": true,
+    "text": "Choice 2.4"
+  }
+},
+{
+  "model": "quiz.choice",
+  "pk": 9,
+  "fields": {
+    "question": 6,
+    "answer": false,
+    "text": "Choice 3.1"
+  }
+},
+{
+  "model": "quiz.choice",
+  "pk": 10,
+  "fields": {
+    "question": 6,
+    "answer": true,
+    "text": "Choice 3.2"
+  }
+},
+{
+  "model": "quiz.choice",
+  "pk": 11,
+  "fields": {
+    "question": 6,
+    "answer": true,
+    "text": "Choice 3.3"
+  }
+},
+{
+  "model": "quiz.choice",
+  "pk": 12,
+  "fields": {
+    "question": 6,
+    "answer": false,
+    "text": "Choice 3.4"
+  }
+},
+{
+  "model": "quiz.choice",
+  "pk": 13,
+  "fields": {
+    "question": 7,
+    "answer": false,
+    "text": "Choice 4.1"
+  }
+},
+{
+  "model": "quiz.choice",
+  "pk": 14,
+  "fields": {
+    "question": 7,
+    "answer": false,
+    "text": "Choice 4.2"
+  }
+},
+{
+  "model": "quiz.choice",
+  "pk": 15,
+  "fields": {
+    "question": 7,
+    "answer": false,
+    "text": "Choice 4.3"
+  }
+},
+{
+  "model": "quiz.choice",
+  "pk": 16,
+  "fields": {
+    "question": 7,
+    "answer": true,
+    "text": "Choice 4.4"
+  }
+},
+{
+  "model": "quiz.sliderquestion",
+  "pk": 1,
+  "fields": {
+    "slider_min": 0,
+    "slider_max": 10,
+    "answer": 5
+  }
+},
+{
+  "model": "quiz.sliderquestion",
+  "pk": 2,
+  "fields": {
+    "slider_min": 5,
+    "slider_max": 20,
+    "answer": 7
+  }
+},
+{
+  "model": "quiz.sliderquestion",
+  "pk": 5,
+  "fields": {
+    "slider_min": 40,
+    "slider_max": 100,
+    "answer": 65
+  }
+},
+{
+  "model": "quiz.response",
+  "pk": 1,
+  "fields": {
+    "name": "cash",
+    "quiz": "d8f49ba6-ccd8-4a9d-a15c-42daba014842"
+  }
+},
+{
+  "model": "quiz.response",
+  "pk": 2,
+  "fields": {
+    "name": "Ben",
+    "quiz": "5a0ce787-8dde-4eda-a3f4-ceb539580efa"
+  }
+},
+{
+  "model": "quiz.responseanswer",
+  "pk": 1,
+  "fields": {
+    "polymorphic_ctype": [
+      "quiz",
+      "responseslideranswer"
+    ],
+    "question": 1,
+    "response": 1
+  }
+},
+{
+  "model": "quiz.responseanswer",
+  "pk": 2,
+  "fields": {
+    "polymorphic_ctype": [
+      "quiz",
+      "responseslideranswer"
+    ],
+    "question": 2,
+    "response": 1
+  }
+},
+{
+  "model": "quiz.responseanswer",
+  "pk": 3,
+  "fields": {
+    "polymorphic_ctype": [
+      "quiz",
+      "responsechoiceanswer"
+    ],
+    "question": 3,
+    "response": 1
+  }
+},
+{
+  "model": "quiz.responseanswer",
+  "pk": 4,
+  "fields": {
+    "polymorphic_ctype": [
+      "quiz",
+      "responsechoiceanswer"
+    ],
+    "question": 4,
+    "response": 1
+  }
+},
+{
+  "model": "quiz.responseanswer",
+  "pk": 5,
+  "fields": {
+    "polymorphic_ctype": [
+      "quiz",
+      "responseslideranswer"
+    ],
+    "question": 5,
+    "response": 2
+  }
+},
+{
+  "model": "quiz.responseanswer",
+  "pk": 6,
+  "fields": {
+    "polymorphic_ctype": [
+      "quiz",
+      "responsechoiceanswer"
+    ],
+    "question": 6,
+    "response": 2
+  }
+},
+{
+  "model": "quiz.responseanswer",
+  "pk": 7,
+  "fields": {
+    "polymorphic_ctype": [
+      "quiz",
+      "responsechoiceanswer"
+    ],
+    "question": 7,
+    "response": 2
+  }
+},
+{
+  "model": "quiz.responsechoiceanswer",
+  "pk": 3,
+  "fields": {}
+},
+{
+  "model": "quiz.responsechoiceanswer",
+  "pk": 4,
+  "fields": {}
+},
+{
+  "model": "quiz.responsechoiceanswer",
+  "pk": 6,
+  "fields": {}
+},
+{
+  "model": "quiz.responsechoiceanswer",
+  "pk": 7,
+  "fields": {}
+},
+{
+  "model": "quiz.responsechoice",
+  "pk": 1,
+  "fields": {
+    "user_choice": 3,
+    "response_answer": 3
+  }
+},
+{
+  "model": "quiz.responsechoice",
+  "pk": 2,
+  "fields": {
+    "user_choice": 8,
+    "response_answer": 4
+  }
+},
+{
+  "model": "quiz.responsechoice",
+  "pk": 3,
+  "fields": {
+    "user_choice": 10,
+    "response_answer": 6
+  }
+},
+{
+  "model": "quiz.responsechoice",
+  "pk": 4,
+  "fields": {
+    "user_choice": 11,
+    "response_answer": 6
+  }
+},
+{
+  "model": "quiz.responsechoice",
+  "pk": 5,
+  "fields": {
+    "user_choice": 16,
+    "response_answer": 7
+  }
+},
+{
+  "model": "quiz.responseslideranswer",
+  "pk": 1,
+  "fields": {
+    "answer": 7
+  }
+},
+{
+  "model": "quiz.responseslideranswer",
+  "pk": 2,
+  "fields": {
+    "answer": 7
+  }
+},
+{
+  "model": "quiz.responseslideranswer",
+  "pk": 5,
+  "fields": {
+    "answer": 67
+  }
+}
+]
