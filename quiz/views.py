@@ -5,7 +5,6 @@ import requests
 import urllib
 import base64
 
-from .forms import SearchForm 
 from . import spotify
 
 access_code = None
@@ -15,7 +14,7 @@ def index(request):
     return render(request, 'index.php')
 
 def login(request):
-    redirect_view = 'admin'
+    redirect_view = 'index'
     query_args = {
         'client_id': '70be5e3cac9044b4951ace6b5d2475e1',
         'response_type': 'code',
