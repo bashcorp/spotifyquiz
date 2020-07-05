@@ -14,6 +14,12 @@ class Quiz(models.Model):
     # questions (Question objects)
     # responses (Response objects)
 
+    def __str__(self):
+        return "<Quiz: " + str(self.user_uuid) + ", Questions=[" + \
+                ", ".join(question.text for question in self.questions.all())\
+                + "], Responses=[" + \
+                ", ".join(response.name for response in self.responses.all()) + "]>"
+
 
 class Question(PolymorphicModel):
     """
@@ -25,16 +31,23 @@ class Question(PolymorphicModel):
     """
     quiz = models.ForeignKey('Quiz', related_name='questions', null=False,
             on_delete=models.CASCADE)
-    question_text = models.CharField(max_length=50, default="default question")
+
+    text = models.CharField(max_length=50, default="default question")
 
     # responses (ResponseAnswer objects)
+
+    def __str__(self):
+        return "<Question: " + self.text + ">"
+
+
+
 
 
 class MultipleChoiceQuestion(Question):
     """
     Represents a multiple choice question with a list of text-based answer
-    choices, stored in Choice. This model supports multiple correct answers,
-    as each Choice holds a boolean describing whether or not is is a correct
+    choices, stored in QuestionChoice. This model supports multiple correct answers,
+    as each QuestionChoice holds a boolean describing whether or not is is a correct
     answer.
     """
 
@@ -49,9 +62,14 @@ class MultipleChoiceQuestion(Question):
         if len(choices) > 1:
             return True
         return False
+
+
+    def __str__(self):
+        return "<MultipleChoiceQuestion: " + self.text + ", Choices=[" + \
+        ", ".join((choice.text + (" (answer)" if choice.answer else "")) for choice in self.choices.all()) + "]>"
     
 
-class Choice(models.Model):
+class QuestionChoice(models.Model):
     """
     Represents one possible choice of a MultipleChoiceQuestion. The choice
     itself is a string of text.
@@ -61,6 +79,9 @@ class Choice(models.Model):
             related_name="choices", on_delete=models.CASCADE)
     answer = models.BooleanField(default=False)
     text = models.CharField(default="default choice", max_length=50)
+
+    def __str__(self):
+        return "<Choice: " + self.text + (", answer" if self.answer else "") + ">"
 
 
 class SliderQuestion(Question):
@@ -83,6 +104,11 @@ class SliderQuestion(Question):
     def save(self, *args, **kwargs):
         self.clean()
         super(SliderQuestion, self).save(*args, **kwargs)
+
+
+    def __str__(self):
+        return "<SliderQuestion: " + self.text + ", [" + str(self.slider_min) + \
+                " to " + str(self.slider_max) + ", answer=" + str(self.answer) + "]>" 
         
 
 
@@ -93,10 +119,13 @@ class Response(models.Model):
     by response.answers
     """
     name = models.CharField(max_length=50)
-    quiz = models.ForeignKey('Quiz', related_name='responses',
+    quiz = models.ForeignKey('Quiz', related_name='responses', null=False,
             on_delete=models.CASCADE)    
 
     # answers (ResponseAnswer objects)
+
+    def __str__(self):
+        return "<Response: Quiz=" + str(self.quiz.user_uuid) + ", name=" + self.name + ">"
 
 
 class ResponseAnswer(PolymorphicModel):
@@ -104,39 +133,105 @@ class ResponseAnswer(PolymorphicModel):
     Represents the answer to one question in a given response. This is a
     general model, as with the Question model - because there are different
     types of questions, the responses to those questions need to be stored
-    in different ways. Subclasses are ResponseChoiceAnswer and 
-    ResponseSliderAnswer.
+    in different ways. Subclasses are MultipleChoiceAnswer and 
+    SliderAnswer.
     """
 
     question = models.ForeignKey('Question', related_name="responses",
-            on_delete=models.CASCADE)
+            null=False, on_delete=models.CASCADE)
 
     response = models.ForeignKey('Response', related_name="answers",
-            on_delete = models.CASCADE)
+            null=False, on_delete = models.CASCADE)
 
-class ResponseChoiceAnswer(ResponseAnswer):
+    def clean(self):
+        try:
+            self.question
+        except:
+            raise ValidationError("A ResponseAnswer was created without \
+                    giving it an associated Question.")
+
+        try:
+            self.response
+        except:
+            raise ValidationError("A ResponseAnswer was created without \
+                    giving it an associated Response.")
+
+        if self.question not in self.response.quiz.questions.all():
+            raise ValidationError("Question " + str(self.question) + \
+                "is in Response " + str(self.response) + \
+                ", but not in the associated quiz.")
+        
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super(ResponseAnswer, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return "<ResponseAnswer: Response=" + self.response.name + \
+                ", Question=" + self.question.text + ">"
+
+
+class MultipleChoiceAnswer(ResponseAnswer):
     """
     Represents the answer to a MultipleChoiceQuestion for a given response.
     No fields are created here because the only data is a list of the user's
-    selected choices. Each selected choice is stored in the ResponseChoice
+    selected choices. Each selected choice is stored in the ChoiceAnswer
     model.
     """
     
-    # choices (ResponseChoice objects)
+    # choices (ChoiceAnswer objects)
 
-class ResponseChoice(models.Model):
+    def __str__(self):
+        return "<MultipleChoiceAnswer: Response=" + self.response.name + \
+                ", Choices=[" + ", ".join(choice.choice.text for choice in self.choices.all()) + "]>"
+
+class ChoiceAnswer(models.Model):
     """
     Represents one of a user's selected choices in a given ResponseAnswer.
     """
 
-    user_choice = models.ForeignKey('Choice', on_delete=models.CASCADE)
-    response_answer = models.ForeignKey('ResponseChoiceAnswer',
+    choice = models.ForeignKey('QuestionChoice', null=False,
+            on_delete=models.CASCADE)
+    answer = models.ForeignKey('MultipleChoiceAnswer', null=False,
             related_name="choices", on_delete=models.CASCADE)
 
-class ResponseSliderAnswer(ResponseAnswer):
+    def clean(self):
+        try:
+            self.answer
+        except:
+            raise ValidationError("A ChoiceAnswer was created without \
+                    giving it an associated ResponseAnswer")
+
+        try:
+            self.choice
+        except:
+            raise ValidationError("A ChoiceAnswer was created without \
+                    giving it a choice (QuestionChoice)")
+
+        if self.choice not in self.answer.question.choices.all():
+            raise ValidationError("A ChoiceAnswer was created that \
+                    chooses a QuestionChoice not in the question it \
+                    is responding to")
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super(ChoiceAnswer, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return "<ChoiceAnswer: Response=" + self.answer.response.name + \
+                ", Question=" + self.answer.question.text + \
+                ", Choice=" + self.choice.text + ">"
+
+class SliderAnswer(ResponseAnswer):
     """
     Represents a user's answer to a SliderQuestion, which is an integer.
     """
     answer = models.IntegerField()
+
+    def __str__(self):
+        return "<SliderAnswer: Response=" + self.response.name + \
+                ", Question=" + self.question.text + \
+                ", Answer=" + self.answer + ">"
+                
 
 
