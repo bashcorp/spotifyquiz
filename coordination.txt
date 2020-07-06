@@ -1,0 +1,5 @@
+To have user's login, redirect them to /login
+
+Quiz at: /quiz/<quiz_id>
+
+
