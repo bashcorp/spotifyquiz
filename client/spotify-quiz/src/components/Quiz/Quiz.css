@@ -1,0 +1,151 @@
+.quiz-wrapper {
+	width: 100%;
+	display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; 
+  max-width:100%;  /* added */
+  height: 100%;
+  background-image: url("./background.svg");
+  background-color: #cccccc;
+}
+
+#root {
+  height: 100%;
+}
+
+.App {
+  height: 100%;
+}
+
+html {
+	overflow-x: hidden;
+  overflow-y: scroll;
+  height: 100%;
+  width:100%;
+}
+
+body{
+  height: 100%;
+}
+
+.nextButton {
+  width: 150px;
+}
+
+.nextButtonWrapper {
+display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Quiz {
+  background-color: #129ae2;
+  box-shadow:0 4px 10px rgba(0,0,0,.7);
+  margin: 0px 25px;
+	border-radius: 30px;
+	z-index: 1000;
+	min-height: 500px;
+  width: 65%;
+}
+
+
+.box-area img {
+	box-shadow:0 4px 10px rgba(0,0,0,1);
+}
+
+.box-area {
+  position: absolute;
+  z-index: -100;
+  top: 0;
+  left: 0;
+  right: 0px;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+
+.box-area li img {
+  position: absolute;
+  z-index: 0;
+  display: block;
+  list-style: none;
+  width: 100px;
+  object-fit: c;
+  height: 100px;
+  animation: animate 60s linear infinite;
+  bottom: -150px;
+}
+
+.box-area li:nth-child(1) img{
+  left: 86%;
+  width: 80px;
+  height: 80px;
+  animation-delay:3s;
+}
+
+
+.box-area li:nth-child(2) img{
+  left: 3%;
+  width: 90px;
+  height: 90px;
+  animation-delay:34s;
+
+}
+
+
+.box-area li:nth-child(3) img{
+  left: 86%;
+  width: 100px;
+  height: 100px;
+  animation-delay: 40s;
+
+}
+
+.box-area li:nth-child(4) img{
+  left: 8%;
+  width: 150px;
+  height: 150px;
+  animation-delay: 4s;
+}
+
+
+.box-area li:nth-child(5) img{
+  left: 87%;
+  width: 80px;
+  height: 80px;
+  animation-delay: 19s;
+}
+
+.box-area li:nth-child(6) img{
+  left: 6%;
+  width: 110px;
+  height: 110px;
+  animation-delay: 49s;
+}
+
+@keyframes animate{
+  0%{
+    transform: translateY(0);
+    opacity: .4;
+  }
+
+40%{
+    opacity: 0;
+}
+
+ 100%{
+    transform: translateY(-800px);
+     opacity: 0;
+
+  }
+
+}
+
+
+@media (max-width: 1180px){
+  .Quiz {
+    width: 90%;
+  }
+}

@@ -1,0 +1,32 @@
+nav {
+	padding: 24px;
+	width: 90%;
+	max-width: 1680px;
+}
+
+nav img {
+	height: 50px;
+}
+
+nav ul {
+	list-style: none;
+	display: flex;
+  	justify-content: space-between;
+}
+
+.top-sign-in {
+	padding: 12px 24px;
+	background-color: #1DB954;
+	border-radius: 500px;
+	font-weight: 400;
+	color: #ffffff;
+	margin-top: 0;
+	transition: all 1s ease;
+	box-shadow:0 4px 10px rgba(0,0,0,0.2);
+}
+
+.top-sign-in:hover{
+	color: white;
+	margin-top: 1px;
+	background-color: #18a148;
+}
