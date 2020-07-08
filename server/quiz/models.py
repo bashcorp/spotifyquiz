@@ -14,6 +14,20 @@ class Quiz(models.Model):
     # questions (Question objects)
     # responses (Response objects)
 
+    def json(self):
+        """
+        Returns a JSON-formatted dictionary of all data that might be needed
+        to display this quiz on the client. 
+        """
+
+        # Compile a list of each question in JSON format
+        questions = [q.json() for q in self.questions.all()]
+
+        return {
+            'uuid': self.user_uuid,
+            'questions': questions
+        }
+
     def __str__(self):
         return "<Quiz: " + str(self.user_uuid) + ", Questions=[" + \
                 ", ".join(question.text for question in self.questions.all())\
@@ -51,23 +65,51 @@ class MultipleChoiceQuestion(Question):
     answer.
     """
 
+    # choices (QuestionChoice objects)
+
     def answers(self):
+        """
+        Returns all the correct answers of this question, and raises an error if there
+        are none.
+        """
         choices = self.choices.filter(answer=True)
         if not choices:
             raise ValidationError('Multiple Choice Question: none of the choices are marked as the correct answer')
         return choices
 
+
     def is_checklist_question(self):
+        """
+        Returns true if question has multiple correct answer, false otherwise. If the
+        question has no correct answers, raises an error.
+        """
         choices = self.answers()
         if len(choices) > 1:
             return True
         return False
 
 
+    def json(self):
+        """
+        Returns a JSON-formatted dictionary of all data that might be needed to
+        display this question on the client.
+        """
+        choices = [c.json() for c in self.choices.all()]
+
+        return {
+            'id': self.id,
+            'text': self.text,
+            'choices': choices,
+            'is_checklist': self.is_checklist_question()
+        }
+
+
     def __str__(self):
         return "<MultipleChoiceQuestion: " + self.text + ", Choices=[" + \
         ", ".join((choice.text + (" (answer)" if choice.answer else "")) for choice in self.choices.all()) + "]>"
     
+
+
 
 class QuestionChoice(models.Model):
     """
@@ -79,6 +121,18 @@ class QuestionChoice(models.Model):
             related_name="choices", on_delete=models.CASCADE)
     answer = models.BooleanField(default=False)
     text = models.CharField(default="default choice", max_length=50)
+
+    def json(self):
+        """
+        Returns a JSON-formatted dictionary of any data that might be needed to
+        display this choice on the client.
+        """
+        return {
+            'id': self.id,
+            'text': self.text,
+            'answer': self.answer
+        }
+
 
     def __str__(self):
         return "<Choice: " + self.text + (", answer" if self.answer else "") + ">"
@@ -96,20 +150,46 @@ class SliderQuestion(Question):
     answer = models.IntegerField(default=5)
 
     def clean(self):
+        """
+        If the slider values are invalid, raise ValidationErrors.
+        Slider values are invalid if the min is >= the max, or if the answer is in between
+        min and max.
+        """
         if self.slider_min >= self.slider_max:
             raise ValidationError('Slider Question: minimum value must be less than maximum value')
         if self.answer < self.slider_min or self.answer > self.slider_max:
             raise ValidationError('Slider Question: answer must be in between min and max')
 
+
     def save(self, *args, **kwargs):
+        """
+        Overrides the save() function that saves this object to the data tables, to
+        ensure that the object is only saved if it is formatted properly, as ensured
+        by clean().
+        """
         self.clean()
         super(SliderQuestion, self).save(*args, **kwargs)
+
+
+    def json(self):
+        """
+        Returns a JSON-formatted dictionary with all data that might be needed to display
+        this question on the client.
+        """
+        return {
+            'id': self.id,
+            'text': self.text,
+            'min': self.slider_min,
+            'max': self.slider_max,
+            'answer': self.answer,
+        }
 
 
     def __str__(self):
         return "<SliderQuestion: " + self.text + ", [" + str(self.slider_min) + \
                 " to " + str(self.slider_max) + ", answer=" + str(self.answer) + "]>" 
-        
+
+
 
 
 class Response(models.Model):
@@ -221,6 +301,8 @@ class ChoiceAnswer(models.Model):
         return "<ChoiceAnswer: Response=" + self.answer.response.name + \
                 ", Question=" + self.answer.question.text + \
                 ", Choice=" + self.choice.text + ">"
+
+
 
 class SliderAnswer(ResponseAnswer):
     """

@@ -202,6 +202,29 @@ class QuizTests(TransactionTestCase):
     Quizzes and their data.
     """
 
+    def test_quiz_json(self):
+        quiz = Quiz.objects.create()
+        q1 = MultipleChoiceQuestion.objects.create(quiz=quiz)
+        c = QuestionChoice.objects.create(question=q1,answer=True)
+        q2 = SliderQuestion.objects.create(quiz=quiz)
+
+        json = {
+            'uuid': quiz.user_uuid,
+            'questions': [q1.json(), q2.json()]
+        }
+        self.assertEquals(quiz.json(), json)
+
+
+    def test_quiz_json_no_question(self):
+        quiz = Quiz.objects.create()
+
+        json = {
+            'uuid': quiz.user_uuid,
+            'questions': []
+        }
+        self.assertEquals(quiz.json(), json)
+
+
     def test_quiz_str_with_questions_and_responses(self):
         """
         The string representation of the quiz object should display
@@ -359,6 +382,48 @@ class MultipleChoiceQuestionTests(TransactionTestCase):
         
         self.assertRaises(ValidationError, q.is_checklist_question)
 
+
+    def test_multiple_choice_json_with_choices_single_answer(self):
+        """
+        json() should return a json-formatted dictionary of everything the
+        client might need to display this question, such as id, text, choices,
+        and whether the question has multiple answers (is a checklist question)
+        """
+        quiz = Quiz.objects.create()
+        q = MultipleChoiceQuestion.objects.create(quiz=quiz, text="question")
+        c1 = QuestionChoice.objects.create(question=q, text="choice1")
+        c2 = QuestionChoice.objects.create(question=q, text="choice2")
+        c3 = QuestionChoice.objects.create(question=q, text="choice3", answer=True)
+
+        json = {
+            'id': q.id,
+            'text': 'question',
+            'choices': [c1.json(), c2.json(), c3.json()],
+            'is_checklist': False
+        }
+        self.assertEquals(q.json(), json)
+
+
+    def test_multiple_choice_json_with_choices_checklist(self):
+        """
+        json() should return a json-formatted dictionary of everything the
+        client might need to display this question, such as id, text, choices,
+        and whether the question has multiple answers (is a checklist question)
+        """
+        quiz = Quiz.objects.create()
+        q = MultipleChoiceQuestion.objects.create(quiz=quiz, text="question")
+        c1 = QuestionChoice.objects.create(question=q, text="choice1", answer=True)
+        c2 = QuestionChoice.objects.create(question=q, text="choice2", answer=True)
+        c3 = QuestionChoice.objects.create(question=q, text="choice3")
+
+        json = {
+            'id': q.id,
+            'text': 'question',
+            'choices': [c1.json(), c2.json(), c3.json()],
+            'is_checklist': True
+        }
+        self.assertEquals(q.json(), json)
+
         
     def test_multiple_choice_str_with_choices(self):
         """
@@ -422,6 +487,35 @@ class QuestionChoiceTests(TransactionTestCase):
         self.assertEquals(c_str, str(c))
 
 
+    def test_question_choice_json_is_not_answer(self):
+        """
+        json() should return a json-formatted dictionary
+        """
+        quiz = Quiz.objects.create()
+        q = MultipleChoiceQuestion.objects.create(quiz=quiz)
+        c = QuestionChoice.objects.create(question=q, text="choice text", answer=False)
+
+        json = {
+            'id': c.id,
+            'text': 'choice text',
+            'answer': False,
+        }
+        self.assertEquals(c.json(), json)
+        
+
+    def test_question_choice_json_is_answer(self):
+        quiz = Quiz.objects.create()
+        q = MultipleChoiceQuestion.objects.create(quiz=quiz)
+        c = QuestionChoice.objects.create(question=q, text="choice text", answer=True)
+
+        json = {
+            'id': c.id,
+            'text': 'choice text',
+            'answer': True,
+        }
+        self.assertEquals(c.json(), json)
+
+
 
 class SliderQuestionTests(TransactionTestCase):
     """
@@ -469,6 +563,25 @@ class SliderQuestionTests(TransactionTestCase):
         self.assertRaises(ValidationError, c1.save)
         c2 = SliderQuestion(quiz=quiz, slider_min = 3, slider_max=8, answer=2)
         self.assertRaises(ValidationError, c2.save)
+
+    def test_slider_question_json(self):
+        """
+        json() should return a json-formatted dictionary of everything the
+        client would need to display the question.
+        """
+        quiz = Quiz.objects.create()
+        q = SliderQuestion(quiz=quiz, text=" This is a question. ",
+                slider_min=3, slider_max=17, answer=5)
+
+        json = {
+            'id': q.id,
+            'text': ' This is a question. ',
+            'min': 3,
+            'max': 17,
+            'answer': 5
+        }
+
+        self.assertEquals(json, q.json())
 
 
     def test_slider_question_str(self):
@@ -662,4 +775,3 @@ class SliderAnswerTests(TransactionTestCase):
         answer = SliderAnswer.objects.create(response=response, question=q, answer=7)
 
         answer_str = "<SliderAnswer: Response=Benjamin, Question=Questions, Answer=7>"
-
