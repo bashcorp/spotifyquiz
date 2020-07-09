@@ -11,20 +11,19 @@ from quiz.models import Quiz
 access_code = None
 refresh = False
 
-react_homepage = 'spotify-quiz/build/index.html'
+react_mainpage = 'index.html'
 
 def index(request):
-    return render(request, react_homepage)
+    return render(request, react_mainpage)
 
 def quiz(request, uuid):
     quiz = Quiz.objects.filter(user_uuid=uuid)[0]
 
     if quiz:
-        return render(request, react_homepage, context={'quiz': quiz.json()})
+        return render(request, react_mainpage, context={'quiz': quiz.json()})
 
     #TODO Add error page
-    return render(request, react_homepage)
-    
+    return render(request, react_mainpage)
 
 def login(request):
     redirect_view = 'index'
