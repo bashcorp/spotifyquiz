@@ -1,16 +1,10 @@
-To have user's login, redirect them to /login/
-
-Dashboard at: /dashboard/
-
-    Start Quiz button redirects to: /quiz/<quiz_id>/
-
-
-
-The quiz: /quiz/<quiz_id>/
-When submit, redirect to results: 
-
-/results
-
-
+Homepage:   /
+Dashboard:  /dashboard/
+Quiz:       /quiz/<quiz_id>/
+Results:    /results/           (a user be taken to this screen after hitting
+                                 submit, which will provide them their own
+                                 results. I guess if you just go to this page
+                                 without having just taken a quiz, that would
+                                 show them nothing? Let's talk about this)
 
 
