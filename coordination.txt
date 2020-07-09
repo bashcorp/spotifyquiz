@@ -1,5 +1,16 @@
-To have user's login, redirect them to /login
+To have user's login, redirect them to /login/
 
-Quiz at: /quiz/<quiz_id>
+Dashboard at: /dashboard/
+
+    Start Quiz button redirects to: /quiz/<quiz_id>/
+
+
+
+The quiz: /quiz/<quiz_id>/
+When submit, redirect to results: 
+
+/results
+
+
 
 
