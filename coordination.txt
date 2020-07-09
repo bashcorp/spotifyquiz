@@ -8,3 +8,23 @@ Results:    /results/           (a user be taken to this screen after hitting
                                  show them nothing? Let's talk about this)
 
 
+
+------Passing data through a URL request------
+When the user goes to a url, let's say "website.com/quiz/<quiz_uuid>", a
+request goes to the server. The server has to respond to that request with an
+HTML page. But Django also gives me the option to include JSON data along with
+that HTML page. So it would be great, when you go to /quiz/<quiz_uuid>, if the
+server could just pass the quiz data along with the HTML page.
+
+There is a way to do this, but the issue is, the data is only passed along
+when Django renders whatever HTML it has on the server (which is
+'public/index.html'). All of React's "html" is really Javascript, which
+apparently means its rendered on the browser, not on the server.
+
+So normally, you could grab that quiz data right from the Quiz HTML page. But
+because you're using react, it's not as simple. You need to grab it from the
+HTML file that is rendered on the server (public.html) and then store it so you
+can use it later in your React code.
+
+Check this out: https://stackoverflow.com/questions/43456959/how-get-context-react-using-django
+I haven't tried this, though. So maybe I'm totally wrong
