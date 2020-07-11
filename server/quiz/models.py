@@ -9,7 +9,8 @@ class Quiz(models.Model):
     Stores a quiz associated with a given spotify user. Holds the quiz's
     questions and all taker's responses to it.
     """
-    user_uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, blank=False)
+    user_id = models.CharField(primary_key=True, max_length=50, editable=False)
 
     # questions (Question objects)
     # responses (Response objects)
@@ -24,12 +25,12 @@ class Quiz(models.Model):
         questions = [q.json() for q in self.questions.all()]
 
         return {
-            'uuid': self.user_uuid,
+            'uuid': self.uuid,
             'questions': questions
         }
 
     def __str__(self):
-        return "<Quiz: " + str(self.user_uuid) + ", Questions=[" + \
+        return "<Quiz: " + str(self.uuid) + ", Questions=[" + \
                 ", ".join(question.text for question in self.questions.all())\
                 + "], Responses=[" + \
                 ", ".join(response.name for response in self.responses.all()) + "]>"
@@ -205,7 +206,7 @@ class Response(models.Model):
     # answers (ResponseAnswer objects)
 
     def __str__(self):
-        return "<Response: Quiz=" + str(self.quiz.user_uuid) + ", name=" + self.name + ">"
+        return "<Response: Quiz=" + str(self.quiz.uuid) + ", name=" + self.name + ">"
 
 
 class ResponseAnswer(PolymorphicModel):

@@ -51,7 +51,7 @@ class ParentFieldsAreRequiredTests(TransactionTestCase):
         Trying to create a ResponseAnswer with no associated Response
         should raise an error.
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         q = Question.objects.create(quiz=quiz)
         self.assertRaises(ValidationError, ResponseAnswer.objects.create, question=q)
         self.assertRaises(ValidationError, MultipleChoiceAnswer.objects.create, question=q)
@@ -63,7 +63,7 @@ class ParentFieldsAreRequiredTests(TransactionTestCase):
         Trying to create a ResponseAnswer with no associated Question
         should raise an error.
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         r = Response.objects.create(quiz=quiz)
         self.assertRaises(ValidationError, ResponseAnswer.objects.create, response=r)
         self.assertRaises(ValidationError, MultipleChoiceAnswer.objects.create, response=r)
@@ -75,7 +75,7 @@ class ParentFieldsAreRequiredTests(TransactionTestCase):
         Trying to create a ChoiceAnswer with no associated
         MultipleChoiceAnswer should raise an error.
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz)
         c = QuestionChoice.objects.create(question=q)
         self.assertRaises(ValidationError, ChoiceAnswer.objects.create, choice=c)
@@ -86,7 +86,7 @@ class ParentFieldsAreRequiredTests(TransactionTestCase):
         Trying to create a ChoiceAnswer with no associated QuestionChoice
         should raise an error.
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         question = MultipleChoiceQuestion.objects.create(quiz=quiz)
         choice = QuestionChoice.objects.create(question=question)
         response = Response.objects.create(quiz=quiz)
@@ -203,23 +203,23 @@ class QuizTests(TransactionTestCase):
     """
 
     def test_quiz_json(self):
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         q1 = MultipleChoiceQuestion.objects.create(quiz=quiz)
         c = QuestionChoice.objects.create(question=q1,answer=True)
         q2 = SliderQuestion.objects.create(quiz=quiz)
 
         json = {
-            'uuid': quiz.user_uuid,
+            'uuid': quiz.uuid,
             'questions': [q1.json(), q2.json()]
         }
         self.assertEquals(quiz.json(), json)
 
 
     def test_quiz_json_no_question(self):
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
 
         json = {
-            'uuid': quiz.user_uuid,
+            'uuid': quiz.uuid,
             'questions': []
         }
         self.assertEquals(quiz.json(), json)
@@ -230,13 +230,13 @@ class QuizTests(TransactionTestCase):
         The string representation of the quiz object should display
         its uuid, questions, and responses.
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         q1 = SliderQuestion.objects.create(quiz=quiz, text="slider")
         q2 = MultipleChoiceQuestion.objects.create(quiz=quiz) 
         r1 = Response.objects.create(quiz=quiz, name="cash")
         r2 = Response.objects.create(quiz=quiz, name="ben")
 
-        quiz_str = "<Quiz: " + str(quiz.user_uuid) + \
+        quiz_str = "<Quiz: " + str(quiz.uuid) + \
             ", Questions=[slider, default question], Responses=[cash, ben]>"
         self.assertEquals(quiz_str, str(quiz))
 
@@ -246,11 +246,11 @@ class QuizTests(TransactionTestCase):
         The string representation of the quiz object should display
         its uuid, questions, and responses.
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         q1 = SliderQuestion.objects.create(quiz=quiz, text="slider")
         q2 = MultipleChoiceQuestion.objects.create(quiz=quiz) 
 
-        quiz_str = "<Quiz: " + str(quiz.user_uuid) + \
+        quiz_str = "<Quiz: " + str(quiz.uuid) + \
             ", Questions=[slider, default question], Responses=[]>"
         self.assertEquals(quiz_str, str(quiz))
 
@@ -260,11 +260,11 @@ class QuizTests(TransactionTestCase):
         The string representation of the quiz object should display
         its uuid, questions, and responses.
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         r1 = Response.objects.create(quiz=quiz, name="cash")
         r2 = Response.objects.create(quiz=quiz, name="ben")
 
-        quiz_str = "<Quiz: " + str(quiz.user_uuid) + \
+        quiz_str = "<Quiz: " + str(quiz.uuid) + \
             ", Questions=[], Responses=[cash, ben]>"
         self.assertEquals(quiz_str, str(quiz))
 
@@ -274,9 +274,9 @@ class QuizTests(TransactionTestCase):
         The string representation of the quiz object should display
         its uuid, questions, and responses.
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         
-        quiz_str = "<Quiz: " + str(quiz.user_uuid) + ", Questions=[], Responses=[]>"
+        quiz_str = "<Quiz: " + str(quiz.uuid) + ", Questions=[], Responses=[]>"
         self.assertEquals(quiz_str, str(quiz))
 
 
@@ -292,7 +292,7 @@ class QuestionTests(TransactionTestCase):
         The string representation of the Question object should display
         its text.
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         q = Question.objects.create(quiz=quiz, text="question 2.5")
 
         q_str = "<Question: question 2.5>"
@@ -311,7 +311,7 @@ class MultipleChoiceQuestionTests(TransactionTestCase):
         answers() should return a list of all the question's choices that are
         marked as correct answers.
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz)
         c1 = QuestionChoice.objects.create(question=q)
         c2 = QuestionChoice.objects.create(question=q)
@@ -329,7 +329,7 @@ class MultipleChoiceQuestionTests(TransactionTestCase):
         should throw an error, because every question should have at least
         one right answer.
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz)
         c1 = QuestionChoice.objects.create(question=q)
         c2 = QuestionChoice.objects.create(question=q)
@@ -343,7 +343,7 @@ class MultipleChoiceQuestionTests(TransactionTestCase):
         is_checklist_question() returns true if the given
         MultipleChoiceQuestion has more than one correct answer.
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz)
         c1 = QuestionChoice.objects.create(question=q)
         c2 = QuestionChoice.objects.create(question=q)
@@ -358,7 +358,7 @@ class MultipleChoiceQuestionTests(TransactionTestCase):
         is_checklist_question() returns false if the given
         MultipleChoiceQuestion has only one correct answer.
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz)
         c1 = QuestionChoice.objects.create(question=q)
         c2 = QuestionChoice.objects.create(question=q)
@@ -374,7 +374,7 @@ class MultipleChoiceQuestionTests(TransactionTestCase):
         are marked as correct answers, since each question should have
         at least one correct answer.
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz)
         c1 = QuestionChoice.objects.create(question=q)
         c2 = QuestionChoice.objects.create(question=q)
@@ -389,7 +389,7 @@ class MultipleChoiceQuestionTests(TransactionTestCase):
         client might need to display this question, such as id, text, choices,
         and whether the question has multiple answers (is a checklist question)
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz, text="question")
         c1 = QuestionChoice.objects.create(question=q, text="choice1")
         c2 = QuestionChoice.objects.create(question=q, text="choice2")
@@ -410,7 +410,7 @@ class MultipleChoiceQuestionTests(TransactionTestCase):
         client might need to display this question, such as id, text, choices,
         and whether the question has multiple answers (is a checklist question)
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz, text="question")
         c1 = QuestionChoice.objects.create(question=q, text="choice1", answer=True)
         c2 = QuestionChoice.objects.create(question=q, text="choice2", answer=True)
@@ -430,7 +430,7 @@ class MultipleChoiceQuestionTests(TransactionTestCase):
         The string representation of MultipleChoiceQuestion should display
         its text and choices.
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz, text="question test")
         c1 = QuestionChoice.objects.create(question=q, text="choice1")
         c2 = QuestionChoice.objects.create(question=q, text="c2")
@@ -446,7 +446,7 @@ class MultipleChoiceQuestionTests(TransactionTestCase):
         The string representation of MultipleChoiceQuestion should display
         its text and choices.
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz, text="question test")
 
         q_str = "<MultipleChoiceQuestion: question test, Choices=[]>"
@@ -466,7 +466,7 @@ class QuestionChoiceTests(TransactionTestCase):
         The string representation of QuestionChoice should display its
         text and whether or not it's a correct answer.
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz)
         c = QuestionChoice.objects.create(question=q, text="choice text", answer=True)
 
@@ -479,7 +479,7 @@ class QuestionChoiceTests(TransactionTestCase):
         The string representation of QuestionChoice should display its
         text and whether or not it's a correct answer.
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz)
         c = QuestionChoice.objects.create(question=q, text="choice text", answer=False)
 
@@ -491,7 +491,7 @@ class QuestionChoiceTests(TransactionTestCase):
         """
         json() should return a json-formatted dictionary
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz)
         c = QuestionChoice.objects.create(question=q, text="choice text", answer=False)
 
@@ -504,7 +504,7 @@ class QuestionChoiceTests(TransactionTestCase):
         
 
     def test_question_choice_json_is_answer(self):
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz)
         c = QuestionChoice.objects.create(question=q, text="choice text", answer=True)
 
@@ -529,7 +529,7 @@ class SliderQuestionTests(TransactionTestCase):
         A SliderQuestion should be created without errors if the values for min, max, and
         answer are in the right range.
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         try: 
             q = SliderQuestion.objects.create(quiz=quiz)
             q = SliderQuestion.objects.create(quiz=quiz, slider_min = 3, slider_max=6, answer=5)
@@ -546,7 +546,7 @@ class SliderQuestionTests(TransactionTestCase):
         If a slider's question minimum value is not less than its max
         value, then creating it should raise an error.
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         c1 = SliderQuestion(quiz=quiz, slider_min = 0, slider_max=0, answer=0)
         self.assertRaises(ValidationError, c1.save)
         c2 = SliderQuestion(quiz=quiz, slider_min = 10, slider_max=3, answer=7)
@@ -558,7 +558,7 @@ class SliderQuestionTests(TransactionTestCase):
         If a slider's correct answer value is not in the range created by
         min and max, then creating it should raise an error.
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         c1 = SliderQuestion(quiz=quiz, slider_min = 3, slider_max=8, answer=9)
         self.assertRaises(ValidationError, c1.save)
         c2 = SliderQuestion(quiz=quiz, slider_min = 3, slider_max=8, answer=2)
@@ -569,7 +569,7 @@ class SliderQuestionTests(TransactionTestCase):
         json() should return a json-formatted dictionary of everything the
         client would need to display the question.
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         q = SliderQuestion(quiz=quiz, text=" This is a question. ",
                 slider_min=3, slider_max=17, answer=5)
 
@@ -589,7 +589,7 @@ class SliderQuestionTests(TransactionTestCase):
         The string representation of SliderQuestion should display its
         text and its minimum, maximum, and answer values.
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         q = SliderQuestion(quiz=quiz, slider_min = -4, slider_max=9, answer=3, text="question1")
 
         q_str = "<SliderQuestion: question1, [-4 to 9, answer=3]>"
@@ -611,10 +611,10 @@ class ResponseTests(TransactionTestCase):
         associated quiz's uuid and the name of the user who made
         this response.
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         response = Response.objects.create(quiz=quiz, name="Cassius")
 
-        r_str = "<Response: Quiz=" + str(quiz.user_uuid) + ", name=Cassius>"
+        r_str = "<Response: Quiz=" + str(quiz.uuid) + ", name=Cassius>"
         self.assertEquals(r_str, str(response))
 
 
@@ -632,7 +632,7 @@ class ResponseAnswerTests(TransactionTestCase):
         When you add a ResponseAnswer to a certain Response, and it links
         to a Question in the associated Quiz, everything should work fine.
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         q1 = Question.objects.create(quiz=quiz)
         response = Response.objects.create(quiz=quiz)
         try:
@@ -646,8 +646,8 @@ class ResponseAnswerTests(TransactionTestCase):
         When you add an Answer to a certain Response, the Question that the
         it answers needs to be in the Quiz that the Response is responding to.
         """
-        quiz = Quiz.objects.create()
-        quiz1 = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
+        quiz1 = Quiz.objects.create(user_id='cass')
         q1 = Question.objects.create(quiz=quiz1)
         response = Response.objects.create(quiz=quiz)
         self.assertRaises(ValidationError, ResponseAnswer.objects.create,
@@ -659,7 +659,7 @@ class ResponseAnswerTests(TransactionTestCase):
         The string representation of ResponseAnswer should display its
         the responder's name and the associated question text.
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         q = Question.objects.create(quiz=quiz, text="question text")
         response = Response.objects.create(quiz=quiz, name="Ben")
         a = ResponseAnswer.objects.create(response=response, question=q)
@@ -681,7 +681,7 @@ class MultipleChoiceAnswerTests(TransactionTestCase):
         The string representation of MultipleChoiceAnswer should display its
         responder's name and the choices they picked.
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz, text="q1")
         c1 = QuestionChoice.objects.create(question=q, text="c1")
         c2 = QuestionChoice.objects.create(question=q, text="c2")
@@ -703,7 +703,7 @@ class MultipleChoiceAnswerTests(TransactionTestCase):
         The string representation of MultipleChoiceAnswer should display its
         responder's name and the choices they picked.
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz, text="q1")
         c1 = QuestionChoice.objects.create(question=q, text="c1")
         c2 = QuestionChoice.objects.create(question=q, text="c2")
@@ -731,7 +731,7 @@ class ChoiceAnswerTests(TransactionTestCase):
         of those ChoiceAnswers represents a choice that is not in the question,
         an error should be raised.
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         q1 = MultipleChoiceQuestion.objects.create(quiz=quiz)
         q2 = MultipleChoiceQuestion.objects.create(quiz=quiz)
         c1 = QuestionChoice.objects.create(question=q1)
@@ -746,7 +746,7 @@ class ChoiceAnswerTests(TransactionTestCase):
         The string representation of ResponseChoice should display its
         responder's name, question text, and choice.
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz, text="Question text")
         c = QuestionChoice.objects.create(question=q, text="c11")
         response = Response.objects.create(quiz=quiz, name="Cash")
@@ -769,7 +769,7 @@ class SliderAnswerTests(TransactionTestCase):
         The string representation of a SliderAnswer should display its
         responder's name, question text, and answer.
         """
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id='cassius')
         q = SliderQuestion.objects.create(quiz=quiz, text="Questions")
         response = Response.objects.create(quiz=quiz, name="Benjamin")
         answer = SliderAnswer.objects.create(response=response, question=q, answer=7)

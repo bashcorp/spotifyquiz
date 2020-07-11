@@ -44,7 +44,7 @@ you have to use them in slightly different ways.
 AUTHORIZATION_CODE = 'authorization_code'
 AUTHORIZATION_IS_REFRESH = 'authorization_code_is_refresh'
 
-
+USER_ID = 'user_id'
 
 
 
@@ -57,13 +57,64 @@ def set_authorization_code(session, code):
     session[AUTHORIZATION_IS_REFRESH] = False
 
 
-def set_refresh_code(session, code):
+def set_refresh_token(session, token):
     """
     Stores a refresh token in the given user session. Makes sure it's
     identified as a refresh token and not an authorization code.
     """
-    session[AUTHORIZATION_CODE] = code
+    session[AUTHORIZATION_CODE] = token
     session[AUTHORIZATION_IS_REFRESH] = True
+
+
+def set_user_id(session, id):
+    """
+    Stores the Spotify ID of the logged-in user in the given session.
+    """
+    session[USER_ID] = id
+
+
+def get_user_id(session):
+    """
+    Returns the Spotify ID of the user logged in to the given session.
+    """
+    return session.get(USER_ID)
+
+
+def is_user_logged_in(session):
+    """
+    Returns whether or not a user is logged into the given session. Does
+    this by checking whether the session's AUTHORIZATION_CODE and USER_ID
+    variables are set.
+    """
+    if session.get(AUTHORIZATION_CODE) and session.get(USER_ID):
+        return True
+    return False
+
+
+def logout(session):
+    """
+    Logs the user out from the given session. In other words, removes any
+    user uri and authorization code or refresh token from the session, so the
+    user will have to login next time they do something that requires that
+    authorization. 
+    """
+    set_authorization_code(session, None)
+    set_user_id(session, None)
+
+
+def make_authorized_get_request(session, url, data={}):
+    token = request_authorized_token(session)
+    if not token:
+        return None
+
+    headers = {
+        'Authorization': "Bearer "+ token
+    }
+    full_url = "https://api.spotify.com" + url
+
+    results = requests.get(url=full_url, data=data, headers=headers)
+    return results
+
 
 
 def request_authorized_token(session):
@@ -71,6 +122,8 @@ def request_authorized_token(session):
     Requests an access token from Spotify, which is used to request personal
     data, and returns that access token. If Spotify also returns a refresh
     token, saves that in the user session.
+    Assumes that the user is already logged in. If a user has not logged in
+    (the authorization code is None), then returns None.
     """
 
     # If there is no authorization code or refresh token, you can't get an
@@ -91,7 +144,7 @@ def request_authorized_token(session):
         data = {
             'grant_type': 'authorization_code',
             'code': code,
-            'redirect_uri': 'http://localhost:8000/logged_in'
+            'redirect_uri': 'http://localhost:8000/logged_in?redirect=dashboard'
         }
 
     # The rest of the request's data (client authentication)
@@ -104,24 +157,18 @@ def request_authorized_token(session):
 
     # Make the request
     result = requests.post(url, data=data, headers=headers)
+    print(result.status_code)
 
     # If Spotify returned a refresh token, save it in the session
     refresh_token = result.json().get('refresh_token')
     if refresh_token:
-        set_refresh_code(request, refresh_token)
+        set_refresh_token(session, refresh_token)
 
     # Get the access token and return in
     access_token = result.json().get('access_token')
     return access_token
         
 
-def logout(session):
-    """
-    Logs the user out from the given session. In other words, removes any
-    authorization code or refresh token from the session, so the user will
-    have to login next time they do something that requires that authorization. 
-    """
-    set_authorization_code(session, None)
 
 
 def request_noauth_access_token():
