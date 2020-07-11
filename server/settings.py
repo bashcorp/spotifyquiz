@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from colorlog import ColoredFormatter
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -134,3 +135,52 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, '../client/spotify-quiz/build/'),
     os.path.join(BASE_DIR, '../client/spotify-quiz/build/static/')
 ]
+
+
+if DEBUG:
+    log_level = 'INFO'
+    formatter = 'concise'
+else:
+    log_level = 'WARNING'
+    formatter = 'verbose'
+
+log_colors = {
+    'DEBUG':    'bold_black',
+    'INFO':     'white',
+    'WARNING':  'yellow',
+    'ERROR':    'red',
+    'CRITICAL': 'bold_red',
+}
+
+LOGGING = {
+    'version':1,
+    'disable_existing_loggers':False,
+    'formatters': {
+        'verbose': {
+            '()': 'colorlog.ColoredFormatter',
+            'format': "%(log_color)s[%(levelname)s %(asctime)s]\t%(message)s",
+            'log_colors': log_colors,
+        },
+        'concise': {
+            '()': 'colorlog.ColoredFormatter',
+            'format': "%(log_color)s[%(levelname)s]\t%(message)s",
+            'log_colors': log_colors,
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': formatter,
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': log_level,
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'WARNING',
+        },
+    },
+}
