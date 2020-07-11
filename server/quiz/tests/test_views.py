@@ -1,6 +1,8 @@
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.conf import settings
-from selenium.webdriver.firefox.webdriver import WebDriver
+from django.test.client import Client
+from django.urls import reverse
+from selenium.webdriver import Firefox
 
 import urllib.parse as urlparse
 from urllib.parse import parse_qs
@@ -11,59 +13,75 @@ import credentials
 
 import os
 
-def create_session_store():
+def create_session_store(key):
     from importlib import import_module
     engine = import_module(settings.SESSION_ENGINE)
-    store = engine.SessionStore()
+    store = engine.SessionStore(session_key=key)
     store.save()
     return store
+
+cash_user_id = "21a452hnlj6ppe3gcvy3yx3di"
 
 class Tests(StaticLiveServerTestCase):
     port = 8000
 
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
-        
+    def setUp(self):
+        # Decrypt and load the credentials for signing into Spotify.
         data = credentials.decryptFile("credentials", "key.txt")
         if(data):
-            cls.spotify_username = data.split("'")[0]
-            cls.spotify_password = data.split("'")[1]
+            self.spotify_username = data.split("'")[0]
+            self.spotify_password = data.split("'")[1]
+
+        # Set up Selenium
+        self.browser = Firefox()
+        self.browser.implicitly_wait(3)
+    
+
+    def tearDown(self):
+        self.browser.implicitly_wait(3)
+        self.browser.quit()
 
 
-    def setUpSelenium(self):
-        selenium = WebDriver()
-        selenium.implicitly_wait(10)
-        return selenium
-
-    def tearDownSelenium(self, selenium):
-        selenium.quit()
 
     def test_login(self):
-        selenium = self.setUpSelenium()
+        """
+        Logging into the site should set the session's authorization_code,
+        user_id, and redirect to the dashboard
+        """
 
-        selenium.get('%s%s' % (self.live_server_url, '/login/'))
-        login_with_fb_btn = selenium.find_element_by_class_name('btn-facebook')
+        # Redirect to 
+        self.browser.get(self.live_server_url +  reverse('login'))
+
+        login_with_fb_btn = self.browser.find_element_by_class_name('btn-facebook')
         login_with_fb_btn.click()
 
-        email_input = selenium.find_element_by_id('email')
+        email_input = self.browser.find_element_by_id('email')
         email_input.send_keys(self.spotify_username)
-        password_input = selenium.find_element_by_id('pass')
+        password_input = self.browser.find_element_by_id('pass')
         password_input.send_keys(self.spotify_password)
 
-        login_btn = selenium.find_element_by_id('loginbutton')
+        login_btn = self.browser.find_element_by_id('loginbutton')
         login_btn.click()
 
-        auth_accept_btn = selenium.find_element_by_id('auth-accept')
+
+        auth_accept_btn = self.browser.find_element_by_id('auth-accept')
         auth_accept_btn.click()
+        
 
-        url = selenium.current_url
+        id = self.browser.get_cookie('sessionid').get('value')
+        session = create_session_store(id)
 
-        self.assertEqual(url, 'http://localhost:8000/')
+        self.assertIsNotNone(session.get(spotify.AUTHORIZATION_CODE))
+        self.assertFalse(session.get(spotify.AUTHORIZATION_IS_REFRESH))
+        self.assertEqual(session.get(spotify.USER_ID), cash_user_id)
+        
 
-        self.tearDownSelenium(selenium)
+        curr_url = self.browser.current_url
 
+        self.assertEqual(curr_url, self.live_server_url + reverse('dashboard'))
+
+
+"""
     def test_login_fail(self):
         selenium = self.setUpSelenium()
 
@@ -88,3 +106,4 @@ class Tests(StaticLiveServerTestCase):
 
         self.tearDownSelenium(selenium)
         
+        """
