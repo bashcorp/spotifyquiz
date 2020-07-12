@@ -142,6 +142,7 @@ def get_noauth_access_token():
     return noauth_access_token
 
 
+
 def is_user_logged_in(session):
     """
     Returns whether or not a user is logged into the given session. Does
@@ -161,6 +162,9 @@ def make_authorized_request(session, url, data={}):
     Makes a GET request to Spotify at the given URL endpoint, with the
     given data attached to the request. This request should be
     to an endpoint that requires a user's authorization.
+
+    The user must be logged in for this to work. If no user is logged
+    in, this will raise an exception.
     """
     token = get_auth_access_token(session)
 
@@ -186,7 +190,7 @@ def make_noauth_request(url, data={}):
     }
     full_url = 'https://api.spotify.com' + url
 
-    results = request.get(url=full_url, data=data, headers=headers)
+    results = requests.get(url=full_url, data=data, headers=headers)
     return results
 
 
@@ -233,26 +237,28 @@ def login(session, authorization_code):
         'Authorization': 'Basic '+ str(encoded_auth, "utf-8"),
     }
     url = 'https://accounts.spotify.com/api/token'
-    result = requests.post(url, data=data, headers=headers)
+    results = requests.post(url, data=data, headers=headers)
 
+    if results.status_code != 200:
+        logger.error("Logging in: Requesting Authorized Access Token: POST " +
+                str(results.status_code))
+        return False
+
+    json = results.json()
     # Since we give Spotify an authorization code, it should always return a
     # refresh token. If not, this module needs to be restructured.
-    refresh_token = result.json().get('refresh_token')
+    refresh_token = json.get('refresh_token')
     if not refresh_token:
-        logger.error("On Login, Spotify didn't return a refresh_token with \
-                the access token. Any further API calls will not work.")
+        logger.critical("On Login, Spotify didn't return a refresh_token with \
+                the access token. Any further API calls will not work. This \
+                suggests an error with the Spotify module.")
         return False
     set_refresh_token(session, refresh_token)
 
     # Store the access token. If no access token was returned, then something
     # went wrong with the above GET request.
-    json = result.json()
     access_token = json.get('access_token')
     timeout = json.get('expires_in')
-    if not access_token:
-        logger.error("On Login, Spotify didn't return an access_token. Login \
-                fails.")
-        return False
 
     set_auth_access_token(session, access_token, timeout)
 

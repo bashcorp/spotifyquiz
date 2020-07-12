@@ -14,6 +14,10 @@ import credentials
 import os
 
 def create_session_store(key):
+    """
+    Creates and returns an instance of session with the given session key.
+    This is used to access the session that Selenium's browser is using.
+    """
     from importlib import import_module
     engine = import_module(settings.SESSION_ENGINE)
     store = engine.SessionStore(session_key=key)
@@ -22,7 +26,7 @@ def create_session_store(key):
 
 cash_user_id = "21a452hnlj6ppe3gcvy3yx3di"
 
-class Tests(StaticLiveServerTestCase):
+class LoginTests(StaticLiveServerTestCase):
     port = 8000
 
     def setUp(self):
