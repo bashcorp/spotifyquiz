@@ -74,19 +74,12 @@ def logged_in(request):
         logger.error("Login to Spotify: redirect didn't provide authorization code, but no error was included in query string")
         return redirect('index')
 
-    # Save the authorization code
-    spotify.set_authorization_code(request.session, request.GET.get('code'))
-
-
-    # Get the user's Spotify URI and store it in the session
-    url = '/v1/me'
-    user_data = spotify.make_authorized_get_request(request.session, url=url)
-
-    if user_data.status_code != 200:
-        logger.warning("Getting user's Spotify id when logging in: POST " + str(user_data.status_code) + ' url:' + url)
+    
+    if not spotify.login(request.session, code):
+        # TODO
+        # Error handling, login failed
+        logger.error("Logging into session failed")
         return redirect('index')
-
-    spotify.set_user_id(request.session, user_data.json().get('uri'))
 
 
     # Redirect to the desired page

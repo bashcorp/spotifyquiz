@@ -71,8 +71,8 @@ class Tests(StaticLiveServerTestCase):
         id = self.browser.get_cookie('sessionid').get('value')
         session = create_session_store(id)
 
-        self.assertIsNotNone(session.get(spotify.AUTHORIZATION_CODE))
-        self.assertFalse(session.get(spotify.AUTHORIZATION_IS_REFRESH))
+        self.assertIsNotNone(session.get(spotify.REFRESH_TOKEN))
+        self.assertIsNotNone(session.get(spotify.AUTH_ACCESS_TOKEN))
         self.assertEqual(session.get(spotify.USER_ID), cash_user_id)
         
 
