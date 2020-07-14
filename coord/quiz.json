@@ -18,7 +18,7 @@
                 {
                     "id": 108,
                     "text": "Superman",
-                    "answer": false
+                    "answer": true 
                 },
                 {
                     "id": 109,
@@ -26,7 +26,7 @@
                     "answer": false
                 }
             ],
-            "is_checklist": false
+            "is_checklist": "check"
         },
         {
             "id": 33,
@@ -53,7 +53,7 @@
                     "answer": false
                 }
             ],
-            "is_checklist": false
+            "type": "mc"
         },
         {
             "id": 34,
@@ -61,6 +61,7 @@
             "min": 3,
             "max": 17,
             "answer": 11
+            "type": "slider"
         }
     ]
 }
