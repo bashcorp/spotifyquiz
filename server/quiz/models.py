@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from polymorphic.models import PolymorphicModel
+from django.utils.html import format_html_join, format_html
 
 import uuid
 
@@ -25,15 +26,23 @@ class Quiz(models.Model):
         questions = [q.json() for q in self.questions.all()]
 
         return {
-            'uuid': self.uuid,
+            'user_id': self.user_id,
             'questions': questions
         }
 
     def __str__(self):
-        return "<Quiz: " + str(self.uuid) + ", Questions=[" + \
+        return "<Quiz: " + str(self.user_id) + ", Questions=[" + \
                 ", ".join(question.text for question in self.questions.all())\
                 + "], Responses=[" + \
                 ", ".join(response.name for response in self.responses.all()) + "]>"
+
+    def _admin_get_quiz_questions(self):
+        """
+        Returns formatted HTML to be displayed on Django's admin site.
+        """
+        return format_html_join(
+                '\n', '<li>{}</li>',
+                ((q._admin_get_question(),) for q in self.questions.all()))
 
 
 class Question(PolymorphicModel):
@@ -47,7 +56,7 @@ class Question(PolymorphicModel):
     quiz = models.ForeignKey('Quiz', related_name='questions', null=False,
             on_delete=models.CASCADE)
 
-    text = models.CharField(max_length=50, default="default question")
+    text = models.CharField(max_length=100, default="default question")
 
     # responses (ResponseAnswer objects)
 
@@ -101,7 +110,7 @@ class MultipleChoiceQuestion(Question):
             'id': self.id,
             'text': self.text,
             'choices': choices,
-            'is_checklist': self.is_checklist_question()
+            'type': ('check' if self.is_checklist_question() else 'mc')
         }
 
 
@@ -109,6 +118,18 @@ class MultipleChoiceQuestion(Question):
         return "<MultipleChoiceQuestion: " + self.text + ", Choices=[" + \
         ", ".join((choice.text + (" (answer)" if choice.answer else "")) for choice in self.choices.all()) + "]>"
     
+
+    def _admin_get_question(self):
+        """
+        Returns formatted HTML to be displayed on Django's admin site.
+        """
+        choices = format_html_join(
+                '\n', '<li>{}{}</li>',
+                ((c.text,', answer' if c.answer else '',) for c in self.choices.all()),
+                )
+        return format_html('{}<br><ul>{}</ul>',
+                self.text,
+                choices)
 
 
 
@@ -121,7 +142,7 @@ class QuestionChoice(models.Model):
     question = models.ForeignKey("MultipleChoiceQuestion", null=False,
             related_name="choices", on_delete=models.CASCADE)
     answer = models.BooleanField(default=False)
-    text = models.CharField(default="default choice", max_length=50)
+    text = models.CharField(default="default choice", max_length=100)
 
     def json(self):
         """
@@ -131,7 +152,7 @@ class QuestionChoice(models.Model):
         return {
             'id': self.id,
             'text': self.text,
-            'answer': self.answer
+            'answer': self.answer,
         }
 
 
@@ -183,6 +204,7 @@ class SliderQuestion(Question):
             'min': self.slider_min,
             'max': self.slider_max,
             'answer': self.answer,
+            'type': 'slider',
         }
 
 
@@ -190,6 +212,15 @@ class SliderQuestion(Question):
         return "<SliderQuestion: " + self.text + ", [" + str(self.slider_min) + \
                 " to " + str(self.slider_max) + ", answer=" + str(self.answer) + "]>" 
 
+    def _admin_get_question(self):
+        """
+        Returns formatted HTML to be displayed on Django's admin site.
+        """
+        return format_html('{}<br><ul><li>{}</li><li>{}</li></ul>',
+                self.text,
+                'range: (' + str(self.slider_min) + ', ' + str(self.slider_max) + ')',
+                'answer: ' + str(self.answer)
+                )
 
 
 

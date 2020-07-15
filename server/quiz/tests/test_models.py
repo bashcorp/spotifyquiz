@@ -209,7 +209,7 @@ class QuizTests(TransactionTestCase):
         q2 = SliderQuestion.objects.create(quiz=quiz)
 
         json = {
-            'uuid': quiz.uuid,
+            'user_id': quiz.user_id,
             'questions': [q1.json(), q2.json()]
         }
         self.assertEquals(quiz.json(), json)
@@ -219,84 +219,20 @@ class QuizTests(TransactionTestCase):
         quiz = Quiz.objects.create(user_id='cassius')
 
         json = {
-            'uuid': quiz.uuid,
+            'user_id': quiz.user_id,
             'questions': []
         }
         self.assertEquals(quiz.json(), json)
 
 
-    def test_quiz_str_with_questions_and_responses(self):
-        """
-        The string representation of the quiz object should display
-        its uuid, questions, and responses.
-        """
-        quiz = Quiz.objects.create(user_id='cassius')
-        q1 = SliderQuestion.objects.create(quiz=quiz, text="slider")
-        q2 = MultipleChoiceQuestion.objects.create(quiz=quiz) 
-        r1 = Response.objects.create(quiz=quiz, name="cash")
-        r2 = Response.objects.create(quiz=quiz, name="ben")
-
-        quiz_str = "<Quiz: " + str(quiz.uuid) + \
-            ", Questions=[slider, default question], Responses=[cash, ben]>"
-        self.assertEquals(quiz_str, str(quiz))
-
-
-    def test_quiz_str_with_questions_no_responses(self):
-        """
-        The string representation of the quiz object should display
-        its uuid, questions, and responses.
-        """
-        quiz = Quiz.objects.create(user_id='cassius')
-        q1 = SliderQuestion.objects.create(quiz=quiz, text="slider")
-        q2 = MultipleChoiceQuestion.objects.create(quiz=quiz) 
-
-        quiz_str = "<Quiz: " + str(quiz.uuid) + \
-            ", Questions=[slider, default question], Responses=[]>"
-        self.assertEquals(quiz_str, str(quiz))
-
-
-    def test_quiz_str_with_responses_no_questions(self):
-        """
-        The string representation of the quiz object should display
-        its uuid, questions, and responses.
-        """
-        quiz = Quiz.objects.create(user_id='cassius')
-        r1 = Response.objects.create(quiz=quiz, name="cash")
-        r2 = Response.objects.create(quiz=quiz, name="ben")
-
-        quiz_str = "<Quiz: " + str(quiz.uuid) + \
-            ", Questions=[], Responses=[cash, ben]>"
-        self.assertEquals(quiz_str, str(quiz))
-
-
-    def test_quiz_str_no_questions_or_responses(self):
-        """
-        The string representation of the quiz object should display
-        its uuid, questions, and responses.
-        """
-        quiz = Quiz.objects.create(user_id='cassius')
-        
-        quiz_str = "<Quiz: " + str(quiz.uuid) + ", Questions=[], Responses=[]>"
-        self.assertEquals(quiz_str, str(quiz))
-
 
 
 class QuestionTests(TransactionTestCase):
     """
-    Tests the database model Question, which holds one Question in a Quiz, and all its
-    related data.
+    Tests the database model Question, which holds one Question in a Quiz, and
+    all its related data.
     """
-
-    def test_question_str(self):
-        """
-        The string representation of the Question object should display
-        its text.
-        """
-        quiz = Quiz.objects.create(user_id='cassius')
-        q = Question.objects.create(quiz=quiz, text="question 2.5")
-
-        q_str = "<Question: question 2.5>"
-        self.assertEquals(q_str, str(q))
+    pass
 
 
 
@@ -399,7 +335,7 @@ class MultipleChoiceQuestionTests(TransactionTestCase):
             'id': q.id,
             'text': 'question',
             'choices': [c1.json(), c2.json(), c3.json()],
-            'is_checklist': False
+            'type': 'mc'
         }
         self.assertEquals(q.json(), json)
 
@@ -420,38 +356,10 @@ class MultipleChoiceQuestionTests(TransactionTestCase):
             'id': q.id,
             'text': 'question',
             'choices': [c1.json(), c2.json(), c3.json()],
-            'is_checklist': True
+            'type': 'check'
         }
         self.assertEquals(q.json(), json)
 
-        
-    def test_multiple_choice_str_with_choices(self):
-        """
-        The string representation of MultipleChoiceQuestion should display
-        its text and choices.
-        """
-        quiz = Quiz.objects.create(user_id='cassius')
-        q = MultipleChoiceQuestion.objects.create(quiz=quiz, text="question test")
-        c1 = QuestionChoice.objects.create(question=q, text="choice1")
-        c2 = QuestionChoice.objects.create(question=q, text="c2")
-        c3 = QuestionChoice.objects.create(question=q, text="c3", answer=True)
-
-        q_str = "<MultipleChoiceQuestion: question test, Choices=[choice1, c2, c3 (answer)]>"
-
-        self.assertEquals(q_str, str(q))
-
-
-    def test_multiple_choice_str_no_choices(self):
-        """
-        The string representation of MultipleChoiceQuestion should display
-        its text and choices.
-        """
-        quiz = Quiz.objects.create(user_id='cassius')
-        q = MultipleChoiceQuestion.objects.create(quiz=quiz, text="question test")
-
-        q_str = "<MultipleChoiceQuestion: question test, Choices=[]>"
-
-        self.assertEquals(q_str, str(q))
 
 
 
@@ -460,32 +368,6 @@ class QuestionChoiceTests(TransactionTestCase):
     A database model that holds one choice of a MultipleChoiceAnswer. The choice
     itself is a string of text.
     """
-    
-    def test_choice_str_is_answer(self):
-        """
-        The string representation of QuestionChoice should display its
-        text and whether or not it's a correct answer.
-        """
-        quiz = Quiz.objects.create(user_id='cassius')
-        q = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        c = QuestionChoice.objects.create(question=q, text="choice text", answer=True)
-
-        c_str = "<Choice: choice text, answer>"
-        self.assertEquals(c_str, str(c))
-
-
-    def test_choice_str_is_not_answer(self):
-        """
-        The string representation of QuestionChoice should display its
-        text and whether or not it's a correct answer.
-        """
-        quiz = Quiz.objects.create(user_id='cassius')
-        q = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        c = QuestionChoice.objects.create(question=q, text="choice text", answer=False)
-
-        c_str = "<Choice: choice text>"
-        self.assertEquals(c_str, str(c))
-
 
     def test_question_choice_json_is_not_answer(self):
         """
@@ -578,23 +460,11 @@ class SliderQuestionTests(TransactionTestCase):
             'text': ' This is a question. ',
             'min': 3,
             'max': 17,
-            'answer': 5
+            'answer': 5,
+            'type': 'slider',
         }
 
         self.assertEquals(json, q.json())
-
-
-    def test_slider_question_str(self):
-        """
-        The string representation of SliderQuestion should display its
-        text and its minimum, maximum, and answer values.
-        """
-        quiz = Quiz.objects.create(user_id='cassius')
-        q = SliderQuestion(quiz=quiz, slider_min = -4, slider_max=9, answer=3, text="question1")
-
-        q_str = "<SliderQuestion: question1, [-4 to 9, answer=3]>"
-
-        self.assertEquals(str(q), q_str)
 
 
 
@@ -604,19 +474,7 @@ class ResponseTests(TransactionTestCase):
     A database model that holds one user's response to a particluar Quiz.
     It holds a ResponseAnswer object for each Question in the Quiz.
     """
-
-    def test_response_str(self):
-        """
-        A string representation of Response should display its
-        associated quiz's uuid and the name of the user who made
-        this response.
-        """
-        quiz = Quiz.objects.create(user_id='cassius')
-        response = Response.objects.create(quiz=quiz, name="Cassius")
-
-        r_str = "<Response: Quiz=" + str(quiz.uuid) + ", name=Cassius>"
-        self.assertEquals(r_str, str(response))
-
+    pass
 
 
 class ResponseAnswerTests(TransactionTestCase):
@@ -654,20 +512,6 @@ class ResponseAnswerTests(TransactionTestCase):
                 response=response, question=q1)
 
 
-    def test_answer_str(self):
-        """
-        The string representation of ResponseAnswer should display its
-        the responder's name and the associated question text.
-        """
-        quiz = Quiz.objects.create(user_id='cassius')
-        q = Question.objects.create(quiz=quiz, text="question text")
-        response = Response.objects.create(quiz=quiz, name="Ben")
-        a = ResponseAnswer.objects.create(response=response, question=q)
-
-        a_str = "<ResponseAnswer: Response=Ben, Question=question text>"
-        self.assertEquals(a_str, str(a))
-
-
 
 class MultipleChoiceAnswerTests(TransactionTestCase):
     """
@@ -675,47 +519,7 @@ class MultipleChoiceAnswerTests(TransactionTestCase):
     MultipleChoiceQuestion. A user can have selected multiple
     of the question's choices.
     """
-
-    def test_response_choice_answer_str_with_choices(self):
-        """
-        The string representation of MultipleChoiceAnswer should display its
-        responder's name and the choices they picked.
-        """
-        quiz = Quiz.objects.create(user_id='cassius')
-        q = MultipleChoiceQuestion.objects.create(quiz=quiz, text="q1")
-        c1 = QuestionChoice.objects.create(question=q, text="c1")
-        c2 = QuestionChoice.objects.create(question=q, text="c2")
-        c3 = QuestionChoice.objects.create(question=q, text="c3")
-        c4 = QuestionChoice.objects.create(question=q, text="c4")
-
-        response = Response.objects.create(quiz=quiz, name="cash")
-        answer = MultipleChoiceAnswer.objects.create(response=response, question=q) 
-        
-        rc1 = ChoiceAnswer.objects.create(answer=answer, choice=c2)
-        rc2 = ChoiceAnswer.objects.create(answer=answer, choice=c4)
-
-        answer_str = "<MultipleChoiceAnswer: Response=cash, Choices=[c2, c4]>"
-        self.assertEquals(answer_str, str(answer))
-
-
-    def test_response_choice_answer_str_no_choices(self):
-        """
-        The string representation of MultipleChoiceAnswer should display its
-        responder's name and the choices they picked.
-        """
-        quiz = Quiz.objects.create(user_id='cassius')
-        q = MultipleChoiceQuestion.objects.create(quiz=quiz, text="q1")
-        c1 = QuestionChoice.objects.create(question=q, text="c1")
-        c2 = QuestionChoice.objects.create(question=q, text="c2")
-        c3 = QuestionChoice.objects.create(question=q, text="c3")
-        c4 = QuestionChoice.objects.create(question=q, text="c4")
-
-        response = Response.objects.create(quiz=quiz, name="cash")
-        answer = MultipleChoiceAnswer.objects.create(response=response, question=q) 
-        
-        answer_str = "<MultipleChoiceAnswer: Response=cash, Choices=[]>"
-        self.assertEquals(answer_str, str(answer))
-
+    pass
 
 
 class ChoiceAnswerTests(TransactionTestCase):
@@ -741,37 +545,10 @@ class ChoiceAnswerTests(TransactionTestCase):
         self.assertRaises(ValidationError, ChoiceAnswer.objects.create, answer=answer, choice=c2)
     
 
-    def test_choice_answer_str(self):
-        """
-        The string representation of ResponseChoice should display its
-        responder's name, question text, and choice.
-        """
-        quiz = Quiz.objects.create(user_id='cassius')
-        q = MultipleChoiceQuestion.objects.create(quiz=quiz, text="Question text")
-        c = QuestionChoice.objects.create(question=q, text="c11")
-        response = Response.objects.create(quiz=quiz, name="Cash")
-        answer= MultipleChoiceAnswer.objects.create(response=response, question=q)
-        choice = ChoiceAnswer.objects.create(answer=answer, choice=c)
-
-        choice_str = "<ChoiceAnswer: Response=Cash, Question=Question text, Choice=c11>"
-        self.assertEquals(choice_str, str(choice))
-
-
 
 class SliderAnswerTests(TransactionTestCase):
     """
     A database model that represents a user's answer to a SliderQuestion,
     which is just the user's choice of integer in the question's range.
     """
-
-    def test_response_slider_answer_str(self):
-        """
-        The string representation of a SliderAnswer should display its
-        responder's name, question text, and answer.
-        """
-        quiz = Quiz.objects.create(user_id='cassius')
-        q = SliderQuestion.objects.create(quiz=quiz, text="Questions")
-        response = Response.objects.create(quiz=quiz, name="Benjamin")
-        answer = SliderAnswer.objects.create(response=response, question=q, answer=7)
-
-        answer_str = "<SliderAnswer: Response=Benjamin, Question=Questions, Answer=7>"
+    pass
