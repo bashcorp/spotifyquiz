@@ -83,12 +83,12 @@ WSGI_APPLICATION = 'wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'spotifyquiz_db',
-        'USER': 'spotifyquiz',
+        'NAME': 'spoton',
+        'USER': 'spoton',
         'PASSWORD': 'ImpossiblequiZ6^',
         'HOST': 'localhost',
         'TEST': {
-            'NAME': 'spotifyquiz_test'
+            'NAME': 'spoton_test'
         }
     }
 }

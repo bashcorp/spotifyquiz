@@ -8,6 +8,7 @@ import logging
 
 from . import spotify
 from quiz.models import Quiz
+from quiz.quiz import create_quiz
 
 logger = logging.getLogger(__name__)
 
@@ -34,8 +35,13 @@ def dashboard(request):
     if not spotify.is_user_logged_in(request.session):
         return redirect('login')
 
-#    id = 
-    #quiz = Quiz.objects.filter(user_uuid=
+    user_id = spotify.get_user_id(request.session)
+    quizzes = Quiz.objects.filter(user_id=user_id)
+    if quizzes:
+        quizzes.delete()
+        logger.debug("Deleted existing quiz")
+    quiz = create_quiz(request.session)
+
 
     return render(request, react_mainpage, context={})
 
@@ -49,7 +55,7 @@ def login(request):
         'response_type': 'code',
         'show_dialog': 'true',
         'redirect_uri': 'http://localhost:8000/logged_in?redirect='+redirect_view,
-        'scope': 'user-read-private user-read-email',
+        'scope': 'user-read-private user-read-email user-top-read',
     }
     query_string = urllib.parse.urlencode(query_args)
 

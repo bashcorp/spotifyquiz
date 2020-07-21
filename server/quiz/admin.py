@@ -9,8 +9,16 @@ from .models import *
 class QuestionInline(admin.TabularInline):
     model = Question
 
+@admin.register(Quiz)
+class QuizAdmin(admin.ModelAdmin):
+    readonly_fields = ('user_id', '_admin_get_quiz_questions',)
+    list_display = ('user_id',)
+
+#class MultipleChoice
+
+
+
 # Register the database models so they show up on the admin dashboard
-admin.site.register(Quiz)
 admin.site.register(Question)
 admin.site.register(MultipleChoiceQuestion)
 admin.site.register(QuestionChoice)
