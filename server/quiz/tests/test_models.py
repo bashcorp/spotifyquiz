@@ -380,7 +380,6 @@ class QuestionChoiceTests(TransactionTestCase):
         json = {
             'id': c.id,
             'text': 'choice text',
-            'answer': False,
         }
         self.assertEquals(c.json(), json)
         
@@ -393,7 +392,6 @@ class QuestionChoiceTests(TransactionTestCase):
         json = {
             'id': c.id,
             'text': 'choice text',
-            'answer': True,
         }
         self.assertEquals(c.json(), json)
 
@@ -460,7 +458,6 @@ class SliderQuestionTests(TransactionTestCase):
             'text': ' This is a question. ',
             'min': 3,
             'max': 17,
-            'answer': 5,
             'type': 'slider',
         }
 

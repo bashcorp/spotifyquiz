@@ -152,7 +152,6 @@ class QuestionChoice(models.Model):
         return {
             'id': self.id,
             'text': self.text,
-            'answer': self.answer,
         }
 
 
@@ -203,7 +202,6 @@ class SliderQuestion(Question):
             'text': self.text,
             'min': self.slider_min,
             'max': self.slider_max,
-            'answer': self.answer,
             'type': 'slider',
         }
 
