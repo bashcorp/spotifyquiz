@@ -1,15 +1,36 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from polymorphic.models import PolymorphicModel
+from polymorphic.managers import PolymorphicManager
+from polymorphic.query import PolymorphicQuerySet
 from django.utils.html import format_html_join, format_html
 
 import uuid
+
+class QuizQuerySet(models.QuerySet):
+    """
+    Overrides the Quiz model's QuerySet so that deleting a set will delete
+    each one individually, thus calling the overridden delete() in Quiz.
+    Otherwise, deleting a set would do it in SQL commands and ignore the delete()
+    in Quiz, which is necessary because of Django-Polymorphic issues.
+
+    Using this fix, any PolymorphicModel will need to override the delete() function and any
+    model which has a list (reverse ForeignKey) of PolymorphicModel objects will need to
+    override the QuerySet and that model's delete() function.
+    """
+    def delete(self, *args, **kwargs):
+        for obj in self:
+            obj.delete()
+        super(QuizQuerySet, self).delete(*args, **kwargs)
 
 class Quiz(models.Model):
     """
     Stores a quiz associated with a given spotify user. Holds the quiz's
     questions and all taker's responses to it.
     """
+    # Use the overridden QuerySet class above
+    objects = QuizQuerySet.as_manager()
+
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, blank=False)
     user_id = models.CharField(primary_key=True, max_length=50, editable=False)
 
@@ -44,6 +65,42 @@ class Quiz(models.Model):
                 '\n', '<li>{}</li>',
                 ((q._admin_get_question(),) for q in self.questions.all()))
 
+    def delete(self, *args, **kwargs):
+        """
+        Overrides the standard delete() function to delete each question and response
+        individually, instead of as a set. This is because Django-Polymorphic has issues with
+        deleting when cascading. So deleting a Quiz causes issues because its list of Questions
+        has two different classes in it. Deleting each question and response item one at a time
+        will fix this.
+
+        With this fix, any class that contains a list (reverse ForeignKey) of objects of a
+        PolymorphicModel will need to override this delete() function and also the model's
+        QuerySet.
+        """
+        for q in self.questions.all():
+            q.delete()
+        for r in self.responses.all():
+            r.delete()
+        super(Quiz, self).delete(*args, **kwargs)
+
+
+
+
+class QuestionQuerySet(PolymorphicQuerySet):
+    """
+    Overrides the Question model's QuerySet so that deleting a set will delete
+    each one individually, thus calling the overridden delete() in Question.
+    Otherwise, deleting a set would do it in SQL commands and ignore the delete()
+    in Question, which is necessary because of Django-Polymorphic issues.
+
+    Using this fix, any PolymorphicModel will need to override the delete() function and any
+    model which has a list (reverse ForeignKey) of PolymorphicModel objects will need to
+    override the QuerySet and that model's delete() function.
+    """
+    def delete(self, *args, **kwargs):
+        for obj in self:
+            obj.delete()
+        super(QuestionQuerySet, self).delete(*args, **kwargs)
 
 class Question(PolymorphicModel):
     """
@@ -53,6 +110,10 @@ class Question(PolymorphicModel):
     those types are in the subclasses MultipleChoiceQuestion and 
     SliderQuestion.
     """
+
+    # Use the overridden QuerySet class above
+    objects = QuestionQuerySet.as_manager()
+
     quiz = models.ForeignKey('Quiz', related_name='questions', null=False,
             on_delete=models.CASCADE)
 
@@ -60,9 +121,10 @@ class Question(PolymorphicModel):
 
     # responses (ResponseAnswer objects)
 
+
+
     def __str__(self):
         return "<Question: " + self.text + ">"
-
 
 
 
@@ -133,6 +195,7 @@ class MultipleChoiceQuestion(Question):
 
 
 
+
 class QuestionChoice(models.Model):
     """
     Represents one possible choice of a MultipleChoiceQuestion. The choice
@@ -143,6 +206,8 @@ class QuestionChoice(models.Model):
             related_name="choices", on_delete=models.CASCADE)
     answer = models.BooleanField(default=False)
     text = models.CharField(default="default choice", max_length=100)
+
+    # picks (ChoiceAnswer objects)
 
     def json(self):
         """
@@ -157,6 +222,8 @@ class QuestionChoice(models.Model):
 
     def __str__(self):
         return "<Choice: " + self.text + (", answer" if self.answer else "") + ">"
+
+
 
 
 class SliderQuestion(Question):
@@ -222,12 +289,33 @@ class SliderQuestion(Question):
 
 
 
+
+class ResponseQuerySet(models.QuerySet):
+    """
+    Overrides the Response model's QuerySet so that deleting a set will delete
+    each one individually, thus calling the overridden delete() in Quiz.
+    Otherwise, deleting a set would do it in SQL commands and ignore the delete()
+    in Response, which is necessary because of Django-Polymorphic issues.
+
+    Using this fix, any PolymorphicModel will need to override the delete() function and any
+    model which has a list (reverse ForeignKey) of PolymorphicModel objects will need to
+    override the QuerySet and that model's delete() function.
+    """
+    def delete(self, *args, **kwargs):
+        for obj in self:
+            obj.delete()
+        super(ResponseQuerySet, self).delete(*args, **kwargs)
+
 class Response(models.Model):
     """
     Represents one user's entire response to a given quiz. Individiual answers
     to questions are stored in ResponseAnswer objects and can be accessed
     by response.answers
     """
+
+    # Use the overridden QuerySet class above
+    objects = ResponseQuerySet.as_manager()
+
     name = models.CharField(max_length=50)
     quiz = models.ForeignKey('Quiz', related_name='responses', null=False,
             on_delete=models.CASCADE)    
@@ -235,8 +323,42 @@ class Response(models.Model):
     # answers (ResponseAnswer objects)
 
     def __str__(self):
-        return "<Response: Quiz=" + str(self.quiz.uuid) + ", name=" + self.name + ">"
+        return "<Response: Quiz=" + str(self.quiz.user_id) + ", name=" + self.name + ">"
 
+    def delete(self, *args, **kwargs):
+        """
+        Overrides the standard delete() function to delete each question and response
+        individually, instead of as a set. This is because Django-Polymorphic has issues with
+        deleting when cascading. So deleting a Response causes issues because its list of 
+        ResponseAnswers has two different classes in it. Deleting each question and response
+        item one at a time will fix this.
+
+        Using this fix, any PolymorphicModel will need to override the delete() function and any
+        model which has a list (reverse ForeignKey) of PolymorphicModel objects will need to
+        override the QuerySet and that model's delete() function.
+        """
+        for a in self.answers.all():
+            a.delete()
+        super(Response, self).delete(*args, **kwargs)
+
+
+
+
+class ResponseAnswerQuerySet(PolymorphicQuerySet):
+    """
+    Overrides the ResponseAnswer model's QuerySet so that deleting a set will delete
+    each one individually, thus calling the overridden delete() in ResponseAnswer.
+    Otherwise, deleting a set would do it in SQL commands and ignore the delete()
+    in Response, which is necessary because of Django-Polymorphic issues.
+
+    Using this fix, any PolymorphicModel will need to override the delete() function and any
+    model which has a list (reverse ForeignKey) of PolymorphicModel objects will need to
+    override the QuerySet and that model's delete() function.
+    """
+    def delete(self, *args, **kwargs):
+        for obj in self:
+            obj.delete()
+        super(ResponseAnswerQuerySet, self).delete(*args, **kwargs)
 
 class ResponseAnswer(PolymorphicModel):
     """
@@ -246,6 +368,9 @@ class ResponseAnswer(PolymorphicModel):
     in different ways. Subclasses are MultipleChoiceAnswer and 
     SliderAnswer.
     """
+
+    # Use the overridden QuerySet class above
+    objects = ResponseAnswerQuerySet.as_manager()
 
     question = models.ForeignKey('Question', related_name="responses",
             null=False, on_delete=models.CASCADE)
@@ -281,6 +406,9 @@ class ResponseAnswer(PolymorphicModel):
                 ", Question=" + self.question.text + ">"
 
 
+
+
+
 class MultipleChoiceAnswer(ResponseAnswer):
     """
     Represents the answer to a MultipleChoiceQuestion for a given response.
@@ -295,13 +423,16 @@ class MultipleChoiceAnswer(ResponseAnswer):
         return "<MultipleChoiceAnswer: Response=" + self.response.name + \
                 ", Choices=[" + ", ".join(choice.choice.text for choice in self.choices.all()) + "]>"
 
+
+
+
 class ChoiceAnswer(models.Model):
     """
     Represents one of a user's selected choices in a given ResponseAnswer.
     """
 
     choice = models.ForeignKey('QuestionChoice', null=False,
-            on_delete=models.CASCADE)
+            related_name="picks", on_delete=models.CASCADE)
     answer = models.ForeignKey('MultipleChoiceAnswer', null=False,
             related_name="choices", on_delete=models.CASCADE)
 
@@ -341,9 +472,9 @@ class SliderAnswer(ResponseAnswer):
     answer = models.IntegerField()
 
     def __str__(self):
-        return "<SliderAnswer: Response=" + self.response.name + \
-                ", Question=" + self.question.text + \
-                ", Answer=" + self.answer + ">"
+        return "<SliderAnswer: Response=" + str(self.response.name) + \
+                ", Question=" + str(self.question.text) + \
+                ", Answer=" + str(self.answer) + ">"
                 
 
 

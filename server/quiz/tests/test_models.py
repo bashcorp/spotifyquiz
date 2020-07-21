@@ -549,3 +549,336 @@ class SliderAnswerTests(TransactionTestCase):
     which is just the user's choice of integer in the question's range.
     """
     pass
+
+
+class DeleteModelsTests(TransactionTestCase):
+    """
+    Tests that when deleting an object, the proper objects are also deleted.
+    """
+
+    fixtures = ['tests_data.json']
+
+    def test_delete_quiz(self):
+        """
+        Deleting a quiz should delete all data associated with it
+        """
+        # Compile refrences to associated objects
+        quiz = Quiz.objects.all()[0]
+        questions = quiz.questions.all()
+        choices = []
+        for q in MultipleChoiceQuestion.objects.filter(quiz=quiz):
+            choices.extend(q.choices.all())
+        responses = quiz.responses.all()
+
+        # Compile list of all answers, and just multiple choice answers,
+        # so can get all mc answer choices with a filter.
+        # This is because filtering with django-polymorphic will break
+        # if answer__in holds a ResponseAnswer that is not the right
+        # subclass.
+        answers = []
+        mc_answers = []
+        for r in responses:
+            answers.extend(r.answers.all())
+            for a in r.answers.all():
+                if isinstance(a, MultipleChoiceAnswer):
+                    mc_answers.append(a)
+        answer_choices = ChoiceAnswer.objects.filter(answer__in=mc_answers)
+
+
+        quiz.delete()
+
+        # Check that all associated objects do not exist, unless they should
+        self.assertFalse(Quiz.objects.filter(user_id=quiz.user_id).exists())
+        for q in questions:
+            self.assertFalse(Question.objects.filter(id=q.id).exists())
+        for c in choices:
+            self.assertFalse(QuestionChoice.objects.filter(id=c.id).exists())
+        for r in responses:
+            self.assertFalse(Response.objects.filter(id=r.id).exists())
+        for a in answers:
+            self.assertFalse(ResponseAnswer.objects.filter(id=a.id).exists())
+        for c in answer_choices:
+            self.assertFalse(ChoiceAnswer.objects.filter(id=c.id).exists())
+
+
+    def test_delete_all_quizzes(self):
+        """
+        Deleting all the quizzes as a QuerySet should delete each quiz
+        and associated data.
+        """
+        Quiz.objects.all().delete()
+
+        self.assertEquals(Quiz.objects.count(), 0)
+        self.assertEquals(Question.objects.count(), 0)
+        self.assertEquals(QuestionChoice.objects.count(), 0)
+        self.assertEquals(Response.objects.count(), 0)
+        self.assertEquals(ResponseAnswer.objects.count(), 0)
+        self.assertEquals(ChoiceAnswer.objects.count(), 0)
+
+
+    def test_delete_all_questions(self):
+        """
+        Deleting every question should delete each question's associated
+        responses and choices, if appropriate.
+        """
+        quiz_count = Quiz.objects.count()
+        response_count = Response.objects.count()
+
+        Question.objects.all().delete()
+
+        self.assertEquals(Quiz.objects.count(), quiz_count)
+        self.assertEquals(Question.objects.count(), 0)
+        self.assertEquals(QuestionChoice.objects.count(), 0)
+        self.assertEquals(Response.objects.count(), response_count)
+        self.assertEquals(ResponseAnswer.objects.count(), 0)
+        self.assertEquals(ChoiceAnswer.objects.count(), 0)
+
+
+    def test_delete_mc_question(self):
+        """
+        Deleting a MultipleChoiceQuestion should also delete all of its choices
+        and any associated ResponseAnswer objects.
+        """
+        # Compile refrences to associated objects
+        q = MultipleChoiceQuestion.objects.all()[0]
+        quiz = q.quiz
+        choices = q.choices.all()
+        responses = q.responses.all()
+
+        q.delete()
+
+        # Check that all associated objects do not exist, unless the should
+        self.assertTrue(Quiz.objects.filter(user_id=quiz.user_id).exists())
+        self.assertFalse(Question.objects.filter(id=q.id).exists())
+        for c in choices:
+            self.assertFalse(QuestionChoice.objects.filter(id=c.id).exists())
+        for r in responses:
+            self.assertFalse(ResponseAnswer.objects.filter(id=r.id).exists())
+
+
+    def test_delete_all_mc_questions(self):
+        """
+        Deleting MultipleChoiceQuestions from a QuerySet should work properly and delete
+        all associated data.
+        """
+        quiz_count = Quiz.objects.count()
+
+        MultipleChoiceQuestion.objects.all().delete()
+
+        self.assertEquals(MultipleChoiceQuestion.objects.count(), 0)
+        self.assertEquals(QuestionChoice.objects.count(), 0)
+        self.assertEquals(MultipleChoiceAnswer.objects.count(), 0)
+        self.assertEquals(ChoiceAnswer.objects.count(), 0)
+        self.assertEquals(Quiz.objects.count(), quiz_count)
+
+
+    def test_delete_question_choice(self):
+        """
+        Deleting a question_choice should not delete its related question.
+        """
+        c = QuestionChoice.objects.all()[0]
+        question = c.question
+        picks = c.picks.all()
+
+        c.delete()
+
+        self.assertFalse(QuestionChoice.objects.filter(id=c.id).exists())
+        self.assertTrue(MultipleChoiceQuestion.objects.filter(id=question.id).exists())
+        for p in picks:
+            self.assertFalse(ChoiceAnswer.objects.filter(id=p.id).exists())
+
+
+    def test_delete_all_question_choices(self):
+        """
+        Deleting QuestionChoices from a queryset should work properly and should delete
+        all associated data.
+        """
+        question_count = Question.objects.count()
+
+        QuestionChoice.objects.all().delete()
+
+        self.assertEquals(QuestionChoice.objects.count(), 0)
+        self.assertEquals(ChoiceAnswer.objects.count(), 0)
+        self.assertEquals(Question.objects.count(), question_count)
+
+
+    def test_delete_slider_question(self):
+        """
+        Deleting a SliderQuestion should also delete all of its associated ResponseAnswer
+        objects.
+        """
+        # Compile refrences to associated objects
+        q = SliderQuestion.objects.all()[0]
+        quiz = q.quiz
+        responses = q.responses.all()
+
+        q.delete()
+
+        # Check that all associated objects do not exist, unless the should
+        self.assertTrue(Quiz.objects.filter(user_id=quiz.user_id).exists())
+        self.assertFalse(Question.objects.filter(id=q.id).exists())
+        for r in responses:
+            self.assertFalse(ResponseAnswer.objects.filter(id=r.id).exists())
+
+
+    def test_delete_all_slider_questions(self):
+        """
+        Deleting SliderQuestions from a QuerySet should work properly and delete
+        all associated data.
+        """
+        quiz_count = Quiz.objects.count()
+
+        SliderQuestion.objects.all().delete()
+
+        self.assertEquals(SliderQuestion.objects.count(), 0)
+        self.assertEquals(SliderAnswer.objects.count(), 0)
+        self.assertEquals(Quiz.objects.count(), quiz_count)
+
+
+    def test_delete_response(self):
+        """
+        Deleting a Response should also delete all of its ResponseAnswer objects.
+        """
+        # Compile refrences to associated objects
+        r = Response.objects.all()[0]
+        quiz = r.quiz
+        answers = r.answers.all()
+
+        r.delete()
+
+        # Check that all associated objects do not exist, unless the should
+        self.assertTrue(Quiz.objects.filter(user_id=quiz.user_id).exists())
+        self.assertFalse(Response.objects.filter(id=r.id).exists())
+        for a in answers:
+            self.assertFalse(ResponseAnswer.objects.filter(id=a.id).exists())
+
+
+    def test_delete_all_responses(self):
+        """
+        Deleting every Response should remove all associated response data 
+        (ResponseAnswer, ChoiceAnswer)
+        """
+        quiz_count = Quiz.objects.count()
+        Response.objects.all().delete()
+
+        self.assertEquals(Response.objects.count(), 0)
+        self.assertEquals(ResponseAnswer.objects.count(), 0)
+        self.assertEquals(ChoiceAnswer.objects.count(), 0)
+        self.assertEquals(Quiz.objects.count(), quiz_count)
+
+
+    def test_delete_all_answers(self):
+        """
+        Deleting ResponseAnswers from a queryset should work properly and delete all
+        associated data.
+        """
+        response_count = Response.objects.count()
+        question_count = Question.objects.count()
+
+        ResponseAnswer.objects.all().delete()
+
+        self.assertEquals(ResponseAnswer.objects.count(), 0)
+        self.assertEquals(ChoiceAnswer.objects.count(), 0)
+        self.assertEquals(Response.objects.count(), response_count)
+        self.assertEquals(Question.objects.count(), question_count)
+
+
+    def test_delete_mc_answer(self):
+        """
+        Deleting a MultipleChoiceAnswer should delete associated ChoiceAnswer objects.
+        """
+        # Compile refrences to associated objects
+        a = MultipleChoiceAnswer.objects.all()[0]
+        response = a.response
+        quiz = response.quiz
+        choices = a.choices.all()
+
+        a.delete()
+
+        # Check that all associated objects do not exist, unless the should
+        self.assertTrue(Response.objects.filter(id=response.id).exists())
+        self.assertTrue(Quiz.objects.filter(user_id=quiz.user_id).exists())
+        self.assertFalse(MultipleChoiceAnswer.objects.filter(id=a.id).exists())
+        for c in choices:
+            self.assertFalse(ChoiceAnswer.objects.filter(id=c.id).exists())
+
+
+    def test_delete_all_mc_answers(self):
+        """
+        Deleting MultipleChoiceAnswers from a queryset should work properly and should delete
+        all associated data with those answers.
+        """
+        question_count = Question.objects.count()
+        response_count = Response.objects.count()
+
+        MultipleChoiceAnswer.objects.all().delete()
+
+        self.assertEquals(MultipleChoiceAnswer.objects.count(), 0)
+        self.assertEquals(ChoiceAnswer.objects.count(), 0)
+        self.assertEquals(Question.objects.count(), question_count)
+        self.assertEquals(Response.objects.count(), response_count)
+
+
+
+    def test_delete_slider_answer(self):
+        """
+        Deleting a SliderAnswer should work. There is nothing to cascade delete at this
+        level.
+        """
+        # Compile refrences to associated objects
+        a = SliderAnswer.objects.all()[0]
+        response = a.response
+        quiz = response.quiz
+
+        a.delete()
+
+        # Check that all associated objects do not exist, unless the should
+        self.assertTrue(Response.objects.filter(id=response.id).exists())
+        self.assertTrue(Quiz.objects.filter(user_id=quiz.user_id).exists())
+        self.assertFalse(SliderAnswer.objects.filter(id=a.id).exists())
+
+
+    def test_delete_all_slider_answers(self):
+        """
+        Deleting SliderAnswers from a queryset should work properly and delete all
+        associated data with those answers.
+        """
+        response_count = Response.objects.count()
+        question_count = Question.objects.count()
+
+        SliderAnswer.objects.all().delete()
+
+        self.assertEquals(SliderAnswer.objects.count(), 0)
+        self.assertEquals(Question.objects.count(), question_count)
+        self.assertEquals(Response.objects.count(), response_count)
+
+
+    def test_delete_choice_answer(self):
+        """
+        Deleting a ChoiceAnswer should preserve its associated QuestionChoice and 
+        ResponseAnswer objects.
+        """
+        a = ChoiceAnswer.objects.all()[0]
+        answer = a.answer
+        choice = a.choice
+
+        a.delete()
+
+        self.assertTrue(MultipleChoiceAnswer.objects.filter(id=answer.id).exists())
+        self.assertTrue(QuestionChoice.objects.filter(id=choice.id).exists())
+        self.assertFalse(ChoiceAnswer.objects.filter(id=a.id).exists())
+
+
+    def test_delete_all_choice_answers(self):
+        """
+        Deleting ChoiceAnswer objects from a queryset should work properly and preserve
+        their associated QuestionChoices and ResponseAnswers.
+        """
+        answer_count = ResponseAnswer.objects.count()
+        choice_count = QuestionChoice.objects.count()
+
+        ChoiceAnswer.objects.all().delete()
+
+        self.assertEquals(ChoiceAnswer.objects.count(), 0)
+        self.assertEquals(ResponseAnswer.objects.count(), answer_count)
+        self.assertEquals(QuestionChoice.objects.count(), choice_count)

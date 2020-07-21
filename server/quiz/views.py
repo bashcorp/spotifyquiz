@@ -38,7 +38,8 @@ def dashboard(request):
     user_id = spotify.get_user_id(request.session)
     quizzes = Quiz.objects.filter(user_id=user_id)
     if quizzes:
-        quizzes.delete()
+        for q in quizzes:
+            q.delete()
         logger.debug("Deleted existing quiz")
     quiz = create_quiz(request.session)
 
