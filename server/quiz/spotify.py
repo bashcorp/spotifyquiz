@@ -150,7 +150,9 @@ def is_user_logged_in(session):
     variables are set.
     """
     if session.get(REFRESH_TOKEN) and session.get(USER_ID):
-        return True
+        results = make_authorized_request(session, '/v1/me')
+        if results.status_code == 200:
+            return True
     return False
 
 
@@ -169,7 +171,7 @@ def make_authorized_request(session, url, data={}):
     token = get_auth_access_token(session)
 
     headers = {
-        'Authorization': 'Bearer ' + token
+        'Authorization': 'Bearer ' + str(token)
     }
     full_url = "https://api.spotify.com" + url
 
@@ -292,9 +294,9 @@ def request_authorized_token(session):
     """
 
     # If no user is logged in, can't get an authorized token, so raise an error.
-    if not is_user_logged_in(session):
+    if not session.get(REFRESH_TOKEN):
         raise SpotifyException("Someone requested an authorized token, but no \
-                user is logged in.")
+                user is logged in (no refresh_token is set).")
 
 
     # The request data is different depending on if you're sending an

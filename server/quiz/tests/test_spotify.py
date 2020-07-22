@@ -44,11 +44,12 @@ class RefreshTokenTests(TestCase):
 
 
 
-class AuthAccessTokenTests(TestCase):
+class AuthAccessTokenTests(StaticLiveServerTestCase):
     """
     When a user logs in, any access token used to access their
     data is saved in that user's session.
     """
+    port = 8000
 
     def test_auth_access_token_initialized(self):
         """
@@ -124,6 +125,19 @@ class AuthAccessTokenTests(TestCase):
         session = self.client.session
         self.assertRaises(spotify.SpotifyException,
                 spotify.get_auth_access_token, session)
+
+
+    def test_get_auth_access_token_doesnt_exist(self):
+        """
+        If no Authorized Access Token is saved in the session,
+        get_auth_access_token() should request one from Spotify,
+        and if the user is logged in, this should work successfully.
+        """
+        session = setup_selenium_and_login(self.live_server_url)
+
+        token = spotify.get_auth_access_token(session)
+        self.assertIsNotNone(token)
+
 
 
 
@@ -244,23 +258,29 @@ class NoauthAccessTokenTests(TestCase):
 
 
 
-class IsUserLoggedInTests(TestCase):
+class IsUserLoggedInTests(StaticLiveServerTestCase):
     """
     For a user to be considered logged in to a session, they must have a
     refresh token saved in the session, along with their spotify User Id (the
     session variables REFRESH_TOKEN and USER_ID). 
-    """
 
-    def test_is_user_logged_in_true(self):
+    This class tests cases where the user is not logged in. For the user to be treated
+    as logged in, there must be a valid refresh_token saved in the session. The test of
+    this is in the 
+    """
+    port = 8000
+
+    def test_is_user_logged_in_false_invalid_code(self):
         """
         is_user_logged_in() should return whether or not a user is
         logged in to a given session. If REFRESH_TOKEN and
-        USER_ID are set, it should return True.
+        USER_ID are set, but the token is invalid or has expired,, it should
+        return False.
         """
         session = self.client.session
         spotify.set_refresh_token(session, 'code1')
         spotify.set_user_id(session, 'user')
-        self.assertTrue(spotify.is_user_logged_in(session))
+        self.assertFalse(spotify.is_user_logged_in(session))
 
 
     def test_is_user_logged_in_false_code(self):
@@ -283,6 +303,12 @@ class IsUserLoggedInTests(TestCase):
         session = self.client.session
         spotify.set_refresh_token(session, 'code1')
         self.assertFalse(spotify.is_user_logged_in(session))
+
+
+    def test_is_user_logged_in_true(self):
+        session = setup_selenium_and_login(self.live_server_url)
+
+        self.assertTrue(spotify.is_user_logged_in(session))
 
 
 
@@ -349,7 +375,7 @@ class LoginTests(TestCase):
 
 
 
-class MakeRequestTests(TestCase):
+class MakeRequestTests(StaticLiveServerTestCase):
     """
     The Spotify module provides functions to easily make requests to
     Spotify's API (make_authorized_request() and make_noauth_request()).
@@ -359,6 +385,7 @@ class MakeRequestTests(TestCase):
     To test the authorized requests, see the test located in this file
     under the class AuthorizedSuccessTests.
     """
+    port = 8000
 
     def test_make_noauth_request(self):
         """
@@ -383,8 +410,21 @@ class MakeRequestTests(TestCase):
                 spotify.make_authorized_request, session, '/v1/me')
 
 
+    def test_make_authorized_request(self):
+        """
+        make_authorized_request() should successfully make the
+        given authorized request if a user is logged in.
+        """
+        session = setup_selenium_and_login(self.live_server_url)
 
-class RequestAuthorizedTokenTests(TestCase):
+        url = '/v1/me'
+        results = spotify.make_authorized_request(session, url)
+
+        self.assertEqual(results.status_code, 200)
+
+
+
+class RequestAuthorizedTokenTests(StaticLiveServerTestCase):
     """
     request_authorized_token() returns an access token that can be used to
     request personal data about a user. It uses the currently stored
@@ -395,6 +435,7 @@ class RequestAuthorizedTokenTests(TestCase):
     browser. That test is located in this file in the class 
     AuthorizedSuccessTests.
     """
+    port = 8000
 
     def test_request_authorized_token_no_user_logged_in(self):
         """
@@ -421,6 +462,19 @@ class RequestAuthorizedTokenTests(TestCase):
 
         self.assertIsNone(session.get(spotify.AUTH_ACCESS_TOKEN))
         self.assertIs(session.get(spotify.REFRESH_TOKEN), 'bad_code')
+
+
+    def test_request_authorized_token(self):
+        """
+        request_authorized_token() should return an Authorized
+        Access Token if a user is logged in.
+        """
+        session = setup_selenium_and_login(self.live_server_url)
+
+        spotify.request_authorized_token(session)
+        self.assertIsNotNone(session[spotify.AUTH_ACCESS_TOKEN])
+        self.assertIsNotNone(session[spotify.REFRESH_TOKEN])
+
 
 
 class RequestNoauthAccessTokenTest(TestCase):
@@ -461,111 +515,42 @@ def create_session_store(key):
     return store
 
 
-class AuthorizedSuccessTests(StaticLiveServerTestCase):
+def setup_selenium_and_login(live_server_url):
     """
-    Some of the functions in the Spotify module require a user to be logged
-    in to be successful. These tests will log in once at the beginning and
-    save the user's authentication data, so that each test can use it.
+    Set up a Selenium browser and sign into Spotify.
     """
-    port = 8000
+    # Decrypt and load the credentials for signing into Spotify.
+    data = credentials.decryptFile("credentials", "key.txt")
+    if(data):
+        spotify_username = data.split("'")[0]
+        spotify_password = data.split("'")[1]
 
-    def setUp(self):
-        """
-        Set up the Selenium browser and sign into Spotify.
-        """
-        # Decrypt and load the credentials for signing into Spotify.
-        data = credentials.decryptFile("credentials", "key.txt")
-        if(data):
-            self.spotify_username = data.split("'")[0]
-            self.spotify_password = data.split("'")[1]
+    # Set up Selenium
+    browser = Firefox()
+    browser.implicitly_wait(3)
 
-        # Set up Selenium
-        self.browser = Firefox()
-        self.browser.implicitly_wait(3)
+    # Redirect to 
+    browser.get(live_server_url +  reverse('login'))
 
-        self.login()
+    login_with_fb_btn = browser.find_element_by_class_name('btn-facebook')
+    login_with_fb_btn.click()
 
+    email_input = browser.find_element_by_id('email')
+    email_input.send_keys(spotify_username)
+    password_input = browser.find_element_by_id('pass')
+    password_input.send_keys(spotify_password)
 
-    def tearDown(self):
-        """
-        Destroy the Selenium browser.
-        """
-        self.browser.implicitly_wait(3)
-        self.browser.quit()
+    login_btn = browser.find_element_by_id('loginbutton')
+    login_btn.click()
 
 
-    def login(self):
-        """
-        Logs into Spotify and saves the authentication data from that
-        session as class variables.
-        """
+    auth_accept_btn = browser.find_element_by_id('auth-accept')
+    auth_accept_btn.click()
+    
 
-        # Redirect to 
-        self.browser.get(self.live_server_url +  reverse('login'))
+    id = browser.get_cookie('sessionid').get('value')
+    session = create_session_store(id)
 
-        login_with_fb_btn = self.browser.find_element_by_class_name('btn-facebook')
-        login_with_fb_btn.click()
-
-        email_input = self.browser.find_element_by_id('email')
-        email_input.send_keys(self.spotify_username)
-        password_input = self.browser.find_element_by_id('pass')
-        password_input.send_keys(self.spotify_password)
-
-        login_btn = self.browser.find_element_by_id('loginbutton')
-        login_btn.click()
-
-
-        auth_accept_btn = self.browser.find_element_by_id('auth-accept')
-        auth_accept_btn.click()
-        
-
-        id = self.browser.get_cookie('sessionid').get('value')
-        session = create_session_store(id)
-
-        self.refresh_token = session.get(spotify.REFRESH_TOKEN)
-        self.auth_access_token = session.get(spotify.AUTH_ACCESS_TOKEN)
-        self.user_id = session.get(spotify.USER_ID)
-
-
-
-    def test_get_auth_access_token_doesnt_exist(self):
-        """
-        If no Authorized Access Token is saved in the session,
-        get_auth_access_token() should request one from Spotify,
-        and if the user is logged in, this should work successfully.
-        """
-        session = self.client.session
-        spotify.set_refresh_token(session, self.refresh_token)
-        spotify.set_user_id(session, self.user_id)
-
-        token = spotify.get_auth_access_token(session)
-        self.assertIsNotNone(token)
-
-
-    def test_request_authorized_token(self):
-        """
-        request_authorized_token() should return an Authorized
-        Access Token if a user is logged in.
-        """
-        session = self.client.session
-        spotify.set_refresh_token(session, self.refresh_token)
-        spotify.set_user_id(session, self.user_id)
-
-        spotify.request_authorized_token(session)
-        self.assertIsNotNone(session[spotify.AUTH_ACCESS_TOKEN])
-        self.assertIsNotNone(session[spotify.REFRESH_TOKEN])
-
-
-    def test_make_authorized_request(self):
-        """
-        make_authorized_request() should successfully make the
-        given authorized request if a user is logged in.
-        """
-        session = self.client.session
-        spotify.set_refresh_token(session, self.refresh_token)
-        spotify.set_user_id(session, self.user_id)
-        
-        url = '/v1/me'
-        results = spotify.make_authorized_request(session, url)
-
-        self.assertEqual(results.status_code, 200)
+    browser.implicitly_wait(3)
+    browser.quit()
+    return session

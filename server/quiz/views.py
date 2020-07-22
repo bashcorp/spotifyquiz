@@ -43,7 +43,6 @@ def dashboard(request):
         logger.debug("Deleted existing quiz")
     quiz = create_quiz(request.session)
 
-
     return render(request, react_mainpage, context={})
 
 
