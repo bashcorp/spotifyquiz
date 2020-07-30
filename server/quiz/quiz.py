@@ -20,6 +20,7 @@ def create_quiz(session):
 
     return quiz
 
+
 def slider_question(session, quiz):
     return SliderQuestion.objects.create(quiz=quiz, text="This is a slider question?",
             slider_min=3, slider_max=17, answer=11)
@@ -39,37 +40,24 @@ def question_top_track(session, quiz, time_range='medium_term'):
 
     # How many of the top artists to pick from, max 50
     limit = 20
-    url = '/v1/me/top/tracks?limit=' + str(limit) + \
-            '&time_range=' + str(time_range)
-    results = spotify.make_authorized_request(session, url=url)
+    query_dict = {
+        'limit': limit,
+        'time_range': time_range
+    }
+    url = '/v1/me/top/tracks'
+    results = spotify.make_authorized_request(session, url=url, query_dict=query_dict)
 
     if results.status_code != 200:
         logger.error("Creating Quiz: Top Track Question: Spotify request returned " + str(results.status_code))
         return None
 
 
-    
-    # Get a list of all the top artists, and choose 3 random indexes
-    items = results.json().get('items') 
-    # Ignore 0 because that's the right answer
-    choice_indexes = random.sample(range(1, len(items)), 3)
-
-    # Create the choices, one being the user's top artist, the other
-    # 3 being random picks from the user's top artists.
-    choice0 = items[0].get('name')
-    choice1 = items[choice_indexes[0]].get('name')
-    choice2 = items[choice_indexes[1]].get('name')
-    choice3 = items[choice_indexes[2]].get('name')
-
 
     # Create the database items at the end, once all the data has been
     # successfully assembled.
     question = MultipleChoiceQuestion.objects.create(quiz=quiz, text="What is their most listened to track in the last 6 months?")
 
-    QuestionChoice.objects.create(question=question, text=choice0, answer=True)
-    QuestionChoice.objects.create(question=question, text=choice1)
-    QuestionChoice.objects.create(question=question, text=choice2)
-    QuestionChoice.objects.create(question=question, text=choice3)
+    create_top_and_three_random_choices(results.json().get('items'), question)
 
     return question
      
@@ -92,39 +80,44 @@ def question_top_artist(session, quiz, time_range='medium_term'):
 
     # How many of the top artists to pick from, max 50
     limit = 20
-    url = '/v1/me/top/artists?limit=' + str(limit) + \
-            '&time_range=' + str(time_range)
-    results = spotify.make_authorized_request(session, url=url)
+    query_dict = {
+        'limit': limit,
+        'time_range': time_range
+    }
+    url = '/v1/me/top/artists'
+    results = spotify.make_authorized_request(session, url=url, query_dict=query_dict)
 
     if results.status_code != 200:
         logger.error("Creating Quiz: Top Artist Question: Spotify request returned " + str(results.status_code))
         return None
 
 
-    
-    # Get a list of all the top artists, and choose 3 random indexes
-    items = results.json().get('items') 
-    # Ignore 0 because that's the right answer
-    choice_indexes = random.sample(range(1, len(items)), 3)
-
-    # Create the choices, one being the user's top artist, the other
-    # 3 being random picks from the user's top artists.
-    choice0 = items[0].get('name')
-    choice1 = items[choice_indexes[0]].get('name')
-    choice2 = items[choice_indexes[1]].get('name')
-    choice3 = items[choice_indexes[2]].get('name')
-
 
     # Create the database items at the end, once all the data has been
     # successfully assembled.
     question = MultipleChoiceQuestion.objects.create(quiz=quiz, text="What is their most listened to artist in the last 6 months?")
 
-    QuestionChoice.objects.create(question=question, text=choice0, answer=True)
-    QuestionChoice.objects.create(question=question, text=choice1)
-    QuestionChoice.objects.create(question=question, text=choice2)
-    QuestionChoice.objects.create(question=question, text=choice3)
+
+    create_top_and_three_random_choices(results.json().get('items'), question)
+    
 
     return question
+
+
+def create_top_and_three_random_choices(items, question):
+    choice_indexes = random.sample(range(1, len(items)), 3)
+
+    choices = [
+        items[0].get('name'),
+        items[choice_indexes[0]].get('name'),
+        items[choice_indexes[1]].get('name'),
+        items[choice_indexes[2]].get('name')
+    ]
+
+    QuestionChoice.objects.create(question=question, text=choices[0], answer=True)
+    QuestionChoice.objects.create(question=question, text=choices[1])
+    QuestionChoice.objects.create(question=question, text=choices[2])
+    QuestionChoice.objects.create(question=question, text=choices[3])
 
     
 
