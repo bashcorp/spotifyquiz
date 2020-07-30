@@ -21,8 +21,7 @@ class ParentFieldsAreRequiredTests(TransactionTestCase):
     """
 
     def test_question_has_no_quiz(self):
-        """
-        Trying to create a Question without giving it a Quiz to be associated with should
+        """ Trying to create a Question without giving it a Quiz to be associated with should
         raise an error.
         """
         self.assertRaises(IntegrityError, Question.objects.create)

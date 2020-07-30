@@ -4,26 +4,12 @@ from django.test.client import Client
 from django.urls import reverse
 from selenium.webdriver import Firefox
 from selenium.webdriver.firefox.options import Options
-
-import urllib.parse as urlparse
-from urllib.parse import parse_qs
-from cryptography.fernet import Fernet
+from quiz.tests.setup_tests import *
 
 from quiz import spotify
 import credentials
 
 import os
-
-def create_session_store(key):
-    """
-    Creates and returns an instance of session with the given session key.
-    This is used to access the session that Selenium's browser is using.
-    """
-    from importlib import import_module
-    engine = import_module(settings.SESSION_ENGINE)
-    store = engine.SessionStore(session_key=key)
-    store.save()
-    return store
 
 cash_user_id = "21a452hnlj6ppe3gcvy3yx3di"
 
@@ -32,19 +18,13 @@ class LoginTests(StaticLiveServerTestCase):
 
     def setUp(self):
         # Decrypt and load the credentials for signing into Spotify.
-        data = credentials.decryptFile("credentials", "key.txt")
-        if(data):
-            self.spotify_username = data.split("'")[0]
-            self.spotify_password = data.split("'")[1]
+        self.spotify_username, self.spotify_password = get_spotify_credentials()
 
         # Set up Selenium
-        options = Options()
-        options.headless = True
-        self.browser = Firefox(options=options)
+        self.browser = headless_browser()
 
     def tearDown(self):
-        self.browser.implicitly_wait(1)
-        self.browser.quit()
+        teardown_browser(self.browser)
 
 
 
