@@ -12,10 +12,10 @@ def get_spotify_credentials():
         spotify_username = data.split("'")[0]
         spotify_password = data.split("'")[1]
         return spotify_username, spotify_password
-    return None
+    return None, None
 
 
-def create_session_store(key):
+def create_session_store(key=None):
     """
     Creates and returns an instance of session with the given session key.
     This is used to access the session that Selenium's browser is using.
@@ -33,9 +33,13 @@ def headless_browser():
     options.headless = True
     return Firefox(options=options)
 
+def headful_browser():
+    return Firefox()
+
 def teardown_browser(browser):
     browser.implicitly_wait(1)
     browser.quit()
+
 
 def create_authorized_session(live_server_url):
     """
@@ -53,6 +57,7 @@ def create_authorized_session(live_server_url):
 
     login_with_fb_btn = browser.find_element_by_class_name('btn-facebook')
     login_with_fb_btn.click()
+
 
     email_input = browser.find_element_by_id('email')
     email_input.send_keys(spotify_username)

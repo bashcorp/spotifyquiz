@@ -5,6 +5,8 @@ import requests
 import base64
 import threading
 import logging
+from urllib.parse import urlencode
+import atexit
 
 
 logger = logging.getLogger(__name__)
@@ -51,6 +53,16 @@ AUTH_ACCESS_TOKEN = 'auth_access_token'
 USER_ID = 'user_id'
 
 noauth_access_token = None
+
+
+def cleanup_timers():
+    for t in threading.enumerate():
+        if isinstance(t, threading.Timer):
+            if t.function == _clear_auth_access_token:
+                t.function(*t.args)
+            t.cancel()
+    
+atexit.register(cleanup_timers)
 
 
 def set_refresh_token(session, token):
@@ -159,7 +171,7 @@ def is_user_logged_in(session):
 
 
 
-def make_authorized_request(session, url, data={}):
+def make_authorized_request(session, url, query_dict={}, data={}):
     """
     Makes a GET request to Spotify at the given URL endpoint, with the
     given data attached to the request. This request should be
@@ -173,7 +185,12 @@ def make_authorized_request(session, url, data={}):
     headers = {
         'Authorization': 'Bearer ' + str(token)
     }
-    full_url = "https://api.spotify.com" + url
+
+    query_string = urlencode(query_dict)
+    if query_string:
+        query_string = '?' + query_string
+
+    full_url = "https://api.spotify.com" + url + query_string
 
     results = requests.get(url=full_url, data=data, headers=headers)
     return results

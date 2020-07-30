@@ -26,6 +26,8 @@ class LoginTests(StaticLiveServerTestCase):
     def tearDown(self):
         teardown_browser(self.browser)
 
+        spotify.cleanup_timers()
+
 
 
     def test_login(self):
@@ -44,7 +46,6 @@ class LoginTests(StaticLiveServerTestCase):
         email_input.send_keys(self.spotify_username)
         password_input = self.browser.find_element_by_id('pass')
         password_input.send_keys(self.spotify_password)
-
         login_btn = self.browser.find_element_by_id('loginbutton')
         login_btn.click()
 
