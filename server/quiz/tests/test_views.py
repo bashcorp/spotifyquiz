@@ -3,6 +3,7 @@ from django.conf import settings
 from django.test.client import Client
 from django.urls import reverse
 from selenium.webdriver import Firefox
+from selenium.webdriver.firefox.options import Options
 
 import urllib.parse as urlparse
 from urllib.parse import parse_qs
@@ -37,12 +38,12 @@ class LoginTests(StaticLiveServerTestCase):
             self.spotify_password = data.split("'")[1]
 
         # Set up Selenium
-        self.browser = Firefox()
-        self.browser.implicitly_wait(3)
-    
+        options = Options()
+        options.headless = True
+        self.browser = Firefox(options=options)
 
     def tearDown(self):
-        self.browser.implicitly_wait(3)
+        self.browser.implicitly_wait(1)
         self.browser.quit()
 
 

@@ -4,6 +4,7 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.conf import settings
 from django.urls import reverse
 from selenium.webdriver import Firefox
+from selenium.webdriver.firefox.options import Options
 
 import urllib
 from urllib.parse import parse_qs
@@ -526,8 +527,9 @@ def setup_selenium_and_login(live_server_url):
         spotify_password = data.split("'")[1]
 
     # Set up Selenium
-    browser = Firefox()
-    browser.implicitly_wait(3)
+    options = Options()
+    options.headless = True
+    browser = Firefox(options=options)
 
     # Redirect to 
     browser.get(live_server_url +  reverse('login'))
@@ -551,6 +553,6 @@ def setup_selenium_and_login(live_server_url):
     id = browser.get_cookie('sessionid').get('value')
     session = create_session_store(id)
 
-    browser.implicitly_wait(3)
+    browser.implicitly_wait(1)
     browser.quit()
     return session
