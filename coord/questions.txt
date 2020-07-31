@@ -1,0 +1,20 @@
+A list of possible questions we can use:
+
+What is the user's most listened to track of all time?
+What is the user's most listened to track of the past 6 months?
+What is the user's most listened to track of the past 4 weeks?
+
+What is the user's most listened to artist of all time?
+What is the user's most listened to artist of the past 6 months?
+What is the user's most listened to artist of the past 4 weeks?
+
+What is the user's most recently played song (as of the timestamp of quiz creation)?
+
+What is the user's most popular playlist (by # of followers)? (Public playlists only?)
+How many followers does the user's most popular playlist have?
+
+
+How many followers does the user have?
+
+
+How loud is the user's music, on average?
