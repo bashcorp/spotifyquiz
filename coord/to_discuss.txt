@@ -1,0 +1,5 @@
+Questions:
+    What do we want to display? Song name, artist? Album art?
+    Link to certain songs or playlists?
+
+

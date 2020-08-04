@@ -1,20 +1,50 @@
 A list of possible questions we can use:
 
-What is the user's most listened to track of all time?
-What is the user's most listened to track of the past 6 months?
-What is the user's most listened to track of the past 4 weeks?
-
-What is the user's most listened to artist of all time?
-What is the user's most listened to artist of the past 6 months?
-What is the user's most listened to artist of the past 4 weeks?
-
-What is the user's most recently played song (as of the timestamp of quiz creation)?
-
-What is the user's most popular playlist (by # of followers)? (Public playlists only?)
-How many followers does the user's most popular playlist have?
+_Top Played_
+(MC) What is the user's most listened to track? (of all time, 6 months, 4 weeks)
+(MC) What is the user's most listened to artist? (of all time, 6 months, 4 weeks)
+(MC) What is the user's most listened to genre? (of all time, 6 months, 4 weeks)
 
 
-How many followers does the user have?
+_Recently Played_
+(MC) What is the user's most recently played song (as of the timestamp of quiz creation)?
+(MC) What is the user's currently playing song (as of the timestamp of quiz creation)?
+    - This might be the same question
+
+
+_User Popularity_
+(MC) What is the user's most popular public playlist (by # of followers)?
+(Sl) How many followers does the user's most popular public playlist have?
+    - Either this one or the previous, not both
+    - Doesn't seem right to expose private playlists except for the below question
+(Sl) How many private playlists does the user have?
+    - Maybe include compared to how many public ones they have?
+(Sl) How many followers does the user have?
+
+_Track/Artist Popularity_
+(Sl) How popular is the user's top artist? (of all time, 6 months, 4 weeks)
+(Sl) How popular are the user's recent albums? (all time, 6 months, 4 weeks)
+(Sl) How popular are the user's saved albums?
+(Sl) How popular is the user's top track? (of all time, 6 months, 4 weeks)
+(Sl) How popular are the user's recent tracks? (all time, 6 months, 4 weeks)
+(Sl) How popular are the user's saved tracks?
+(MC) Which is the user's most popular artist? (of recently listened to, saved artists)
+(MC) Which is the user's most popular track? (of recently listened to, saved tracks)
+
+_Misc_
+How much of the user's music is explicit?
+What's the average length of the user's music taste?
 
 
 How loud is the user's music, on average?
+Which of the user's top songs is the loudest?
+
+
+
+Which albums has the user saved?
+Which tracks has the user saved?
+Which artists does the user follow?
+
+
+How old is the music that the user listens to?
+
