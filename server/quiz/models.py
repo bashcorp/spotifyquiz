@@ -205,7 +205,8 @@ class QuestionChoice(models.Model):
     question = models.ForeignKey("MultipleChoiceQuestion", null=False,
             related_name="choices", on_delete=models.CASCADE)
     answer = models.BooleanField(default=False)
-    text = models.CharField(default="default choice", max_length=100)
+    primary_text = models.CharField(default="default choice", max_length=50)
+    secondary_text = models.CharField(blank=True, null=True, max_length=50)
 
     # picks (ChoiceAnswer objects)
 
@@ -214,10 +215,14 @@ class QuestionChoice(models.Model):
         Returns a JSON-formatted dictionary of any data that might be needed to
         display this choice on the client.
         """
-        return {
+        dict = {
             'id': self.id,
-            'text': self.text,
+            'primary_text': self.primary_text,
         }
+        if self.secondary_text:
+            dict['secondary_text'] = self.secondary_text
+
+        return dict
 
 
     def __str__(self):

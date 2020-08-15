@@ -21,7 +21,8 @@ class ParentFieldsAreRequiredTests(TransactionTestCase):
     """
 
     def test_question_has_no_quiz(self):
-        """ Trying to create a Question without giving it a Quiz to be associated with should
+        """
+        Trying to create a Question without giving it a Quiz to be associated with should
         raise an error.
         """
         self.assertRaises(IntegrityError, Question.objects.create)
@@ -326,9 +327,9 @@ class MultipleChoiceQuestionTests(TransactionTestCase):
         """
         quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz, text="question")
-        c1 = QuestionChoice.objects.create(question=q, text="choice1")
-        c2 = QuestionChoice.objects.create(question=q, text="choice2")
-        c3 = QuestionChoice.objects.create(question=q, text="choice3", answer=True)
+        c1 = QuestionChoice.objects.create(question=q, primary_text="choice1")
+        c2 = QuestionChoice.objects.create(question=q, primary_text="choice2")
+        c3 = QuestionChoice.objects.create(question=q, primary_text="choice3", answer=True)
 
         json = {
             'id': q.id,
@@ -347,9 +348,9 @@ class MultipleChoiceQuestionTests(TransactionTestCase):
         """
         quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz, text="question")
-        c1 = QuestionChoice.objects.create(question=q, text="choice1", answer=True)
-        c2 = QuestionChoice.objects.create(question=q, text="choice2", answer=True)
-        c3 = QuestionChoice.objects.create(question=q, text="choice3")
+        c1 = QuestionChoice.objects.create(question=q, primary_text="choice1", answer=True)
+        c2 = QuestionChoice.objects.create(question=q, primary_text="choice2", answer=True)
+        c3 = QuestionChoice.objects.create(question=q, primary_text="choice3")
 
         json = {
             'id': q.id,
@@ -370,27 +371,45 @@ class QuestionChoiceTests(TransactionTestCase):
 
     def test_question_choice_json_is_not_answer(self):
         """
-        json() should return a json-formatted dictionary
+        json() should return a json-formatted dictionary describing the choice.
         """
         quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        c = QuestionChoice.objects.create(question=q, text="choice text", answer=False)
+        c = QuestionChoice.objects.create(question=q, primary_text="choice text", secondary_text="subtext", answer=False)
 
         json = {
             'id': c.id,
-            'text': 'choice text',
+            'primary_text': 'choice text',
+            'secondary_text': 'subtext',
         }
         self.assertEquals(c.json(), json)
         
 
-    def test_question_choice_json_is_answer(self):
+    def test_question_choice_json_no_secondary_text(self):
+        """
+        If secondary_text is not set, then json() should return a dictionary
+        without a secondary_text field.
+        """
         quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        c = QuestionChoice.objects.create(question=q, text="choice text", answer=True)
+        c = QuestionChoice.objects.create(question=q, primary_text="choice text", answer=False)
 
         json = {
             'id': c.id,
-            'text': 'choice text',
+            'primary_text': 'choice text',
+        }
+        self.assertEquals(c.json(), json)
+
+
+    def test_question_choice_json_is_answer(self):
+        quiz = Quiz.objects.create(user_id='cassius')
+        q = MultipleChoiceQuestion.objects.create(quiz=quiz)
+        c = QuestionChoice.objects.create(question=q, primary_text="choice text", secondary_text="subtext", answer=True)
+
+        json = {
+            'id': c.id,
+            'primary_text': 'choice text',
+            'secondary_text': 'subtext',
         }
         self.assertEquals(c.json(), json)
 
