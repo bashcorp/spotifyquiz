@@ -23,7 +23,6 @@ venv/
 *.pot
 db.sqlite3
 *.pyc
-migrations/
 
 *.DS_Store
 
