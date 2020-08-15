@@ -7,22 +7,26 @@
             "choices": [
                 {
                     "id": 106,
-                    "text": "Earthen Dweller",
+                    "primary_text": "Earthen Dweller",
+                    "secondary_text": "Gnome",
                     "answer": true
                 },
                 {
                     "id": 107,
-                    "text": "California Rain",
+                    "primary_text": "California Rain",
+                    "secondary_text": "Silvertide",
                     "answer": false
                 },
                 {
                     "id": 108,
-                    "text": "Superman",
+                    "primary_text": "Superman",
+                    "secondary_text": "Skee-Lo",
                     "answer": true 
                 },
                 {
                     "id": 109,
-                    "text": "Foxhole J.C.",
+                    "primary_text": "Foxhole J.C.",
+                    "secondary_text": "Silvertide",
                     "answer": false
                 }
             ],
@@ -34,22 +38,22 @@
             "choices": [
                 {
                     "id": 110,
-                    "text": "Skee-Lo",
+                    "primary_text": "Skee-Lo",
                     "answer": true
                 },
                 {
                     "id": 111,
-                    "text": "100 gecs",
+                    "primary_text": "100 gecs",
                     "answer": false
                 },
                 {
                     "id": 112,
-                    "text": "Hozier",
+                    "primary_text": "Hozier",
                     "answer": false
                 },
                 {
                     "id": 113,
-                    "text": "Willie Peyote",
+                    "primary_text": "Willie Peyote",
                     "answer": false
                 }
             ],
