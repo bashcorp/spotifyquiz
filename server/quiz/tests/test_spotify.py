@@ -651,6 +651,54 @@ class AuthorizedSessionTests(StaticLiveServerTestCase):
         self.assertEqual(len(results.json().get('items')), 10)
 
 
+    def test_make_authorized_request_with_full_url(self):
+        """
+        Calling make_authorized_request() with full_url=True should ignore
+        the query string and just use whatever url was passed in through the
+        url argument.
+        """
+        query_dict = {
+            'slkww': 1430
+        }
+        url = 'https://api.spotify.com/v1/me'
+
+        results = spotify.make_authorized_request(self.session, url, query_dict=query_dict, full_url=True)
+
+        self.assertEqual(results.status_code, 200)
+
+
+    def test_make_authorized_request_bad_url_no_raise(self):
+        """
+        Calling make_authorized_request() with raise_on_error=False and giving
+        it a bad url should return the results of the bad request.
+        """
+        query_dict = {
+            'slksdf': 3451
+        }
+        url = '/v1/me/top/tracks'
+        results = spotify.make_authorized_request(self.session, url, query_dict=query_dict, raise_on_error=False)
+
+        self.assertNotEqual(results.status_code, 200)
+
+
+    def test_make_authorized_request_bad_url_raise(self):
+        """
+        Calling make_authorized_request() with raise_on_error=True and giving
+        it a bad url should raise a SpotifyRequestException.
+        """
+
+        query_dict = {
+            'slksdf': 3451
+        }
+        url = '/v1/me/top/tracks'
+        self.assertRaises(
+            spotify.SpotifyRequestException,
+            spotify.make_authorized_request,
+            self.session, url, query_dict=query_dict)
+
+
+
+
     def test_request_authorized_token(self):
         """
         request_authorized_token() should return an Authorized

@@ -162,7 +162,7 @@ def is_user_logged_in(session):
     variables are set.
     """
     if session.get(REFRESH_TOKEN) and session.get(USER_ID):
-        results = make_authorized_request(session, '/v1/me')
+        results = make_authorized_request(session, '/v1/me', raise_on_error=False)
         if results.status_code == 200:
             return True
     return False
@@ -171,7 +171,7 @@ def is_user_logged_in(session):
 
 
 
-def make_authorized_request(session, url, query_dict={}, data={}):
+def make_authorized_request(session, url, full_url=False, query_dict={}, data={}, raise_on_error=True):
     """
     Makes a GET request to Spotify at the given URL endpoint, with the
     given data attached to the request. This request should be
@@ -179,6 +179,14 @@ def make_authorized_request(session, url, query_dict={}, data={}):
 
     The user must be logged in for this to work. If no user is logged
     in, this will raise an exception.
+
+    By default, the URL is relative, meaning it will be appended to
+    'https://api.spotify.com'. If full_url is set to true, this function
+    expects the URL to already be absolute, and will make the request with that,
+    not appending any query string. This is to be used when the Spotify API
+    returns a paging object that has a URL to the next page. That URL is an
+    absolute one, with a query string already existing, so use full_url=True
+    to make that request.
     """
     token = get_auth_access_token(session)
 
@@ -190,9 +198,15 @@ def make_authorized_request(session, url, query_dict={}, data={}):
     if query_string:
         query_string = '?' + query_string
 
-    full_url = "https://api.spotify.com" + url + query_string
+    final_url = "https://api.spotify.com" + url + query_string
+    if full_url:
+        final_url = url
 
-    results = requests.get(url=full_url, data=data, headers=headers)
+    results = requests.get(url=final_url, data=data, headers=headers)
+
+    if results.status_code != 200 and raise_on_error:
+        raise SpotifyRequestException(final_url + " returned " + str(results.status_code))
+        
     return results
 
 
@@ -394,3 +408,9 @@ class SpotifyException(Exception):
     An exception for errors that occur when working with the Spotify API.
     """
     pass
+
+class SpotifyRequestException(SpotifyException):
+    """
+    An exception to be thrown when a request to the Spotify API returns
+    a non-successful status code.
+    """
