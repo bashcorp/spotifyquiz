@@ -178,7 +178,7 @@ class MultipleChoiceQuestion(Question):
 
     def __str__(self):
         return "<MultipleChoiceQuestion: " + self.text + ", Choices=[" + \
-        ", ".join((choice.text + (" (answer)" if choice.answer else "")) for choice in self.choices.all()) + "]>"
+        ", ".join((choice.primary_text + (" (answer)" if choice.answer else "")) for choice in self.choices.all()) + "]>"
     
 
     def _admin_get_question(self):
@@ -226,7 +226,7 @@ class QuestionChoice(models.Model):
 
 
     def __str__(self):
-        return "<Choice: " + self.text + (", answer" if self.answer else "") + ">"
+        return "<Choice: " + self.primary_text + (", answer" if self.answer else "") + ">"
 
 
 
@@ -426,7 +426,7 @@ class MultipleChoiceAnswer(ResponseAnswer):
 
     def __str__(self):
         return "<MultipleChoiceAnswer: Response=" + self.response.name + \
-                ", Choices=[" + ", ".join(choice.choice.text for choice in self.choices.all()) + "]>"
+                ", Choices=[" + ", ".join(choice.choice.primary_text for choice in self.choices.all()) + "]>"
 
 
 
@@ -466,7 +466,7 @@ class ChoiceAnswer(models.Model):
     def __str__(self):
         return "<ChoiceAnswer: Response=" + self.answer.response.name + \
                 ", Question=" + self.answer.question.text + \
-                ", Choice=" + self.choice.text + ">"
+                ", Choice=" + self.choice.primary_text + ">"
 
 
 
