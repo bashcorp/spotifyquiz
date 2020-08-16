@@ -32,10 +32,10 @@ class ParentFieldsAreRequiredTests(TransactionTestCase):
 
     def test_choice_has_no_mc_question(self):
         """
-        Trying to create a QuestionChoice without no associated
+        Trying to create a Choice without no associated
         MultipleChoiceQuestion should raise an error.
         """
-        self.assertRaises(IntegrityError, QuestionChoice.objects.create)
+        self.assertRaises(IntegrityError, Choice.objects.create)
 
 
     def test_response_has_no_quiz(self):
@@ -77,18 +77,18 @@ class ParentFieldsAreRequiredTests(TransactionTestCase):
         """
         quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        c = QuestionChoice.objects.create(question=q)
+        c = Choice.objects.create(question=q)
         self.assertRaises(ValidationError, ChoiceAnswer.objects.create, choice=c)
 
 
     def test_response_choice_has_no_choice(self):
         """
-        Trying to create a ChoiceAnswer with no associated QuestionChoice
+        Trying to create a ChoiceAnswer with no associated Choice
         should raise an error.
         """
         quiz = Quiz.objects.create(user_id='cassius')
         question = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        choice = QuestionChoice.objects.create(question=question)
+        choice = Choice.objects.create(question=question)
         response = Response.objects.create(quiz=quiz)
         answer = MultipleChoiceAnswer.objects.create(response=response, question=question)
         self.assertRaises(ValidationError, ChoiceAnswer.objects.create, answer=answer)
@@ -125,7 +125,7 @@ class ModelsContainProperLists(TransactionTestCase):
     def test_questions_have_proper_choices(self):
         """
         A Question object should have a reverse ForeignKey relationship called
-        'choices' that has all of its QuestionChoice objects.
+        'choices' that has all of its Choice objects.
         """
 
         question1 = Question.objects.filter(id=3)[0]
@@ -133,10 +133,10 @@ class ModelsContainProperLists(TransactionTestCase):
         question3 = Question.objects.filter(id=6)[0]
         question4 = Question.objects.filter(id=7)[0]
 
-        set1 = QuestionChoice.objects.filter(id__in=[1,2,3,4])
-        set2 = QuestionChoice.objects.filter(id__in=[5,6,7,8])
-        set3 = QuestionChoice.objects.filter(id__in=[9,10,11,12])
-        set4 = QuestionChoice.objects.filter(id__in=[13,14,15,16])
+        set1 = Choice.objects.filter(id__in=[1,2,3,4])
+        set2 = Choice.objects.filter(id__in=[5,6,7,8])
+        set3 = Choice.objects.filter(id__in=[9,10,11,12])
+        set4 = Choice.objects.filter(id__in=[13,14,15,16])
 
         self.assertCountEqual(question1.choices.all(), set1)
         self.assertCountEqual(question2.choices.all(), set2)
@@ -205,7 +205,7 @@ class QuizTests(TransactionTestCase):
     def test_quiz_json(self):
         quiz = Quiz.objects.create(user_id='cassius')
         q1 = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        c = QuestionChoice.objects.create(question=q1,answer=True)
+        c = Choice.objects.create(question=q1,answer=True)
         q2 = SliderQuestion.objects.create(quiz=quiz)
 
         json = {
@@ -249,11 +249,11 @@ class MultipleChoiceQuestionTests(TransactionTestCase):
         """
         quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        c1 = QuestionChoice.objects.create(question=q)
-        c2 = QuestionChoice.objects.create(question=q)
-        c3 = QuestionChoice.objects.create(question=q)
-        c4 = QuestionChoice.objects.create(question=q, answer=True)
-        c5 = QuestionChoice.objects.create(question=q, answer=True)
+        c1 = Choice.objects.create(question=q)
+        c2 = Choice.objects.create(question=q)
+        c3 = Choice.objects.create(question=q)
+        c4 = Choice.objects.create(question=q, answer=True)
+        c5 = Choice.objects.create(question=q, answer=True)
         answers = [c4, c5]
 
         self.assertCountEqual(q.answers(), answers)
@@ -267,9 +267,9 @@ class MultipleChoiceQuestionTests(TransactionTestCase):
         """
         quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        c1 = QuestionChoice.objects.create(question=q)
-        c2 = QuestionChoice.objects.create(question=q)
-        c3 = QuestionChoice.objects.create(question=q)
+        c1 = Choice.objects.create(question=q)
+        c2 = Choice.objects.create(question=q)
+        c3 = Choice.objects.create(question=q)
 
         self.assertRaises(ValidationError, q.answers)
 
@@ -281,10 +281,10 @@ class MultipleChoiceQuestionTests(TransactionTestCase):
         """
         quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        c1 = QuestionChoice.objects.create(question=q)
-        c2 = QuestionChoice.objects.create(question=q)
-        c4 = QuestionChoice.objects.create(question=q, answer=True)
-        c5 = QuestionChoice.objects.create(question=q, answer=True)
+        c1 = Choice.objects.create(question=q)
+        c2 = Choice.objects.create(question=q)
+        c4 = Choice.objects.create(question=q, answer=True)
+        c5 = Choice.objects.create(question=q, answer=True)
         
         self.assertTrue(q.is_checklist_question())
 
@@ -296,10 +296,10 @@ class MultipleChoiceQuestionTests(TransactionTestCase):
         """
         quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        c1 = QuestionChoice.objects.create(question=q)
-        c2 = QuestionChoice.objects.create(question=q)
-        c4 = QuestionChoice.objects.create(question=q)
-        c4 = QuestionChoice.objects.create(question=q, answer=True)
+        c1 = Choice.objects.create(question=q)
+        c2 = Choice.objects.create(question=q)
+        c4 = Choice.objects.create(question=q)
+        c4 = Choice.objects.create(question=q, answer=True)
         
         self.assertFalse(q.is_checklist_question())
 
@@ -312,9 +312,9 @@ class MultipleChoiceQuestionTests(TransactionTestCase):
         """
         quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        c1 = QuestionChoice.objects.create(question=q)
-        c2 = QuestionChoice.objects.create(question=q)
-        c3 = QuestionChoice.objects.create(question=q)
+        c1 = Choice.objects.create(question=q)
+        c2 = Choice.objects.create(question=q)
+        c3 = Choice.objects.create(question=q)
         
         self.assertRaises(ValidationError, q.is_checklist_question)
 
@@ -327,9 +327,9 @@ class MultipleChoiceQuestionTests(TransactionTestCase):
         """
         quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz, text="question")
-        c1 = QuestionChoice.objects.create(question=q, primary_text="choice1")
-        c2 = QuestionChoice.objects.create(question=q, primary_text="choice2")
-        c3 = QuestionChoice.objects.create(question=q, primary_text="choice3", answer=True)
+        c1 = Choice.objects.create(question=q, primary_text="choice1")
+        c2 = Choice.objects.create(question=q, primary_text="choice2")
+        c3 = Choice.objects.create(question=q, primary_text="choice3", answer=True)
 
         json = {
             'id': q.id,
@@ -348,9 +348,9 @@ class MultipleChoiceQuestionTests(TransactionTestCase):
         """
         quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz, text="question")
-        c1 = QuestionChoice.objects.create(question=q, primary_text="choice1", answer=True)
-        c2 = QuestionChoice.objects.create(question=q, primary_text="choice2", answer=True)
-        c3 = QuestionChoice.objects.create(question=q, primary_text="choice3")
+        c1 = Choice.objects.create(question=q, primary_text="choice1", answer=True)
+        c2 = Choice.objects.create(question=q, primary_text="choice2", answer=True)
+        c3 = Choice.objects.create(question=q, primary_text="choice3")
 
         json = {
             'id': q.id,
@@ -363,7 +363,7 @@ class MultipleChoiceQuestionTests(TransactionTestCase):
 
 
 
-class QuestionChoiceTests(TransactionTestCase):
+class ChoiceTests(TransactionTestCase):
     """
     A database model that holds one choice of a MultipleChoiceAnswer. The choice
     itself is a string of text.
@@ -375,7 +375,7 @@ class QuestionChoiceTests(TransactionTestCase):
         """
         quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        c = QuestionChoice.objects.create(question=q, primary_text="choice text", secondary_text="subtext", answer=False)
+        c = Choice.objects.create(question=q, primary_text="choice text", secondary_text="subtext", answer=False)
 
         json = {
             'id': c.id,
@@ -392,7 +392,7 @@ class QuestionChoiceTests(TransactionTestCase):
         """
         quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        c = QuestionChoice.objects.create(question=q, primary_text="choice text", answer=False)
+        c = Choice.objects.create(question=q, primary_text="choice text", answer=False)
 
         json = {
             'id': c.id,
@@ -404,7 +404,7 @@ class QuestionChoiceTests(TransactionTestCase):
     def test_question_choice_json_is_answer(self):
         quiz = Quiz.objects.create(user_id='cassius')
         q = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        c = QuestionChoice.objects.create(question=q, primary_text="choice text", secondary_text="subtext", answer=True)
+        c = Choice.objects.create(question=q, primary_text="choice text", secondary_text="subtext", answer=True)
 
         json = {
             'id': c.id,
@@ -412,6 +412,292 @@ class QuestionChoiceTests(TransactionTestCase):
             'secondary_text': 'subtext',
         }
         self.assertEquals(c.json(), json)
+
+
+class ChoiceCreationFunctionTests(TransactionTestCase):
+    """
+    The Choice object has several static function that make it easier to create specific Choice
+    objects from the data that Spotify API returns. These functions create Choices from
+    tracks, artists, and genres.
+    """
+
+    def test_create_artist_choice_not_answer(self):
+        """
+        create_artist_choice() should create a Choice object from the given Artist JSON, and
+        set the Choice's answer field to the argument 'answer'.
+        """
+        artist = {
+            'name': 'Bon Jovi'
+        }
+        quiz = Quiz.objects.create()
+        question = MultipleChoiceQuestion.objects.create(quiz=quiz)
+        Choice.create_artist_choice(question=question, artist=artist)
+
+        self.assertEquals(Choice.objects.count(), 1)
+
+        q = Choice.objects.all()[0]
+        self.assertEquals(q.primary_text, 'Bon Jovi')
+        self.assertIsNone(q.secondary_text)
+        self.assertFalse(q.answer)
+        self.assertEquals(q.question, question)
+
+    def test_create_artist_choice_is_answer(self):
+        """
+        create_artist_choice() should create a Choice object from the given Artist JSON, and
+        set the Choice's answer field to the argument 'answer'.
+        """
+        artist = {
+            'name': 'Bon Jovi'
+        }
+        quiz = Quiz.objects.create()
+        question = MultipleChoiceQuestion.objects.create(quiz=quiz)
+        Choice.create_artist_choice(question=question, artist=artist, answer=True)
+
+        self.assertEquals(Choice.objects.count(), 1)
+
+        q = Choice.objects.all()[0]
+        self.assertEquals(q.primary_text, 'Bon Jovi')
+        self.assertIsNone(q.secondary_text)
+        self.assertTrue(q.answer)
+        self.assertEquals(q.question, question)
+
+
+    def test_create_artist_choices_not_answers(self):
+        """
+        create_artist_choices() should create Choice objects for each Artist JSON in the
+        given list, and set the Choices' answer fields to the argument 'answer'.
+        """
+        artists = [
+        { 'name': 'Bon Jovi' },
+        { 'name': 'Cassius' },
+        { 'name': 'Bon Jamin' },
+        ]
+
+        quiz = Quiz.objects.create()
+        question = MultipleChoiceQuestion.objects.create(quiz=quiz)
+        Choice.create_artist_choices(question=question, artists=artists)
+
+        self.assertEquals(Choice.objects.count(), 3)
+
+        objects = Choice.objects.all()
+        self.assertEquals(objects[0].primary_text, 'Bon Jovi')
+        self.assertFalse(objects[0].answer)
+        self.assertEquals(objects[1].primary_text, 'Cassius')
+        self.assertFalse(objects[1].answer)
+        self.assertEquals(objects[2].primary_text, 'Bon Jamin')
+        self.assertFalse(objects[2].answer)
+
+
+    def test_create_artist_choices_are_answers(self):
+        """
+        create_artist_choices() should create Choice objects for each Artist JSON in the
+        given list, and set the Choices' answer fields to the argument 'answer'.
+        """
+        artists = [
+        { 'name': 'Bon Jovi' },
+        { 'name': 'Cassius' },
+        { 'name': 'Bon Jamin' },
+        ]
+
+        quiz = Quiz.objects.create()
+        question = MultipleChoiceQuestion.objects.create(quiz=quiz)
+        Choice.create_artist_choices(question=question, artists=artists, answer=True)
+
+        self.assertEquals(Choice.objects.count(), 3)
+
+        objects = Choice.objects.all()
+        self.assertEquals(objects[0].primary_text, 'Bon Jovi')
+        self.assertTrue(objects[0].answer)
+        self.assertEquals(objects[1].primary_text, 'Cassius')
+        self.assertTrue(objects[1].answer)
+        self.assertEquals(objects[2].primary_text, 'Bon Jamin')
+        self.assertTrue(objects[2].answer)
+
+
+    def test_create_track_choice_not_answer(self):
+        """
+        create_track_choice() should create a Choice object from the given Track JSON, and
+        set the Choice's answer field to the argument 'answer'.
+        """
+        track = {
+            'name': 'YGLABN',
+            'artists': [{'name': 'Bon Jovi'}, {'name': 'Unknown'}]
+        }
+        quiz = Quiz.objects.create()
+        question = MultipleChoiceQuestion.objects.create(quiz=quiz)
+        Choice.create_track_choice(question=question, track=track)
+
+        self.assertEquals(Choice.objects.count(), 1)
+
+        q = Choice.objects.all()[0]
+        self.assertEquals(q.primary_text, 'YGLABN')
+        self.assertEquals(q.secondary_text, 'Bon Jovi')
+        self.assertFalse(q.answer)
+        self.assertEquals(q.question, question)
+
+
+    def test_create_track_choice_is_answer(self):
+        """
+        create_track_choice() should create a Choice object from the given Track JSON, and
+        set the Choice's answer field to the argument 'answer'.
+        """
+        track = {
+            'name': 'YGLABN',
+            'artists': [{'name': 'Bon Jovi'}, {'name': 'Unknown'}]
+        }
+        quiz = Quiz.objects.create()
+        question = MultipleChoiceQuestion.objects.create(quiz=quiz)
+        Choice.create_track_choice(question=question, track=track, answer=True)
+
+        self.assertEquals(Choice.objects.count(), 1)
+
+        q = Choice.objects.all()[0]
+        self.assertEquals(q.primary_text, 'YGLABN')
+        self.assertEquals(q.secondary_text, 'Bon Jovi')
+        self.assertTrue(q.answer)
+        self.assertEquals(q.question, question)
+
+
+    def test_create_track_choices_not_answers(self):
+        """
+        create_track_choices() should create Choice objects for each Track JSON in the
+        given list, and set the Choices' answer fields to the argument 'answer'.
+        """
+        tracks = [
+        {
+            'name': 'YGLABN',
+            'artists': [{'name': 'Bon Jovi'}, {'name': 'Unknown'}] 
+        },
+        {
+            'name': 'Country Song',
+            'artists': [{'name': 'Cassius'}, {'name': 'Ben Jamin'}]
+        }]
+
+        quiz = Quiz.objects.create()
+        question = MultipleChoiceQuestion.objects.create(quiz=quiz)
+        Choice.create_track_choices(question=question, tracks=tracks)
+
+        self.assertEquals(Choice.objects.count(), 2)
+
+        objects = Choice.objects.all()
+        self.assertEquals(objects[0].primary_text, 'YGLABN')
+        self.assertEquals(objects[0].secondary_text, 'Bon Jovi')
+        self.assertFalse(objects[0].answer)
+        self.assertEquals(objects[1].primary_text, 'Country Song')
+        self.assertEquals(objects[1].secondary_text, 'Cassius')
+        self.assertFalse(objects[1].answer)
+
+
+    def test_create_track_choices_are_answers(self):
+        """
+        create_track_choices() should create Choice objects for each Track JSON in the
+        given list, and set the Choices' answer fields to the argument 'answer'.
+        """
+        tracks = [
+        {
+            'name': 'YGLABN',
+            'artists': [{'name': 'Bon Jovi'}, {'name': 'Unknown'}] 
+        },
+        {
+            'name': 'Country Song',
+            'artists': [{'name': 'Cassius'}, {'name': 'Ben Jamin'}]
+        }]
+
+        quiz = Quiz.objects.create()
+        question = MultipleChoiceQuestion.objects.create(quiz=quiz)
+        Choice.create_track_choices(question=question, tracks=tracks, answer=True)
+
+        self.assertEquals(Choice.objects.count(), 2)
+
+        objects = Choice.objects.all()
+        self.assertEquals(objects[0].primary_text, 'YGLABN')
+        self.assertEquals(objects[0].secondary_text, 'Bon Jovi')
+        self.assertTrue(objects[0].answer)
+        self.assertEquals(objects[1].primary_text, 'Country Song')
+        self.assertEquals(objects[1].secondary_text, 'Cassius')
+        self.assertTrue(objects[1].answer)
+
+
+    def test_create_genre_choice_not_answer(self):
+        """
+        create_genre_choice() should create a Choice object from the given Genre string, and
+        set the Choice's answer field to the argument 'answer'.
+        """
+        genre = "Pop"
+        quiz = Quiz.objects.create()
+        question = MultipleChoiceQuestion.objects.create(quiz=quiz)
+        Choice.create_genre_choice(question=question, genre=genre)
+
+        self.assertEquals(Choice.objects.count(), 1)
+
+        q = Choice.objects.all()[0]
+        self.assertEquals(q.primary_text, 'Pop')
+        self.assertIsNone(q.secondary_text)
+        self.assertFalse(q.answer)
+        self.assertEquals(q.question, question)
+
+
+    def test_create_genre_choice_is_answer(self):
+        """
+        create_genre_choice() should create a Choice object from the given Genre string, and
+        set the Choice's answer field to the argument 'answer'.
+        """
+        genre = "Pop"
+        quiz = Quiz.objects.create()
+        question = MultipleChoiceQuestion.objects.create(quiz=quiz)
+        Choice.create_genre_choice(question=question, genre=genre, answer=True)
+
+        self.assertEquals(Choice.objects.count(), 1)
+
+        q = Choice.objects.all()[0]
+        self.assertEquals(q.primary_text, 'Pop')
+        self.assertIsNone(q.secondary_text)
+        self.assertTrue(q.answer)
+        self.assertEquals(q.question, question)
+
+
+    def test_create_genre_choices_not_answers(self):
+        """
+        create_genre_choices() should create Choice objects for each Genre string in the
+        given list, and set the Choices' answer fields to the argument 'answer'.
+        """
+        genres = ["Pop", "Rock"]
+
+        quiz = Quiz.objects.create()
+        question = MultipleChoiceQuestion.objects.create(quiz=quiz)
+        Choice.create_genre_choices(question=question, genres=genres)
+
+        self.assertEquals(Choice.objects.count(), 2)
+
+        objects = Choice.objects.all()
+        self.assertEquals(objects[0].primary_text, 'Pop')
+        self.assertIsNone(objects[0].secondary_text)
+        self.assertFalse(objects[0].answer)
+        self.assertEquals(objects[1].primary_text, 'Rock')
+        self.assertIsNone(objects[1].secondary_text)
+        self.assertFalse(objects[1].answer)
+
+
+    def test_create_genre_choices_are_answers(self):
+        """
+        create_genre_choices() should create Choice objects for each Genre string in the
+        given list, and set the Choices' answer fields to the argument 'answer'.
+        """
+        genres = ["Pop", "Rock"]
+
+        quiz = Quiz.objects.create()
+        question = MultipleChoiceQuestion.objects.create(quiz=quiz)
+        Choice.create_genre_choices(question=question, genres=genres, answer=True)
+
+        self.assertEquals(Choice.objects.count(), 2)
+
+        objects = Choice.objects.all()
+        self.assertEquals(objects[0].primary_text, 'Pop')
+        self.assertIsNone(objects[0].secondary_text)
+        self.assertTrue(objects[0].answer)
+        self.assertEquals(objects[1].primary_text, 'Rock')
+        self.assertIsNone(objects[1].secondary_text)
+        self.assertTrue(objects[1].answer)
 
 
 
@@ -553,8 +839,8 @@ class ChoiceAnswerTests(TransactionTestCase):
         quiz = Quiz.objects.create(user_id='cassius')
         q1 = MultipleChoiceQuestion.objects.create(quiz=quiz)
         q2 = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        c1 = QuestionChoice.objects.create(question=q1)
-        c2 = QuestionChoice.objects.create(question=q2)
+        c1 = Choice.objects.create(question=q1)
+        c2 = Choice.objects.create(question=q2)
         response = Response.objects.create(quiz=quiz)
         answer = MultipleChoiceAnswer.objects.create(response=response,question=q1)
         self.assertRaises(ValidationError, ChoiceAnswer.objects.create, answer=answer, choice=c2)
@@ -610,7 +896,7 @@ class DeleteModelsTests(TransactionTestCase):
         for q in questions:
             self.assertFalse(Question.objects.filter(id=q.id).exists())
         for c in choices:
-            self.assertFalse(QuestionChoice.objects.filter(id=c.id).exists())
+            self.assertFalse(Choice.objects.filter(id=c.id).exists())
         for r in responses:
             self.assertFalse(Response.objects.filter(id=r.id).exists())
         for a in answers:
@@ -628,7 +914,7 @@ class DeleteModelsTests(TransactionTestCase):
 
         self.assertEquals(Quiz.objects.count(), 0)
         self.assertEquals(Question.objects.count(), 0)
-        self.assertEquals(QuestionChoice.objects.count(), 0)
+        self.assertEquals(Choice.objects.count(), 0)
         self.assertEquals(Response.objects.count(), 0)
         self.assertEquals(ResponseAnswer.objects.count(), 0)
         self.assertEquals(ChoiceAnswer.objects.count(), 0)
@@ -646,7 +932,7 @@ class DeleteModelsTests(TransactionTestCase):
 
         self.assertEquals(Quiz.objects.count(), quiz_count)
         self.assertEquals(Question.objects.count(), 0)
-        self.assertEquals(QuestionChoice.objects.count(), 0)
+        self.assertEquals(Choice.objects.count(), 0)
         self.assertEquals(Response.objects.count(), response_count)
         self.assertEquals(ResponseAnswer.objects.count(), 0)
         self.assertEquals(ChoiceAnswer.objects.count(), 0)
@@ -669,7 +955,7 @@ class DeleteModelsTests(TransactionTestCase):
         self.assertTrue(Quiz.objects.filter(user_id=quiz.user_id).exists())
         self.assertFalse(Question.objects.filter(id=q.id).exists())
         for c in choices:
-            self.assertFalse(QuestionChoice.objects.filter(id=c.id).exists())
+            self.assertFalse(Choice.objects.filter(id=c.id).exists())
         for r in responses:
             self.assertFalse(ResponseAnswer.objects.filter(id=r.id).exists())
 
@@ -684,7 +970,7 @@ class DeleteModelsTests(TransactionTestCase):
         MultipleChoiceQuestion.objects.all().delete()
 
         self.assertEquals(MultipleChoiceQuestion.objects.count(), 0)
-        self.assertEquals(QuestionChoice.objects.count(), 0)
+        self.assertEquals(Choice.objects.count(), 0)
         self.assertEquals(MultipleChoiceAnswer.objects.count(), 0)
         self.assertEquals(ChoiceAnswer.objects.count(), 0)
         self.assertEquals(Quiz.objects.count(), quiz_count)
@@ -694,13 +980,13 @@ class DeleteModelsTests(TransactionTestCase):
         """
         Deleting a question_choice should not delete its related question.
         """
-        c = QuestionChoice.objects.all()[0]
+        c = Choice.objects.all()[0]
         question = c.question
         picks = c.picks.all()
 
         c.delete()
 
-        self.assertFalse(QuestionChoice.objects.filter(id=c.id).exists())
+        self.assertFalse(Choice.objects.filter(id=c.id).exists())
         self.assertTrue(MultipleChoiceQuestion.objects.filter(id=question.id).exists())
         for p in picks:
             self.assertFalse(ChoiceAnswer.objects.filter(id=p.id).exists())
@@ -708,14 +994,14 @@ class DeleteModelsTests(TransactionTestCase):
 
     def test_delete_all_question_choices(self):
         """
-        Deleting QuestionChoices from a queryset should work properly and should delete
+        Deleting Choices from a queryset should work properly and should delete
         all associated data.
         """
         question_count = Question.objects.count()
 
-        QuestionChoice.objects.all().delete()
+        Choice.objects.all().delete()
 
-        self.assertEquals(QuestionChoice.objects.count(), 0)
+        self.assertEquals(Choice.objects.count(), 0)
         self.assertEquals(ChoiceAnswer.objects.count(), 0)
         self.assertEquals(Question.objects.count(), question_count)
 
@@ -873,7 +1159,7 @@ class DeleteModelsTests(TransactionTestCase):
 
     def test_delete_choice_answer(self):
         """
-        Deleting a ChoiceAnswer should preserve its associated QuestionChoice and 
+        Deleting a ChoiceAnswer should preserve its associated Choice and 
         ResponseAnswer objects.
         """
         a = ChoiceAnswer.objects.all()[0]
@@ -883,20 +1169,20 @@ class DeleteModelsTests(TransactionTestCase):
         a.delete()
 
         self.assertTrue(MultipleChoiceAnswer.objects.filter(id=answer.id).exists())
-        self.assertTrue(QuestionChoice.objects.filter(id=choice.id).exists())
+        self.assertTrue(Choice.objects.filter(id=choice.id).exists())
         self.assertFalse(ChoiceAnswer.objects.filter(id=a.id).exists())
 
 
     def test_delete_all_choice_answers(self):
         """
         Deleting ChoiceAnswer objects from a queryset should work properly and preserve
-        their associated QuestionChoices and ResponseAnswers.
+        their associated Choices and ResponseAnswers.
         """
         answer_count = ResponseAnswer.objects.count()
-        choice_count = QuestionChoice.objects.count()
+        choice_count = Choice.objects.count()
 
         ChoiceAnswer.objects.all().delete()
 
         self.assertEquals(ChoiceAnswer.objects.count(), 0)
         self.assertEquals(ResponseAnswer.objects.count(), answer_count)
-        self.assertEquals(QuestionChoice.objects.count(), choice_count)
+        self.assertEquals(Choice.objects.count(), choice_count)

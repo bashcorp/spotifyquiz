@@ -132,12 +132,12 @@ class Question(PolymorphicModel):
 class MultipleChoiceQuestion(Question):
     """
     Represents a multiple choice question with a list of text-based answer
-    choices, stored in QuestionChoice. This model supports multiple correct answers,
-    as each QuestionChoice holds a boolean describing whether or not is is a correct
+    choices, stored in Choice. This model supports multiple correct answers,
+    as each Choice holds a boolean describing whether or not is is a correct
     answer.
     """
 
-    # choices (QuestionChoice objects)
+    # choices (Choice objects)
 
     def answers(self):
         """
@@ -196,7 +196,7 @@ class MultipleChoiceQuestion(Question):
 
 
 
-class QuestionChoice(models.Model):
+class Choice(models.Model):
     """
     Represents one possible choice of a MultipleChoiceQuestion. The choice
     itself is a string of text.
@@ -229,6 +229,76 @@ class QuestionChoice(models.Model):
         return "<Choice: " + self.primary_text + (", answer" if self.answer else "") + ">"
 
 
+    def create_artist_choices(question, artists, answer=False):
+        """
+        Creates choice objects from a given list of tracks, formatted as JSON the way the
+        Spotify API returns them.
+        Sets them all as correct or incorrect answers according to 'answer'.
+        """
+        for a in artists:
+            Choice.create_artist_choice(question, a, answer)
+
+
+    def create_artist_choice(question, artist, answer=False):
+        """
+        Creates a Choice object that represents an artist, by using artist data in the JSON
+        format that the Spotify API returns. The Choice's primary text is the artist's name,
+        and it has no secondary choice.
+        The Choice's 'answer' field will be set according to the 'answer' argument
+        """
+        return Choice.objects.create(
+            question = question,
+            primary_text = artist['name'],
+            answer = answer
+        )
+
+
+    def create_track_choices(question, tracks, answer=False):
+        """
+        Creates choice objects from a given list of tracks, formatted as JSON the way the
+        Spotify API returns them.
+        Sets them all as correct or incorrect answers according to 'answer'.
+        """
+        for t in tracks:
+            Choice.create_track_choice(question, t, answer)
+
+
+    def create_track_choice(question, track, answer=False):
+        """
+        Creates a Choice object that represents a track, by using track data in the JSON
+        format that the Spotify API returns. The Choice's primary text is the track's name,
+        and its secondary text is the track's artist.
+        The Choice's 'answer' field will be set according to the 'answer' argument
+        """
+        return Choice.objects.create(
+            question = question,
+            primary_text = track['name'],
+            secondary_text = track['artists'][0]['name'],
+            answer = answer
+        )
+
+
+    def create_genre_choices(question, genres, answer=False):
+        """
+        Creates choice objects from a given list of genres, which are just strings.
+        Sets them all as correct or incorrect answers according to 'answer'.
+        """
+        for g in genres:
+            Choice.create_genre_choice(question, g, answer)
+
+    def create_genre_choice(question, genre, answer=False):
+        """
+        Creates a Choice object that represents a genre, by using artist data in the JSON
+        format that the Spotify API returns. The Choice's primary text is the genre name,
+        and it has no secondary text.
+        The Choice's 'answer' field will be set according to the 'answer' argument
+        """
+        return Choice.objects.create(
+                question = question,
+                primary_text = genre,
+                answer = answer
+        )
+        
 
 
 class SliderQuestion(Question):
@@ -436,7 +506,7 @@ class ChoiceAnswer(models.Model):
     Represents one of a user's selected choices in a given ResponseAnswer.
     """
 
-    choice = models.ForeignKey('QuestionChoice', null=False,
+    choice = models.ForeignKey('Choice', null=False,
             related_name="picks", on_delete=models.CASCADE)
     answer = models.ForeignKey('MultipleChoiceAnswer', null=False,
             related_name="choices", on_delete=models.CASCADE)
@@ -452,11 +522,11 @@ class ChoiceAnswer(models.Model):
             self.choice
         except:
             raise ValidationError("A ChoiceAnswer was created without \
-                    giving it a choice (QuestionChoice)")
+                    giving it a choice (Choice)")
 
         if self.choice not in self.answer.question.choices.all():
             raise ValidationError("A ChoiceAnswer was created that \
-                    chooses a QuestionChoice not in the question it \
+                    chooses a Choice not in the question it \
                     is responding to")
 
     def save(self, *args, **kwargs):

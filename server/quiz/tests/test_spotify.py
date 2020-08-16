@@ -697,8 +697,6 @@ class AuthorizedSessionTests(StaticLiveServerTestCase):
             self.session, url, query_dict=query_dict)
 
 
-
-
     def test_request_authorized_token(self):
         """
         request_authorized_token() should return an Authorized

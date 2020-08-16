@@ -114,7 +114,7 @@
   "fields": {}
 },
 {
-  "model": "quiz.questionchoice",
+  "model": "quiz.choice",
   "pk": 1,
   "fields": {
     "question": 3,
@@ -124,7 +124,7 @@
   }
 },
 {
-  "model": "quiz.questionchoice",
+  "model": "quiz.choice",
   "pk": 2,
   "fields": {
     "question": 3,
@@ -134,7 +134,7 @@
   }
 },
 {
-  "model": "quiz.questionchoice",
+  "model": "quiz.choice",
   "pk": 3,
   "fields": {
     "question": 3,
@@ -144,7 +144,7 @@
   }
 },
 {
-  "model": "quiz.questionchoice",
+  "model": "quiz.choice",
   "pk": 4,
   "fields": {
     "question": 3,
@@ -154,7 +154,7 @@
   }
 },
 {
-  "model": "quiz.questionchoice",
+  "model": "quiz.choice",
   "pk": 5,
   "fields": {
     "question": 4,
@@ -164,7 +164,7 @@
   }
 },
 {
-  "model": "quiz.questionchoice",
+  "model": "quiz.choice",
   "pk": 6,
   "fields": {
     "question": 4,
@@ -174,7 +174,7 @@
   }
 },
 {
-  "model": "quiz.questionchoice",
+  "model": "quiz.choice",
   "pk": 7,
   "fields": {
     "question": 4,
@@ -184,7 +184,7 @@
   }
 },
 {
-  "model": "quiz.questionchoice",
+  "model": "quiz.choice",
   "pk": 8,
   "fields": {
     "question": 4,
@@ -194,7 +194,7 @@
   }
 },
 {
-  "model": "quiz.questionchoice",
+  "model": "quiz.choice",
   "pk": 9,
   "fields": {
     "question": 6,
@@ -204,7 +204,7 @@
   }
 },
 {
-  "model": "quiz.questionchoice",
+  "model": "quiz.choice",
   "pk": 10,
   "fields": {
     "question": 6,
@@ -214,7 +214,7 @@
   }
 },
 {
-  "model": "quiz.questionchoice",
+  "model": "quiz.choice",
   "pk": 11,
   "fields": {
     "question": 6,
@@ -224,7 +224,7 @@
   }
 },
 {
-  "model": "quiz.questionchoice",
+  "model": "quiz.choice",
   "pk": 12,
   "fields": {
     "question": 6,
@@ -234,7 +234,7 @@
   }
 },
 {
-  "model": "quiz.questionchoice",
+  "model": "quiz.choice",
   "pk": 13,
   "fields": {
     "question": 7,
@@ -244,7 +244,7 @@
   }
 },
 {
-  "model": "quiz.questionchoice",
+  "model": "quiz.choice",
   "pk": 14,
   "fields": {
     "question": 7,
@@ -254,7 +254,7 @@
   }
 },
 {
-  "model": "quiz.questionchoice",
+  "model": "quiz.choice",
   "pk": 15,
   "fields": {
     "question": 7,
@@ -264,7 +264,7 @@
   }
 },
 {
-  "model": "quiz.questionchoice",
+  "model": "quiz.choice",
   "pk": 16,
   "fields": {
     "question": 7,

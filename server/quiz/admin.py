@@ -21,7 +21,7 @@ class QuizAdmin(admin.ModelAdmin):
 # Register the database models so they show up on the admin dashboard
 admin.site.register(Question)
 admin.site.register(MultipleChoiceQuestion)
-admin.site.register(QuestionChoice)
+admin.site.register(Choice)
 admin.site.register(SliderQuestion)
 admin.site.register(Response)
 admin.site.register(ResponseAnswer)
