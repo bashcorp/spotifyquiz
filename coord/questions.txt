@@ -1,50 +1,106 @@
-A list of possible questions we can use:
+Info we can get:
 
-_Top Played_
+For each track:
+    - Song features (bars, beats, time signatures, etc.)
+    - Acousticness
+    - Danceability
+    - Duration
+    - Energy
+    - Instrumentalness
+    - Key
+    - Liveness
+    - Loudness
+    - Tempo
+    - Valence (happiness)
+    - Explicit
+    - Popularity
+    - Track Number
+    - Album
+
+For each album:
+    - Type (Single, Compilation, Album)
+    - Genres
+    - Popularity
+    - Release Date
+    - Tracks
+
+For each artist:
+    - Followers
+    - Genres
+    - Popularity
+    - Albums
+    - Top Tracks
+    - Related Artists
+
+For each playlist:
+    - Tracks
+    - Collaborative
+    - Description
+    - # of followers
+    - Name
+    - Public/Private
+
+
+For each user:
+    - Display Name
+    - # of Followers
+    - Top 50 tracks (all time, 6 months, 4 weeks)
+    - Top 50 artists (all time, 6 months, 4 weeks)
+    - All saved songs
+    - All saved albums
+    - Followed artists
+    - Currently playing track
+    - 50 recently played tracks
+    - All playlists (private and public)
+
+
+
+A list of questions we can use:
+
+_Top Played_ (Choose 2)
 (MC) What is the user's most listened to track? (of all time, 6 months, 4 weeks)
 (MC) What is the user's most listened to artist? (of all time, 6 months, 4 weeks)
 (MC) What is the user's most listened to genre? (of all time, 6 months, 4 weeks)
 
+_Saved/Followed_ (Choose 2)
+(Cl) Which albums has the user saved?
+(Cl) Which tracks has the user saved?
+(Cl) Which artists does the user follow?
 
-_Recently Played_
+_Recently Played_ (Choose 1)
 (MC) What is the user's most recently played song (as of the timestamp of quiz creation)?
-(MC) What is the user's currently playing song (as of the timestamp of quiz creation)?
-    - This might be the same question
+(Cl) Which of these did the user listen to recently?
 
+_Misc_ (Choose 3)
+(Sl) How much of the user's music is explicit?
+(Sl) What's the average length of the user's music taste?
+(Sl) How energetic is the user's music taste?
+(Sl) How acoustic is the user's music taste/What percentage of the user's music taste is acoustic?
+(Sl) How loud is the user's music, on average?
+(Sl) How happy is the user's music taste?
+(Sl) How danceable is the user's music taste?
 
-_User Popularity_
+(1 of these)
+(Sl) How old is the music that the user listens to?
+(Mc) What decade is the music that the user listens to the most?
+
+_Popularity and Playlists_
+(Choose 2)
 (MC) What is the user's most popular public playlist (by # of followers)?
 (Sl) How many followers does the user's most popular public playlist have?
-    - Either this one or the previous, not both
-    - Doesn't seem right to expose private playlists except for the below question
-(Sl) How many private playlists does the user have?
-    - Maybe include compared to how many public ones they have?
 (Sl) How many followers does the user have?
+(Sl) What is the average popularity of the user's music taste?
 
-_Track/Artist Popularity_
-(Sl) How popular is the user's top artist? (of all time, 6 months, 4 weeks)
-(Sl) How popular are the user's recent albums? (all time, 6 months, 4 weeks)
-(Sl) How popular are the user's saved albums?
-(Sl) How popular is the user's top track? (of all time, 6 months, 4 weeks)
-(Sl) How popular are the user's recent tracks? (all time, 6 months, 4 weeks)
-(Sl) How popular are the user's saved tracks?
-(MC) Which is the user's most popular artist? (of recently listened to, saved artists)
-(MC) Which is the user's most popular track? (of recently listened to, saved tracks)
-
-_Misc_
-How much of the user's music is explicit?
-What's the average length of the user's music taste?
-
-
-How loud is the user's music, on average?
-Which of the user's top songs is the loudest?
+(Choose 1)
+(Cl) Which tracks are on this playlist?
+(Sl) The user has X# of public playlists. How many private playlists does the user have?
+(Sl) How many collaborative playlists does the user have?
 
 
 
-Which albums has the user saved?
-Which tracks has the user saved?
-Which artists does the user follow?
 
 
-How old is the music that the user listens to?
+
+
+
 
