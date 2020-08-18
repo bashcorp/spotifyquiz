@@ -286,6 +286,7 @@ class Choice(models.Model):
         for g in genres:
             Choice.create_genre_choice(question, g, answer)
 
+
     def create_genre_choice(question, genre, answer=False):
         """
         Creates a Choice object that represents a genre, by using artist data in the JSON

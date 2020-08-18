@@ -54,6 +54,8 @@ USER_ID = 'user_id'
 
 noauth_access_token = None
 
+SCOPES = 'user-read-private user-top-read user-library-read playlist-read-collaborative playlist-read-private user-follow-read user-read-recently-played'
+
 
 def cleanup_timers():
     for t in threading.enumerate():

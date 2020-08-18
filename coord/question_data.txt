@@ -1,0 +1,54 @@
+Saved Tracks:
+    Name
+    Artist
+        Name
+
+Saved Albums:
+    Name
+    Artist
+        Name
+
+Followed Artists:
+    Name
+
+(If needed)
+Top Tracks: 
+    Name
+    Artist
+        Name
+        Genre
+
+(If needed)
+Top Artists: 
+    Name
+    Genre
+    
+Music Taste (Tracks):
+    Name
+    Artist
+        Name
+    Album
+        Release Date
+    Popularity
+    Explicit
+
+    (If needed)
+    Danceability
+    Energy
+    Acousticness
+    Loud
+    Happy
+    
+
+
+Playlists:
+    Private/Public
+    Collaborative
+    # of Followers
+
+Recently Played Tracks:
+    Name
+    Artist
+        Name
+    
+# of Followers

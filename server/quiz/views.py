@@ -41,7 +41,7 @@ def dashboard(request):
         for q in quizzes:
             q.delete()
         logger.debug("Deleted existing quiz")
-    quiz = create_quiz(request.session)
+    #quiz = create_quiz(request.session)
 
     return render(request, react_mainpage, context={})
 
@@ -55,7 +55,7 @@ def login(request):
         'response_type': 'code',
         'show_dialog': 'true',
         'redirect_uri': 'http://localhost:8000/logged_in?redirect='+redirect_view,
-        'scope': 'user-read-private user-read-email user-top-read',
+        'scope': spotify.SCOPES
     }
     query_string = urllib.parse.urlencode(query_args)
 
