@@ -1,4 +1,4 @@
-from django.test import TransactionTestCase
+from django.test import TransactionTestCase, TestCase
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 
 from quiz import spotify
@@ -333,3 +333,56 @@ class UserDataCompilationTests(StaticLiveServerTestCase):
 
         self.assertEquals(data['type'], 'playlist')
         self.assertIsNotNone(data.get('tracks'))
+
+
+class UserDataErrorTests(StaticLiveServerTestCase):
+    port = 8000 
+
+    @classmethod 
+    def setUpClass(cls):
+        """
+        These tests only need a user to be logged into a session, so
+        this does it once at class creation. Saves the session data by itself
+        so that each test can have a fresh session with that data.
+        """
+        super(UserDataErrorTests, cls).setUpClass()
+         
+        cls.session = create_authorized_session(cls.live_server_url)
+        #cls.refresh_token = session.get(spotify.REFRESH_TOKEN)
+        #cls.auth_access_token = session.get(spotify.AUTH_ACCESS_TOKEN)
+        #cls.user_id = session.get(spotify.USER_ID)
+
+
+    @classmethod
+    def tearDownClass(cls):
+        """
+        At the end of this class, complete any timers that would delete
+        auth_access_tokens, so that they don't hang up the testing program.
+        """
+        super(UserDataErrorTests, cls).tearDownClass()
+        spotify.cleanup_timers()
+
+    def test_bad_session_errors(self):
+        u = UserData(None)
+
+        self.assertRaises(Exception, u.personal_data)
+        self.assertRaises(Exception, u.music_taste)
+        self.assertRaises(Exception, u.music_taste_with_audio_features)
+        self.assertRaises(Exception, u.playlists)
+        self.assertRaises(Exception, u.playlists_detailed)
+        self.assertRaises(Exception, u.recently_played)
+        self.assertRaises(Exception, u.top_artists, 'long_term')
+        self.assertRaises(Exception, u.top_tracks, 'long_term')
+        self.assertRaises(Exception, u.top_genres, 'long_term')
+        self.assertRaises(Exception, u.saved_tracks)
+        self.assertRaises(Exception, u.saved_albums)
+        self.assertRaises(Exception, u.followed_artists)
+        self.assertRaises(Exception, u.get_playlist_with_tracks)
+
+
+    def test_bad_time_range(self):
+        u = UserData(self.session)
+
+        self.assertRaises(spotify.SpotifyRequestException, u.top_artists, 'asdf')
+        self.assertRaises(spotify.SpotifyRequestException, u.top_tracks, 'asdf')
+        self.assertRaises(spotify.SpotifyRequestException, u.top_genres, 'asdf')
