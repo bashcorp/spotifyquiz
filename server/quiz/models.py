@@ -236,6 +236,31 @@ class Choice(models.Model):
         return "<Choice: " + self.primary_text + (", answer" if self.answer else "") + ">"
 
 
+    def create_album_choices(question, albums, answer=False):
+        """
+        Creates choice objects from a given list of albums, formatted as JSON the way the
+        Spotify API returns them.
+        Sets them all as correct or incorrect answers according to 'answer'.
+        """
+        for a in albums:
+            Choice.create_album_choice(question, a, answer)
+
+
+    def create_album_choice(question, album, answer=False):
+        """
+        Creates a Choice object that represents an album, by using album data in the JSON
+        format that the Spotify API returns. The Choice's primary text is the album's name,
+        and its secondary text is the album's artist's name.
+        The Choice's 'answer' field will be set according to the 'answer' argument.
+        """
+        return Choice.objects.create(
+            question = question,
+            primary_text = album['name'],
+            secondary_text = album['artists'][0]['name'],
+            answer = answer
+        )
+
+
     def create_artist_choices(question, artists, answer=False):
         """
         Creates choice objects from a given list of tracks, formatted as JSON the way the
@@ -251,7 +276,7 @@ class Choice(models.Model):
         Creates a Choice object that represents an artist, by using artist data in the JSON
         format that the Spotify API returns. The Choice's primary text is the artist's name,
         and it has no secondary choice.
-        The Choice's 'answer' field will be set according to the 'answer' argument
+        The Choice's 'answer' field will be set according to the 'answer' argument.
         """
         return Choice.objects.create(
             question = question,

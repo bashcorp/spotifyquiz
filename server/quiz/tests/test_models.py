@@ -450,6 +450,112 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
     tracks, artists, and genres.
     """
 
+    def test_create_album_choice_not_answer(self):
+        """
+        create_album_choice() should create a Choice object from the given Album JSON, and
+        set the Choice's answer field to the argument 'answer'.
+        """
+        album = {
+            'name': 'Album',
+            'artists': [{'name': 'Cash'}]
+        }
+        quiz = Quiz.objects.create()
+        question = MultipleChoiceQuestion.objects.create(quiz=quiz)
+        Choice.create_album_choice(question=question, album=album)
+
+        self.assertEquals(Choice.objects.count(), 1)
+
+        q = Choice.objects.all()[0]
+        self.assertEquals(q.primary_text, 'Album')
+        self.assertEquals(q.secondary_text, 'Cash')
+        self.assertFalse(q.answer)
+        self.assertEquals(q.question, question)
+
+
+    def test_create_album_choice_is_answer(self):
+        """
+        create_album_choice() should create a Choice object from the given Album JSON, and
+        set the Choice's answer field to the argument 'answer'.
+        """
+        album = {
+            'name': 'Album',
+            'artists': [{'name': 'Cash'}]
+        }
+        quiz = Quiz.objects.create()
+        question = MultipleChoiceQuestion.objects.create(quiz=quiz)
+        Choice.create_album_choice(question=question, album=album, answer=True)
+
+        self.assertEquals(Choice.objects.count(), 1)
+
+        q = Choice.objects.all()[0]
+        self.assertEquals(q.primary_text, 'Album')
+        self.assertEquals(q.secondary_text, 'Cash')
+        self.assertTrue(q.answer)
+        self.assertEquals(q.question, question)
+
+
+    def test_create_album_choices_not_answers(self):
+        """
+        create_album_choices() should create Choice objects for each Album JSON in the
+        given list, and set the Choices' answer fields to the argument 'answer'.
+        """
+        albums = [
+            {
+                'name': 'Album',
+                'artists': [{'name': 'Cash'}]
+            },
+            {
+                'name': 'Album2',
+                'artists': [{'name': 'Ben'}]
+            },
+        ]
+
+        quiz = Quiz.objects.create()
+        question = MultipleChoiceQuestion.objects.create(quiz=quiz)
+        Choice.create_album_choices(question=question, albums=albums)
+
+        self.assertEquals(Choice.objects.count(), 2)
+
+        objects = Choice.objects.all()
+        self.assertEquals(objects[0].primary_text, 'Album')
+        self.assertEquals(objects[0].secondary_text, 'Cash')
+        self.assertFalse(objects[0].answer)
+        self.assertEquals(objects[1].primary_text, 'Album2')
+        self.assertEquals(objects[1].secondary_text, 'Ben')
+        self.assertFalse(objects[1].answer)
+
+
+    def test_create_album_choices_are_answers(self):
+        """
+        create_album_choices() should create Choice objects for each Album JSON in the
+        given list, and set the Choices' answer fields to the argument 'answer'.
+        """
+        albums = [
+            {
+                'name': 'Album',
+                'artists': [{'name': 'Cash'}]
+            },
+            {
+                'name': 'Album2',
+                'artists': [{'name': 'Ben'}]
+            },
+        ]
+
+        quiz = Quiz.objects.create()
+        question = MultipleChoiceQuestion.objects.create(quiz=quiz)
+        Choice.create_album_choices(question=question, albums=albums, answer=True)
+
+        self.assertEquals(Choice.objects.count(), 2)
+
+        objects = Choice.objects.all()
+        self.assertEquals(objects[0].primary_text, 'Album')
+        self.assertEquals(objects[0].secondary_text, 'Cash')
+        self.assertTrue(objects[0].answer)
+        self.assertEquals(objects[1].primary_text, 'Album2')
+        self.assertEquals(objects[1].secondary_text, 'Ben')
+        self.assertTrue(objects[1].answer)
+
+
     def test_create_artist_choice_not_answer(self):
         """
         create_artist_choice() should create a Choice object from the given Artist JSON, and
@@ -469,6 +575,7 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         self.assertIsNone(q.secondary_text)
         self.assertFalse(q.answer)
         self.assertEquals(q.question, question)
+
 
     def test_create_artist_choice_is_answer(self):
         """
