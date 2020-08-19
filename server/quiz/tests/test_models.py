@@ -274,6 +274,35 @@ class MultipleChoiceQuestionTests(TransactionTestCase):
         self.assertRaises(ValidationError, q.answers)
 
 
+    def test_get_incorrect_answers(self):
+        """
+        incorrect_answers() should return a list of all the question's choices that
+        are marked as incorrect answers.
+        """
+        quiz = Quiz.objects.create(user_id='cassius')
+        q = MultipleChoiceQuestion.objects.create(quiz=quiz)
+        c1 = Choice.objects.create(question=q, answer=True)
+        c2 = Choice.objects.create(question=q)
+        c3 = Choice.objects.create(question=q)
+        incorrect = [c2, c3]
+
+        self.assertCountEqual(q.incorrect_answers(), incorrect)
+
+
+    def test_get_incorrect_answers_none(self):
+        """
+        incorrect_answers() should return an empty list if none of the question's choices
+        are marked as incorrect.
+        """
+        quiz = Quiz.objects.create(user_id='cassius')
+        q = MultipleChoiceQuestion.objects.create(quiz=quiz)
+        c1 = Choice.objects.create(question=q, answer=True)
+        c2 = Choice.objects.create(question=q, answer=True)
+        c3 = Choice.objects.create(question=q, answer=True)
+        
+        self.assertCountEqual(q.incorrect_answers(), [])
+
+
     def test_is_checklist_question_true(self):
         """
         is_checklist_question() returns true if the given

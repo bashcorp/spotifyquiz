@@ -150,6 +150,13 @@ class MultipleChoiceQuestion(Question):
         return choices
 
 
+    def incorrect_answers(self):
+        """
+        Returns all the incorrect answers of this question.
+        """
+        return self.choices.filter(answer=False)
+
+
     def is_checklist_question(self):
         """
         Returns true if question has multiple correct answer, false otherwise. If the
