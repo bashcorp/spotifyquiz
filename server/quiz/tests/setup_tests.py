@@ -4,6 +4,11 @@ from selenium.webdriver import Firefox
 from selenium.webdriver.firefox.options import Options
 
 import credentials
+from quiz import spotify
+
+auth_access_token = None
+user_id = None
+refresh_token = None
 
 
 def get_spotify_credentials():
@@ -46,35 +51,49 @@ def create_authorized_session(live_server_url):
     Set up a Selenium browser and sign into Spotify, and return the resulting authorized
     session.
     """
-    # Decrypt and load the credentials for signing into Spotify.
-    spotify_username, spotify_password = get_spotify_credentials()
+    global auth_access_token
+    global refresh_token
+    global user_id
 
-    # Set up Selenium
-    browser = headless_browser()
+    if not auth_access_token:
+        # Decrypt and load the credentials for signing into Spotify.
+        spotify_username, spotify_password = get_spotify_credentials()
 
-    # Redirect to 
-    browser.get(live_server_url +  reverse('login'))
+        # Set up Selenium
+        browser = headless_browser()
 
-    login_with_fb_btn = browser.find_element_by_class_name('btn-facebook')
-    login_with_fb_btn.click()
+        # Redirect to 
+        browser.get(live_server_url +  reverse('login'))
 
-
-    email_input = browser.find_element_by_id('email')
-    email_input.send_keys(spotify_username)
-    password_input = browser.find_element_by_id('pass')
-    password_input.send_keys(spotify_password)
-
-    login_btn = browser.find_element_by_id('loginbutton')
-    login_btn.click()
+        login_with_fb_btn = browser.find_element_by_class_name('btn-facebook')
+        login_with_fb_btn.click()
 
 
-    auth_accept_btn = browser.find_element_by_id('auth-accept')
-    auth_accept_btn.click()
-    
+        email_input = browser.find_element_by_id('email')
+        email_input.send_keys(spotify_username)
+        password_input = browser.find_element_by_id('pass')
+        password_input.send_keys(spotify_password)
 
-    id = browser.get_cookie('sessionid').get('value')
-    session = create_session_store(id)
+        login_btn = browser.find_element_by_id('loginbutton')
+        login_btn.click()
 
-    teardown_browser(browser)
 
-    return session
+        auth_accept_btn = browser.find_element_by_id('auth-accept')
+        auth_accept_btn.click()
+        
+
+        id = browser.get_cookie('sessionid').get('value')
+        session = create_session_store(id)
+
+        auth_access_token = session.get(spotify.AUTH_ACCESS_TOKEN)
+        refresh_token = session.get(spotify.REFRESH_TOKEN)
+        user_id = session.get(spotify.USER_ID)
+
+        teardown_browser(browser)
+
+        return session
+
+    session = create_session_store()
+    session[spotify.AUTH_ACCESS_TOKEN] = auth_access_token
+    session[spotify.REFRESH_TOKEN] = refresh_token
+    session[spotify.USER_ID] = user_id
