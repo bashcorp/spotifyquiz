@@ -9,6 +9,9 @@ def random_from_list(arr, num_choices, start=0, end=None):
     if not end: #If not specified, include the entire list
         end = len(arr)
 
+    if end-start < num_choices:
+        return None
+
     indexes = random.sample(range(start, end), num_choices)
 
     return [arr[i] for i in indexes]
