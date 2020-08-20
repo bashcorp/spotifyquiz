@@ -97,3 +97,5 @@ def create_authorized_session(live_server_url):
     session[spotify.AUTH_ACCESS_TOKEN] = auth_access_token
     session[spotify.REFRESH_TOKEN] = refresh_token
     session[spotify.USER_ID] = user_id
+
+    return session
