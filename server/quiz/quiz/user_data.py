@@ -248,15 +248,7 @@ class UserData:
         top_artists = self.top_artists(time_range)
 
         # Get list of all genres
-        genres = []
-        for a in top_artists:
-            genres.extend(a['genres'])
-
-        # Sort by most common
-        top_genres = []
-        # Each item in the list is a tuple: (item, occurances)
-        for i in Counter(genres).most_common():
-            top_genres.append(i[0])
+        top_genres = [a['genres'] for a in top_artists]
 
         self._top_genres[time_range] = top_genres
 

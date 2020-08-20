@@ -108,21 +108,21 @@ class UserDataTests(TransactionTestCase):
 
     def test_get_top_genres_longterm_exists(self):
         u = UserData(None)
-        test_data = ['hello', 'goodbye']
+        test_data = [['hello', 'there'], ['goodbye', 'now']]
         u._top_genres['long_term'] = test_data
         self.assertEqual(u.top_genres('long_term'), test_data)
 
 
     def test_get_top_genres_mediumterm_exists(self):
         u = UserData(None)
-        test_data = ['hello', 'goodbye']
+        test_data = [['hello', 'there'], ['goodbye', 'now']]
         u._top_genres['medium_term'] = test_data
         self.assertEqual(u.top_genres('medium_term'), test_data)
 
 
     def test_get_top_genres_shortterm_exists(self):
         u = UserData(None)
-        test_data = ['hello', 'goodbye']
+        test_data = [['hello', 'there'], ['goodbye', 'now']]
         u._top_genres['short_term'] = test_data
         self.assertEqual(u.top_genres('short_term'), test_data)
 
@@ -278,24 +278,30 @@ class UserDataCompilationTests(StaticLiveServerTestCase):
         u = UserData(self.session)
         data = u.top_genres('long_term')
         self.assertGreaterEqual(len(data), 50)
-        for g in data:
-            self.assertIsInstance(g, str)
+        for gl in data:
+            self.assertIsInstance(gl, list)
+            for g in gl:
+                self.assertIsInstance(g, str)
 
 
     def test_compile_top_genres_mediumterm(self):
         u = UserData(self.session)
         data = u.top_genres('medium_term')
         self.assertGreaterEqual(len(data), 50)
-        for g in data:
-            self.assertIsInstance(g, str)
+        for gl in data:
+            self.assertIsInstance(gl, list)
+            for g in gl:
+                self.assertIsInstance(g, str)
 
 
     def test_compile_top_genres_shortterm(self):
         u = UserData(self.session)
         data = u.top_genres('short_term')
         self.assertGreaterEqual(len(data), 10)
-        for g in data:
-            self.assertIsInstance(g, str)
+        for gl in data:
+            self.assertIsInstance(gl, list)
+            for g in gl:
+                self.assertIsInstance(g, str)
 
 
     def test_compile_personal_data(self):
