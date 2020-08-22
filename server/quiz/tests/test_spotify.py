@@ -705,3 +705,41 @@ class AuthorizedSessionTests(StaticLiveServerTestCase):
         spotify.request_authorized_token(self.session)
         self.assertIsNotNone(self.session[spotify.AUTH_ACCESS_TOKEN])
         self.assertIsNotNone(self.session[spotify.REFRESH_TOKEN])
+
+
+
+class SpotifyUtilsTests(TestCase):
+    """
+    Tests the misc. helpful functions in the Spotify module.
+    """
+
+    def test_create_id_querystr(self):
+        """
+        create_id_querystr() should take a list of ids and create a comma-separated string of
+        the ids.
+        """
+        ids = ['s1532', '123ab', 'absdf2']
+        result = spotify.create_id_querystr(ids)
+        querystr = 's1532,123ab,absdf2'
+        self.assertEquals(result, querystr)
+    
+
+    def test_create_id_querystr_one_id(self):
+        """
+        create_id_querystr() should take a list of ids and create a comma-separated string of
+        the ids.
+        """
+        ids = ['s1532']
+        result = spotify.create_id_querystr(ids)
+        self.assertEquals(result, 's1532')
+
+
+    def test_create_id_querystr_empty(self):
+        """
+        If create_id_querystr() given an empty list, it should return an empty string.
+        """
+        result = spotify.create_id_querystr([])
+        self.assertEquals(result, "")
+        
+
+

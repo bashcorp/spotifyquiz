@@ -26,7 +26,7 @@ def question_saved_albums(quiz, user_data):
     num_of_incorrect = 4-num_of_correct
     incorrect_choices = []
     if num_of_incorrect > 0:
-        top_track_albums = strip_albums_from_tracks(user_data.top_tracks('long_term'))
+        top_track_albums = [t['album'] for t in user_data.top_tracks('long_term')]
         incorrect_choices = choose_items_not_in_list(top_track_albums, saved_albums, num_of_incorrect)
 
         if not incorrect_choices:

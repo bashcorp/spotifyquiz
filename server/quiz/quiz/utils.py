@@ -17,23 +17,25 @@ def random_from_list(arr, num_choices, start=0, end=None):
     return [arr[i] for i in indexes]
 
 
-def pick_and_call(quiz, user_data, funcs, num_of_calls, args=[]):
-    func_indices = random.sample(range(0, len(funcs)), num_of_calls)
-    for i in func_indices:
-        funcs[i](quiz, user_data, args[random.randint(0, len(args))])
-    
-
 def split_into_subsections(arr, sublist_size):
+    """
+    Split a list into several lists of a given size. If the length of the list is not
+    evenly divisible by the size of the sublists, then the last list will have fewer items
+    than sublist_size.
+    """
+    if sublist_size < 1:
+        return None
+
     sublists = []
     start = 0
     end = sublist_size
     while start < len(arr):
-        end = start+20
+        end = start+sublist_size
         if end > len(arr):
             end = len(arr)
 
         sublists.append(arr[start:end])
-        start += 20
+        start += sublist_size
 
     return sublists
 
@@ -45,20 +47,26 @@ def combine_track_json(tracks1, tracks2):
     merged, with precedence on the values in the tracks1 version of the track, over the tracks2
     version.
     """
-    for t1 in tracks1:
-        for t2 in tracks2:
+    for t2 in tracks2:
+        found = False
+        for t1 in tracks1:
             if t1['id'] == t2['id']:
                 non_destructive_update(t1, t2)
+                found = True
                 break
+
+        if not found:
+            tracks1.append(t2)
+
 
     return tracks1
 
 
 def non_destructive_update(i1, i2):
     """
-    Combines two dictionaries, putting the items from i2 into i1. Items in i1 have precedence
-    over items in i2, meaning that if both dictionaries have the key, the value in i1 will be
-    the one saved.
+    Combines two dictionaries, putting the items from i2 into i1. It's similar to the built-in
+    python method dictionary.update(), except that items in i1 have precedence over items in i2,
+    meaning that if both dictionaries have the key, the value in i1 will be the one saved.
     """
     for k in i2.keys():
         if not i1.get(k):
@@ -69,6 +77,10 @@ def non_destructive_update(i1, i2):
 
 
 def choose_items_not_in_list(item_list, excluded_items, num_chosen):
+    """
+    Chooses a number of items (num_chosen) from the given item_list, such that the chosen
+    items are not in the list excluded_items.
+    """
     chosen = [] 
 
     items = item_list.copy()
@@ -82,12 +94,6 @@ def choose_items_not_in_list(item_list, excluded_items, num_chosen):
             return None
 
         chosen.append(items[i])
+        del items[i]
 
     return chosen
-
-
-def strip_albums_from_tracks(tracks):
-    albums = [] 
-    for t in tracks:
-        albums.append(t['album'])
-    return albums
