@@ -405,6 +405,21 @@ def request_noauth_access_token():
 
 
 
+def create_id_querystr(ids):
+    """
+    Takes a list of ids and turns them into a comma-separated string that can be used in
+    making Spotify API requests that require a list of ids. The last item will not have
+    a comma after it.
+    """
+    id_str = ""
+    for id in ids:
+        id_str += str(id) + ","
+    id_str = id_str[:-1]
+    return id_str
+
+
+
+
 class SpotifyException(Exception):
     """
     An exception for errors that occur when working with the Spotify API.

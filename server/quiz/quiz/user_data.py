@@ -269,7 +269,7 @@ class UserData:
         id_sections = split_into_subsections(ids, limit)
         for section in id_sections:
             url = '/v1/audio-features'
-            query_dict = { 'ids': create_id_querystr(section) }
+            query_dict = { 'ids': spotify.create_id_querystr(section) }
             results = spotify.make_authorized_request(self.session, url, query_dict=query_dict)
 
             tracks = results.json()['audio_features'] 

@@ -39,9 +39,13 @@ def split_into_subsections(arr, sublist_size):
 
 
 def combine_track_json(tracks1, tracks2):
-    combination = []
+    """
+    Takes two lists of track objects, in the Spotify JSON format, and combines them, putting
+    tracks from tracks2 into tracks1. If each list has a track with the same ID, they will be
+    merged, with precedence on the values in the tracks1 version of the track, over the tracks2
+    version.
+    """
     for t1 in tracks1:
-        t = t1.copy()
         for t2 in tracks2:
             if t1['id'] == t2['id']:
                 non_destructive_update(t1, t2)
@@ -51,15 +55,39 @@ def combine_track_json(tracks1, tracks2):
 
 
 def non_destructive_update(i1, i2):
+    """
+    Combines two dictionaries, putting the items from i2 into i1. Items in i1 have precedence
+    over items in i2, meaning that if both dictionaries have the key, the value in i1 will be
+    the one saved.
+    """
     for k in i2.keys():
         if not i1.get(k):
             i1[k] = i2[k]
 
+    return i1
 
-def create_id_querystr(ids):
-    id_str = ""
-    for id in ids:
-        id_str += str(id) + ","
-    id_str = id_str[:-1]
-    return id_str
 
+
+def choose_items_not_in_list(item_list, excluded_items, num_chosen):
+    chosen = [] 
+
+    items = item_list.copy()
+    for i in range(num_chosen):
+        i = random.randint(0, len(items)-1)
+        while len(items) > 1 and items[i] in excluded_items:
+            del items[i]
+            i = random.randint(0, len(items)-1)
+
+        if items[i] in excluded_items:
+            return None
+
+        chosen.append(items[i])
+
+    return chosen
+
+
+def strip_albums_from_tracks(tracks):
+    albums = [] 
+    for t in tracks:
+        albums.append(t['album'])
+    return albums

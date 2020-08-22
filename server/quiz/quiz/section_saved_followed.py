@@ -3,7 +3,7 @@ from collections import Counter
 
 from quiz import spotify
 from quiz.models import *
-from .utils import random_from_list
+from .utils import *
 
 
 def question_saved_albums(quiz, user_data):
@@ -120,27 +120,3 @@ def question_followed_artists(quiz, user_data):
 
 
 
-def choose_items_not_in_list(item_list, excluded_items, num_chosen):
-    chosen = [] 
-
-    items = item_list.copy()
-    for i in range(num_chosen):
-        i = random.randint(0, len(items)-1)
-        while len(items) > 1 and items[i] in excluded_items:
-            del items[i]
-            i = random.randint(0, len(items)-1)
-
-        if items[i] in excluded_items:
-            return None
-
-        chosen.append(items[i])
-
-    return chosen
-        
-
-            
-def strip_albums_from_tracks(tracks):
-    albums = [] 
-    for t in tracks:
-        albums.append(t['album'])
-    return albums
