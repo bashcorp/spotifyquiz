@@ -38,7 +38,7 @@ class UserDataTests(TransactionTestCase):
 
     def test_get_music_taste_with_audio_features_exists(self):
         u = UserData(None)
-        test_data = [{'id': 5, 'energy': 3}, {'id': 2, 'energy': 5}]
+        test_data = [{'id': 5, 'energy': 0}, {'id': 2, 'energy': 5}]
         u._music_taste = test_data
         self.assertEqual(u.music_taste_with_audio_features(), test_data)
 
@@ -52,7 +52,7 @@ class UserDataTests(TransactionTestCase):
 
     def test_get_playlists_detailed_exists(self):
         u = UserData(None)
-        test_data = [{'followers': 4}, {'followers': 5}]
+        test_data = [{'followers': 0}, {'followers': 5}]
         u._playlists = test_data
         self.assertEqual(u.playlists_detailed(), test_data)
 
@@ -354,10 +354,6 @@ class UserDataErrorTests(StaticLiveServerTestCase):
         super(UserDataErrorTests, cls).setUpClass()
          
         cls.session = create_authorized_session(cls.live_server_url)
-        #cls.refresh_token = session.get(spotify.REFRESH_TOKEN)
-        #cls.auth_access_token = session.get(spotify.AUTH_ACCESS_TOKEN)
-        #cls.user_id = session.get(spotify.USER_ID)
-
 
     @classmethod
     def tearDownClass(cls):
@@ -367,6 +363,7 @@ class UserDataErrorTests(StaticLiveServerTestCase):
         """
         super(UserDataErrorTests, cls).tearDownClass()
         spotify.cleanup_timers()
+
 
     def test_bad_session_errors(self):
         u = UserData(None)

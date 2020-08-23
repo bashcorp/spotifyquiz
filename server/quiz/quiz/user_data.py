@@ -35,7 +35,7 @@ class UserData:
     def music_taste_with_audio_features(self):
         if not self._music_taste:
             self._compile_music_taste()
-        if not self._music_taste[0].get('energy'):
+        if self._music_taste[0].get('energy') is None:
             self._compile_audio_features()
         return self._music_taste
 
@@ -49,7 +49,7 @@ class UserData:
     def playlists_detailed(self):
         if not self._playlists:
             self._compile_playlists()
-        if self._playlists and not self._playlists[0].get('followers'):
+        if self._playlists and self._playlists[0].get('followers') is None:
             self._compile_playlist_details()
         return self._playlists
 
@@ -61,19 +61,19 @@ class UserData:
 
 
     def top_artists(self, time_range):
-        if not self._top_artists or not self._top_artists.get(time_range):
+        if not self._top_artists or self._top_artists.get(time_range) is None:
             self._compile_top_artists(time_range)
         return self._top_artists.get(time_range)
 
 
     def top_tracks(self, time_range):
-        if not self._top_tracks or not self._top_tracks.get(time_range):
+        if not self._top_tracks or self._top_tracks.get(time_range) is None:
             self._compile_top_tracks(time_range)
         return self._top_tracks.get(time_range)
 
 
     def top_genres(self, time_range):
-        if not self._top_genres or not self._top_genres.get(time_range):
+        if not self._top_genres or self._top_genres.get(time_range) is None:
             self._compile_top_genres(time_range)
         return self._top_genres.get(time_range)
 
