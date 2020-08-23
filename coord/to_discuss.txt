@@ -1,5 +1,6 @@
 Questions:
-    What do we want to display? Song name, artist? Album art?
     Link to certain songs or playlists?
+    Can a slider increment by minute:second values?
+    Should it be from "sad" to "happy" instead of 0-100 for slider questions?
 
 

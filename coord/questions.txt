@@ -55,7 +55,9 @@ For each user:
 
 
 
-A list of questions we can use:
+Questions:
+
+Created: 
 
 _Top Played_ (Choose 2)
 (MC) What is the user's most listened to track? (of all time, 6 months, 4 weeks)
@@ -67,22 +69,27 @@ _Saved/Followed_ (Choose 2)
 (Cl) Which tracks has the user saved?
 (Cl) Which artists does the user follow?
 
-_Recently Played_ (Choose 1)
-(MC) What is the user's most recently played song (as of the timestamp of quiz creation)?
-(Cl) Which of these did the user listen to recently?
-
-_Misc_ (Choose 3)
+_Music Taste Features_ (Choose 3)
 (Sl) How much of the user's music is explicit?
 (Sl) What's the average length of the user's music taste?
 (Sl) How energetic is the user's music taste?
 (Sl) How acoustic is the user's music taste/What percentage of the user's music taste is acoustic?
-(Sl) How loud is the user's music, on average?
 (Sl) How happy is the user's music taste?
 (Sl) How danceable is the user's music taste?
+
+
+
+To create: 
 
 (1 of these)
 (Sl) How old is the music that the user listens to?
 (Mc) What decade is the music that the user listens to the most?
+
+
+_Recently Played_ (Choose 1)
+(MC) What is the user's most recently played song (as of the timestamp of quiz creation)?
+(Cl) Which of these did the user listen to recently?
+
 
 _Popularity and Playlists_
 (Choose 2)
@@ -99,8 +106,5 @@ _Popularity and Playlists_
 
 
 
-
-
-
-
-
+Removed: 
+(Sl) How loud is the user's music, on average?
