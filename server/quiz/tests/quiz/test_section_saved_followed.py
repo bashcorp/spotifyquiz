@@ -84,6 +84,23 @@ class QuestionSavedAlbumsTests(StaticLiveServerTestCase):
             self.assertTrue(found)
 
 
+    def test_question_saved_albums_real_request(self):
+        """
+        When the user has valid data, question_saved_albums() should return a proper Question 
+        about the user's saved albums. This tests that the question works with real Spotify
+        data.
+        """
+        u = UserData(self.session)
+
+        quiz = Quiz.objects.create(user_id='cassius')
+        q = question_saved_albums(quiz, u)
+
+        self.assertEquals(q.choices.count(), 4)
+        self.assertGreater(q.answers().count(), 0)
+        self.assertLessEqual(q.answers().count(), 4)
+        self.assertEqual(q.incorrect_answers().count(), 4-q.answers().count())
+
+
     def test_question_saved_albums_only_one_correct_answer(self):
         """
         question_saved_albums() should create a question, even if there is only one available
@@ -228,6 +245,22 @@ class QuestionSavedTracksTests(StaticLiveServerTestCase):
             self.assertTrue(found)
 
 
+    def test_question_saved_tracks_real_request(self):
+        """
+        When the user has valid data, question_saved_tracks() should return a proper Question
+        about the user's saved tracks. This tests the question with real Spotify data.
+        """
+        u = UserData(self.session)
+
+        quiz = Quiz.objects.create(user_id='cassius')
+        q = question_saved_tracks(quiz, u)
+
+        self.assertEquals(q.choices.count(), 4)
+        self.assertGreater(q.answers().count(), 0)
+        self.assertLessEqual(q.answers().count(), 4)
+        self.assertEqual(q.incorrect_answers().count(), 4-q.answers().count())
+
+
     def test_question_saved_tracks_only_one_correct_answer(self):
         """
         question_saved_tracks() should create a question, even if there is only one available
@@ -365,6 +398,22 @@ class QuestionFollowedArtistsTests(StaticLiveServerTestCase):
                 if a['name'] == title:
                     found = True
             self.assertTrue(found)
+
+
+    def test_question_followed_artists_real_request(self):
+        """
+        When the user has valid data, question_followed_artists() should return a proper Question
+        about the user's followed artists. This tests the question with real Spotify data.
+        """
+        u = UserData(self.session)
+
+        quiz = Quiz.objects.create(user_id='cassius')
+        q = question_followed_artists(quiz, u)
+
+        self.assertEquals(q.choices.count(), 4)
+        self.assertGreater(q.answers().count(), 0)
+        self.assertLessEqual(q.answers().count(), 4)
+        self.assertEqual(q.incorrect_answers().count(), 4-q.answers().count())
 
 
     def test_question_followed_artists_only_one_correct_answer(self):

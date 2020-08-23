@@ -85,6 +85,9 @@ def choose_items_not_in_list(item_list, excluded_items, num_chosen):
 
     items = item_list.copy()
     for i in range(num_chosen):
+        if not items:
+            return None
+
         i = random.randint(0, len(items)-1)
         while len(items) > 1 and items[i] in excluded_items:
             del items[i]

@@ -100,6 +100,50 @@ class QuestionTopTrackTests(StaticLiveServerTestCase):
 
 
 
+
+    def test_question_top_track_real_request_long_term(self):
+        """
+        When the user has valid data, question_top_track() should return a proper Question
+        about the user's top track. This tests the question with real Spotify data.
+        """
+        self._test_question_top_track_real_request('long_term')
+
+
+    def test_question_top_track_real_request_medium_term(self):
+        """
+        When the user has valid data, question_top_track() should return a proper Question
+        about the user's top track. This tests the question with real Spotify data.
+        """
+        self._test_question_top_track_real_request('medium_term')
+
+
+    def test_question_top_track_real_request_short_term(self):
+        """
+        When the user has valid data, question_top_track() should return a proper Question
+        about the user's top track. This tests the question with real Spotify data.
+        """
+        self._test_question_top_track_real_request('short_term')
+
+
+    def _test_question_top_track_real_request(self, time_range):
+        """
+        When the user has valid data, question_top_track() should return a proper Question
+        about the user's top track. This tests the question with real Spotify data.
+
+        This function is the test that is run by the three above methods, with different
+        time_ranges.
+        """
+        u = UserData(self.session)
+
+        quiz = Quiz.objects.create(user_id='cassius')
+        q = question_top_track(quiz, u, time_range)
+
+        self.assertEqual(q.choices.count(), 4)
+        self.assertEqual(q.answers().count(), 1)
+        self.assertEqual(q.incorrect_answers().count(), 3)
+
+
+
     def test_question_top_track_long_term_not_enough_choices(self):
         """
         question_top_track() should return None if there are not enough tracks to fill the choices.
@@ -164,6 +208,8 @@ class QuestionTopArtistTests(StaticLiveServerTestCase):
         super(QuestionTopArtistTests, cls).tearDownClass()
         spotify.cleanup_timers()
 
+
+
     def test_question_top_artist_long_term(self):
         """
         When the user has valid data, question_top_artist() should return a proper Question
@@ -220,6 +266,48 @@ class QuestionTopArtistTests(StaticLiveServerTestCase):
                 if t['name'] == name:
                     found = True
             self.assertTrue(found)
+
+
+
+    def _test_question_top_artist_real_request_long_term(self):
+        """
+        When the user has valid data, question_top_artist() should return a proper Question
+        about the user's top artist. This tests the question with real Spotify data.
+        """
+        self._test_question_top_artist_real_request('long_term')
+
+
+    def _test_question_top_artist_real_request_medium_term(self):
+        """
+        When the user has valid data, question_top_artist() should return a proper Question
+        about the user's top artist. This tests the question with real Spotify data.
+        """
+        self._test_question_top_artist_real_request('medium_term')
+
+
+    def _test_question_top_artist_real_request_short_term(self):
+        """
+        When the user has valid data, question_top_artist() should return a proper Question
+        about the user's top artist. This tests the question with real Spotify data.
+        """
+        self._test_question_top_artist_real_request('short_term')
+
+
+    def _test_question_top_artist_real_request(self, time_range):
+        """
+        When the user has valid data, question_top_artist() should return a proper Question
+        about the user's top artist. This tests the question with real Spotify data.
+
+        This method is called by the 3 above to test with different time_ranges.
+        """
+        u = UserData(self.session)
+
+        quiz = Quiz.objects.create(user_id='cassius')
+        q = question_top_artist(quiz, u, time_range)
+
+        self.assertEqual(q.choices.count(), 4)
+        self.assertEqual(q.answers().count(), 1)
+        self.assertEqual(q.incorrect_answers().count(), 3)
 
 
 
@@ -350,6 +438,50 @@ class QuestionTopGenreTests(StaticLiveServerTestCase):
                 if title in g:
                     found = True
             self.assertTrue(found)
+
+
+
+    def _test_question_top_genre_real_request_long_term(self):
+        """
+        When the user has valid data, question_top_genre() should return a proper Question
+        about the user's top genre. This tests the question with real Spotify data.
+        """
+        self._test_question_top_genre_real_request('long_term')
+
+
+    def _test_question_top_genre_real_request_medium_term(self):
+        """
+        When the user has valid data, question_top_genre() should return a proper Question
+        about the user's top genre. This tests the question with real Spotify data.
+        """
+        self._test_question_top_genre_real_request('medium_term')
+
+
+    def _test_question_top_genre_real_request_short_term(self):
+        """
+        When the user has valid data, question_top_genre() should return a proper Question
+        about the user's top genre. This tests the question with real Spotify data.
+        """
+        self._test_question_top_genre_real_request('short_term')
+
+
+    def _test_question_top_genre_real_request(self, time_range):
+        """
+        When the user has valid data, question_top_genre() should return a proper Question
+        about the user's top genre. This tests the question with real Spotify data.
+
+        This method is used by the 3 method above to test different time_ranges.
+        """
+        u = UserData(self.session)
+
+        quiz = Quiz.objects.create(user_id='cassius')
+        q = question_top_genre(quiz, u, time_range)
+
+        self.assertEqual(q.choices.count(), 4)
+        self.assertEqual(q.answers().count(), 1)
+        self.assertEqual(q.incorrect_answers().count(), 3)
+
+
 
 
     def test_question_followed_artists_long_term_not_enough_choices(self):
