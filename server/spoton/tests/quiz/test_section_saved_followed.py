@@ -45,7 +45,7 @@ class QuestionSavedAlbumsTests(StaticLiveServerTestCase):
             {'name': 'Country Album 7', 'id': 7, 'artists': [{'name': 'John'}]},
         ]
 
-        u._top_tracks['long_term'] = [
+        u._music_taste = [
             {'album': {'name': 'Rock Album 1', 'id': 8, 'artists': [{'name': 'Lucy'}]}},
             {'album': {'name': 'Rock Album 2', 'id': 9, 'artists': [{'name': 'Lewis'}]}},
             {'album': {'name': 'Rock Album 3', 'id': 10, 'artists': [{'name': 'Lucifer'}]}},
@@ -78,7 +78,7 @@ class QuestionSavedAlbumsTests(StaticLiveServerTestCase):
             title = c.primary_text
             artist = c.secondary_text
             found = False
-            for t in u._top_tracks['long_term']:
+            for t in u._music_taste:
                 if t['album']['name'] == title and t['album']['artists'][0]['name'] == artist:
                     found = True
             self.assertTrue(found)
@@ -112,7 +112,7 @@ class QuestionSavedAlbumsTests(StaticLiveServerTestCase):
             {'name': 'Country Album 1', 'id': 1, 'artists': [{'name': 'Cassius'}]},
         ]
 
-        u._top_tracks['long_term'] = [
+        u._music_taste = [
             {'album': {'name': 'Country Album 2', 'id': 2, 'artists': [{'name': 'Cassius'}]},},
             {'album': {'name': 'Country Album 3', 'id': 3, 'artists': [{'name': 'Benjamin'}]},},
             {'album': {'name': 'Country Album 4', 'id': 4, 'artists': [{'name': 'James'}]},},
@@ -133,7 +133,7 @@ class QuestionSavedAlbumsTests(StaticLiveServerTestCase):
             title = c.primary_text
             artist = c.secondary_text
             found = False
-            for t in u._top_tracks['long_term']:
+            for t in u._music_taste:
                 if t['album']['name'] == title and t['album']['artists'][0]['name'] == artist:
                     found = True
             self.assertTrue(found)
@@ -152,7 +152,7 @@ class QuestionSavedAlbumsTests(StaticLiveServerTestCase):
             {'name': 'Country Album 3', 'id': 3, 'artists': [{'name': 'James'}]},
         ]
 
-        u._top_tracks['long_term'] = [
+        u._music_taste = [
             {'album': {'name': 'Country Album 1', 'id': 1, 'artists': [{'name': 'Cassius'}]},},
             {'album': {'name': 'Country Album 2', 'id': 2, 'artists': [{'name': 'Benjamin'}]},},
             {'album': {'name': 'Country Album 3', 'id': 3, 'artists': [{'name': 'James'}]},},
@@ -209,7 +209,7 @@ class QuestionSavedTracksTests(StaticLiveServerTestCase):
             {'name': 'Country Track 7', 'id': 7, 'artists': [{'name': 'John'}]},
         ]
 
-        u._top_tracks['long_term'] = [
+        u._music_taste = [
             { 'name': 'Rock Track 1', 'id': 8, 'artists': [{'name': 'Lucy'}]},
             { 'name': 'Rock Track 2', 'id': 9, 'artists': [{'name': 'Lewis'}]},
             { 'name': 'Rock Track 3', 'id': 10, 'artists': [{'name': 'Lucifer'}]},
@@ -239,7 +239,7 @@ class QuestionSavedTracksTests(StaticLiveServerTestCase):
             title = c.primary_text
             artist = c.secondary_text
             found = False
-            for t in u._top_tracks['long_term']:
+            for t in u._music_taste:
                 if t['name'] == title and t['artists'][0]['name'] == artist:
                     found = True
             self.assertTrue(found)
@@ -272,7 +272,7 @@ class QuestionSavedTracksTests(StaticLiveServerTestCase):
             {'name': 'Country Track 1', 'id': 1, 'artists': [{'name': 'Cassius'}]},
         ]
 
-        u._top_tracks['long_term'] = [
+        u._music_taste = [
             {'name': 'Country Track 2', 'id': 2, 'artists': [{'name': 'Ben'}]},
             {'name': 'Country Track 3', 'id': 3, 'artists': [{'name': 'John'}]},
             {'name': 'Country Track 4', 'id': 4, 'artists': [{'name': 'Jim'}]},
@@ -293,7 +293,7 @@ class QuestionSavedTracksTests(StaticLiveServerTestCase):
             title = c.primary_text
             artist = c.secondary_text
             found = False
-            for t in u._top_tracks['long_term']:
+            for t in u._music_taste:
                 if t['name'] == title and t['artists'][0]['name'] == artist:
                     found = True
             self.assertTrue(found)
@@ -312,7 +312,7 @@ class QuestionSavedTracksTests(StaticLiveServerTestCase):
             {'name': 'Country Track 3', 'id': 3, 'artists': [{'name': 'James'}]},
         ]
 
-        u._top_tracks['long_term'] = [
+        u._music_taste = [
             {'name': 'Country Track 1', 'id': 1, 'artists': [{'name': 'Cassius'}]},
             {'name': 'Country Track 2', 'id': 2, 'artists': [{'name': 'Benjamin'}]},
             {'name': 'Country Track 3', 'id': 3, 'artists': [{'name': 'James'}]},

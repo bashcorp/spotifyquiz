@@ -76,15 +76,11 @@ _Music Taste Features_ (Choose 3)
 (Sl) How acoustic is the user's music taste/What percentage of the user's music taste is acoustic?
 (Sl) How happy is the user's music taste?
 (Sl) How danceable is the user's music taste?
+(Sl) How old is the music that the user listens to?
 
 
 
 To create: 
-
-(1 of these)
-(Sl) How old is the music that the user listens to?
-(Mc) What decade is the music that the user listens to the most?
-
 
 _Recently Played_ (Choose 1)
 (MC) What is the user's most recently played song (as of the timestamp of quiz creation)?
