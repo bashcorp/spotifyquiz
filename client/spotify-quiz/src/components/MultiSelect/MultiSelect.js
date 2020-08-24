@@ -1,46 +1,35 @@
 import React from "react"; //142
 import "./MultiSelect.css";
 
+
 const MultiSelect = (props) => {
 	let { sendData, answers, questionIndex } = props;
+	console.log("Answers: " + answers);
 
 	const [first, setFirst] = React.useState(false);
 	const [second, setSecond] = React.useState(false);
 	const [third, setThird] = React.useState(false);
 	const [fourth, setFourth] = React.useState(false);
+	const [selected, setSelected] = React.useState([]);
 
-	const optionNumber = [
-		"0?" + questionIndex,
-		"1?" + questionIndex,
-		"2?" + questionIndex,
-		"3?" + questionIndex,
-	];
+	const handleSelectionClick = (option) => {
+		let tmpArr = [];
 
-	const handleSelectionClick = (selection) => {
-		switch (selection){
-			case "first":
-				setFirst(!first);
-				break;
-			case "second":
-				setSecond(!second);
-				break;
-			case "third":
-				setThird(!third);
-				break;
-			case "fourth":
-				setFourth(!fourth);
-				break;
-			default:
-				break;
+		if (selected.includes(option.id)){
+			tmpArr = selected.filter(e => e !== option.id);
+			setSelected(tmpArr);
+			console.log("Type of selected #1: " + typeof selected);
+		} else {
+			tmpArr = selected.concat(option.id);
+			setSelected(selected);
+			console.log("Type of selected #2: " + typeof selected);
+			console.log(selected)
 		}
-		
 		updateFinalSubmission();
 	};
 
 	const updateFinalSubmission = () => {
-		
-
-		sendData(answers['first'].title);
+		sendData(selected);
 	};
 
 	const onSubmit = (e) => {
@@ -48,78 +37,21 @@ const MultiSelect = (props) => {
 	};
 
 	return (
+
 		<div className="MultipleChoice">
 			<form onSubmit={onSubmit}>
 			<span className="MultipleSelect">Select all correct answers</span>
-				<ul>
-					<li
-						style={{
-							boxShadow: first ? "0 6px 14px 0 #454545":"",
-							transform: first ? "scale(1.07)":"",
-						}}
-						
-						onClick={() =>
-							handleSelectionClick("first")
-						}
-					>
-						<span>
-							{answers["first"].title}
-						</span>
-						<span className="artist">
-							{answers["first"].artist}
-						</span>
+
+			<ul>
+				 {answers.choices.map(option => (
+
+					<li style={{ boxShadow: (selected.includes(option.id) ? '0 6px 14px 0 #454545' : ''),
+								 transform: (selected.includes(option.id) ? 'scale(1.07)' : '')}}
+								 key={option.id} count={option} onClick={() => handleSelectionClick(option)}>
+						<span>{option.text}</span>
+						<span className="artist">{option.text}</span>
 					</li>
-					<li
-						style={{
-							boxShadow: second ? "0 6px 14px 0 #454545":"",
-							transform: second ? "scale(1.07)":"",
-						}}
-						
-						onClick={() =>
-							handleSelectionClick("second")
-						}
-					>
-						<span>
-							{answers["second"].title}
-						</span>
-						<span className="artist">
-							{answers["second"].artist}
-						</span>
-					</li>
-					<li
-						style={{
-							boxShadow: third ? "0 6px 14px 0 #454545":"",
-							transform: third ? "scale(1.07)":"",
-						}}
-						
-						onClick={() =>
-							handleSelectionClick("third")
-						}
-					>
-						<span>
-							{answers["third"].title}
-						</span>
-						<span className="artist">
-							{answers["third"].artist}
-						</span>
-					</li>
-					<li
-						style={{
-							boxShadow: fourth ? "0 6px 14px 0 #454545":"",
-							transform: fourth ? "scale(1.07)":"",
-						}}
-						
-						onClick={() =>
-							handleSelectionClick("fourth")
-						}
-					>
-						<span>
-							{answers["fourth"].title}
-						</span>
-						<span className="artist">
-							{answers["fourth"].artist}
-						</span>
-					</li>
+					))}
 				</ul>
 			</form>
 		</div>

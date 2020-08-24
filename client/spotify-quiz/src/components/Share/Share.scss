@@ -1,21 +1,63 @@
 .Share {
-	padding: 60px 10% 20px 10%;
-	background-color: #129ae2;
 	position: relative;
-	z-index: 2;
+	z-index: 10;
+}
+
+:root {
+  $width: 100vw;
+  $full-width: 100vw;
+  
+  @media (min-width: 42em) {
+    $width: 42rem;
+  }
+  
+    /*-----------------
+  Magic Number Alert:
+  
+  the 0.09719 is calculated by this formula:
+  tan(11°) / 2
+  11° is the current skewY value.
+  ------------------*/
+  --magic-number: 0.09719;
+  --skew-padding: calc(var($width) * var($magic-number));
+  --clip-padding: calc(var($full-width) * var($magic-number));
+}
+
+.diagonal-box {
+  position: relative;
+  padding: var(--skew-padding) 0;
+  margin-top: -1px;
+  
+  &:before {
+    content: "";
+    position: absolute;
+    background-color: #5a0bd8;
+    box-shadow: 0px 6px 5px rgba(0, 0, 0, 0.4), 0px -6px 5px rgba(0, 0, 0, 0.4);
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    transform: skewy(-3deg);
+    transform-origin: 50% 0;
+    outline: 1px solid transparent;
+    backface-visibility: hidden;
+  }
+}
+
+.content {
+	padding: 7%;
 }
 
 #my-quiz-header {
 	font-size:200%;
 	font-weight: 700;
 	position: relative;
-	top: -30px;
 	color: #fffdf7;
 	margin-left: 15px;
 }
 
 .Share h3 {
-	color: #fffdf7;
+	color: #3e3e3e;
 }
 
 .share-wrapper {
@@ -24,16 +66,16 @@
 	align-items: flex-start;
 	align-content: space-around;
 	justify-content: space-around;
-	margin-top: -24px;
 }
 
 .share-wrapper > li {
+	text-align: center;
 	flex: 1 1 290px;
 	margin: 15px;
 	padding: 24px;
 	border-radius: 12px;
 	box-shadow:0 8px 10px rgba(0,0,0,0.3);
-	background-color: #525252;
+	background-color: #fcfaff;
 	align-self: stretch;
 	position: relative;
 	transition: all .4s ease;
@@ -49,6 +91,7 @@
 	font-size: 300%;
 	font-weight: 700;
 	color: black;
+	margin-bottom: 16px;
 }
 
 .take-it p {
@@ -56,7 +99,7 @@
 	line-height: 120%;
 	margin: 16px 0px;
 	font-family: sans-serif;
-	color: #d4d4cf;
+	color: #3b3b3b;
 }
 
 .share-button-wrapper {
@@ -75,6 +118,10 @@
 	margin-top: 0;
 	transition: all .5s ease;
 	box-shadow:0 2px 2px rgba(0,0,0,0.2);
+	          -webkit-animation-duration: 10s;
+            animation-duration: 10s;
+            -webkit-animation-fill-mode: both;
+            animation-fill-mode: both;
 }
 
 .share-button:hover{
@@ -82,11 +129,6 @@
 	margin-top: 1px;
 	background-color: #18a148;
 }
-
-.share-title {
-	margin-bottom: 16px;
-}
-
 
 .share-url {
 	font-family: sans-serif;
@@ -109,7 +151,7 @@
 }
 
 #copy-link {
-	margin-top: 10px;
+	padding-bottom: 10px;
 }
 
 svg {
@@ -146,7 +188,7 @@ svg {
 	line-height: 120%;
 	margin: 16px 0px 0px 0px;
 	font-family: sans-serif;
-	color: #d4d4cf;
+	color: darkgray;
 }
 
 

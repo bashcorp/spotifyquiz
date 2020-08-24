@@ -8,38 +8,20 @@ const MultipleChoice = (props) => {
 
 	console.log(questionIndex)
 
+	console.log("Answers: " + answers);
+
 	const [selected, setSelected] = React.useState();
-	const optionNumber = ["first?"+questionIndex, "second?"+questionIndex, "third?"+questionIndex, "fourth?"+questionIndex];
 
 
 
 	const handleSelectionClick = (selection) => {
 		setSelected(selection);
-		updateFinalSubmission(selection.split('?')[0]);
+		updateFinalSubmission(selection.id);
 	}
 
-	const updateFinalSubmission = (name) => {
-		switch(name) {
-			case 'first':
-				sendData(answers['first'].title); //TODO: Find out what Cash wants to recieve for answer
-				return;
-			case 'second':
-				sendData(answers['second'].title);
-				return;
-			case 'third':
-				sendData(answers['third'].title);
-				return;
-			case 'fourth':
-				sendData(answers['fourth'].title);
-				return;
-			default:
-			return 'Invalid response. (#001)'
-		}
+	const updateFinalSubmission = (id) => {
+		sendData(id);
 	}
-
-
-
-	
 
 	const onSubmit = (e) => {
 		e.preventDefault();
@@ -49,12 +31,12 @@ const MultipleChoice = (props) => {
 		<div className="MultipleChoice">
 			<form onSubmit={onSubmit}>
 				<ul>
-				 {optionNumber.map(option => (
+				 {answers.choices.map(option => (
 					<li style={{ boxShadow: (option===selected ? '0 6px 14px 0 #454545' : ''),
 								 transform: (option===selected ? 'scale(1.07)' : '')}}
-								 key={option} count={option} onClick={() => handleSelectionClick(option)}>
-						<span>{answers[option.split('?')[0]].title}</span>
-						<span className="artist">{answers[option.split('?')[0]].artist}</span>
+								 key={option.id} count={option} onClick={() => handleSelectionClick(option)}>
+						<span>{option.text}</span>
+						<span className="artist">{option.text}</span>
 					</li>
 					))}
 				</ul>
