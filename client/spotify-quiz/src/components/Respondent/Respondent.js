@@ -1,5 +1,5 @@
 import React from 'react';
-import './Respondent.css';
+import './Respondent.scss';
 import RespondentItem from '../RespondentItem/RespondentItem';
 
 
@@ -8,12 +8,9 @@ class Respondent extends React.Component {
 
 	render() {
 		return (
-<section>
-			<div id="wave"/>
-			<div/>
-
-
 			<div className="Respondent">
+			    <div class="diagonal-box-respondent">
+  					<div class="content-respondent">
 
 			 <h2 id="responses-header">Results ({this.props.respondents.length})</h2>
 
@@ -26,7 +23,8 @@ class Respondent extends React.Component {
 			</ul>
 
 			</div>
-			</section>
+			</div>
+			</div>
 
 			);
 		}

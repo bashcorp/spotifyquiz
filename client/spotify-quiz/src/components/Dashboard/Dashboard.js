@@ -1,5 +1,7 @@
+
 import React from 'react';
 import './Dashboard.css';
+import './bubbles.css';
 import TitleHeader from '../TitleHeader/TitleHeader';
 import Share from '../Share/Share';
 import Respondent from '../Respondent/Respondent';
@@ -24,8 +26,34 @@ function Dashboard() {
 
 	return (
 	<div className="dashboard-wrapper">
+  <nav className="topnav-dashboard">
+        <ul>
+          <li>
+            <a href="#">
+              <img src={require('./../../assets/newlogo.svg')} />
+            </a>
+          </li>
+          <li className="top-sign-in">
+            <a href="/dashboard">Start quiz</a>
+          </li>
+        </ul>
+      </nav>
+
+<div class="animation-area">
     <TitleHeader />
     <Share />
+
+  <ul class="box-area">
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+  </ul>
+</div>
+
+
     <Respondent respondents={respondents}/>
     </div>
   );

@@ -4,110 +4,355 @@ import Question from '../Question/Question';
 import MultipleChoice from '../MultipleChoice/MultipleChoice';
 import MultiSelect from '../MultiSelect/MultiSelect';
 import Slider from '../Slider/Slider';
+import Modal from 'react-modal';
 import Next from '../Next/Next';
 import ProgressBar from '../ProgressBar/ProgressBar';
-
+import { Beforeunload } from 'react-beforeunload';
 
 let questionIndex = 0;
 let buttonText = "Next";
 let returnArray = [];
-let questionArray = [
+let questions = [
 {
-  question: 'What\'s their favorite song?', 
-  type: 'slider', 
-  answer: '', 
-  assets: { 
-    one: "https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350",
-    two: "../../logo.svg", 
-    three: "../../logo.svg"}, 
-    first: {
-     title:'Song #1',
-     artist: 'Artist 1'}, 
-    second: { title:'Song #2', 
-      artist: 'Artist #2'},
-    third: { 
-      title:'Song #3',  
-      artist: 'Artist #3'}, 
-    fourth: { 
-      title:'Song #4',
-      artist: 'Artist #4'}, 
-    },
-    {
-  question: 'What\'s their favorite song?', 
-  type: 'multipleChoice', 
-  answer: '', 
-  assets: { 
-    one: "https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350",
-    two: "../../logo.svg", 
-    three: "../../logo.svg"}, 
-    first: {
-     title:'Song #1',
-     artist: 'Artist 1'}, 
-    second: { title:'Song #2', 
-      artist: 'Artist #2'},
-    third: { 
-      title:'Song #3',  
-      artist: 'Artist #3'}, 
-    fourth: { 
-      title:'Song #4',
-      artist: 'Artist #4'}, 
-    },
-    {
-  question: 'SECOND', 
-  type: 'multipleSelect', 
-  answer: '', 
-  assets: { 
-    one: "https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350",
-    two: "../../logo.svg", 
-    three: "../../logo.svg"}, 
-    first: {
-     title:'Song #1',
-     artist: 'Artist 1'}, 
-    second: { title:'Song #2', 
-      artist: 'Artist #2'},
-    third: { 
-      title:'Song #3',  
-      artist: 'Artist #3'}, 
-    fourth: { 
-      title:'Song #4',
-      artist: 'Artist #4'}, 
-    }
-  ];
-  let currentProgress = Math.ceil((questionIndex+1/questionArray.length)*100);
+    id: 34,
+    text: "This is a slider question?",
+    min: 3,
+    max: 17,
+    answer: 11,
+    type: "slider"
+  },
+{
+  id: 33,
+  text: "What is their most listened to artist in the last 6 months?",
+  type: "check",
+  choices: [
+      {
+        id: 110,
+        text: "Skee-Lo",
+        answer: true
+      },
+      {
+        id: 111,
+        text: "100 gecs",
+        answer: false
+      },
+      {
+        id: 112,
+        text: "Hozier",
+        answer: false
+      },
+      {
+        id: 113,
+        text: "Willie Peyote",
+        answer: false
+      }
+    ],
+  },
+  {
+  id: 33,
+  text: "What is their most listened to artist in the last 6 months?",
+  type: "check",
+  choices: [
+      {
+        id: 110,
+        text: "Skee-Lo",
+        answer: true
+      },
+      {
+        id: 111,
+        text: "100 gecs",
+        answer: false
+      },
+      {
+        id: 112,
+        text: "Hozier",
+        answer: false
+      },
+      {
+        id: 113,
+        text: "Willie Peyote",
+        answer: false
+      }
+    ],
+  },
+  {
+  id: 33,
+  text: "What is their most listened to artist in the last 6 months?",
+  type: "mc",
+  choices: [
+      {
+        id: 110,
+        text: "Skee-Lo",
+        answer: true
+      },
+      {
+        id: 111,
+        text: "100 gecs",
+        answer: false
+      },
+      {
+        id: 112,
+        text: "Hozier",
+        answer: false
+      },
+      {
+        id: 113,
+        text: "Willie Peyote",
+        answer: false
+      }
+    ],
+  },
+  {
+  id: 33,
+  text: "What is their most listened to artist in the last 6 months?",
+  type: "mc",
+  choices: [
+      {
+        id: 110,
+        text: "Skee-Lo",
+        answer: true
+      },
+      {
+        id: 111,
+        text: "100 gecs",
+        answer: false
+      },
+      {
+        id: 112,
+        text: "Hozier",
+        answer: false
+      },
+      {
+        id: 113,
+        text: "Willie Peyote",
+        answer: false
+      }
+    ],
+  },
+  {
+  id: 33,
+  text: "What is their most listened to artist in the last 6 months?",
+  type: "mc",
+  choices: [
+      {
+        id: 110,
+        text: "Skee-Lo",
+        answer: true
+      },
+      {
+        id: 111,
+        text: "100 gecs",
+        answer: false
+      },
+      {
+        id: 112,
+        text: "Hozier",
+        answer: false
+      },
+      {
+        id: 113,
+        text: "Willie Peyote",
+        answer: false
+      }
+    ],
+  },
+  {
+  id: 33,
+  text: "What is their most listened to artist in the last 6 months?",
+  type: "mc",
+  choices: [
+      {
+        id: 110,
+        text: "Skee-Lo",
+        answer: true
+      },
+      {
+        id: 111,
+        text: "100 gecs",
+        answer: false
+      },
+      {
+        id: 112,
+        text: "Hozier",
+        answer: false
+      },
+      {
+        id: 113,
+        text: "Willie Peyote",
+        answer: false
+      }
+    ],
+  },
+  {
+  id: 33,
+  text: "What is their most listened to artist in the last 6 months?",
+  type: "mc",
+  choices: [
+      {
+        id: 110,
+        text: "Skee-Lo",
+        answer: true
+      },
+      {
+        id: 111,
+        text: "100 gecs",
+        answer: false
+      },
+      {
+        id: 112,
+        text: "Hozier",
+        answer: false
+      },
+      {
+        id: 113,
+        text: "Willie Peyote",
+        answer: false
+      }
+    ],
+  },
+  {
+  id: 33,
+  text: "What is their most listened to artist in the last 6 months?",
+  type: "mc",
+  choices: [
+      {
+        id: 110,
+        text: "Skee-Lo",
+        answer: true
+      },
+      {
+        id: 111,
+        text: "100 gecs",
+        answer: false
+      },
+      {
+        id: 112,
+        text: "Hozier",
+        answer: false
+      },
+      {
+        id: 113,
+        text: "Willie Peyote",
+        answer: false
+      }
+    ],
+  },
+  {
+  id: 33,
+  text: "What is their most listened to artist in the last 6 months?",
+  type: "mc",
+  choices: [
+      {
+        id: 110,
+        text: "Skee-Lo",
+        answer: true
+      },
+      {
+        id: 111,
+        text: "100 gecs",
+        answer: false
+      },
+      {
+        id: 112,
+        text: "Hozier",
+        answer: false
+      },
+      {
+        id: 113,
+        text: "Willie Peyote",
+        answer: false
+      }
+    ],
+  }
+];
+
+const customStyles = {
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)',
+    backgroundImage       : 'linear-gradient(225deg, #843df5 0%, #129ae2 74%)',
+    padding               : "100vh",
+    width                 : "35vh"
+  }
+};
+
+
+let currentProgress = Math.ceil((questionIndex+1/questions.length)*100);
 
 const Quiz = (props) => {
-  const [currentQuestion, setCurrentQuestion] = React.useState(questionArray[questionIndex]);
-  const [nextDisabled, setNextDisabled] = React.useState(true);
 
+  const [currentQuestion, setCurrentQuestion] = React.useState(questions[questionIndex]);
+  const [nextDisabled, setNextDisabled] = React.useState(true);
+  const [modalIsOpen,setIsOpen] = React.useState(true);
+  var subtitle;
 
   const getData = (val) => {
     returnArray[questionIndex] = val;
     setNextDisabled(false);
   }
+ 
+  const afterOpenModal = () => {
+    subtitle.style.color = "white";
+  }
+ 
+  const closeModal = () => {
+    setIsOpen(false);
+  }
 
   const nextQuestion = () => {
-    if (questionArray.length > questionIndex + 1){
+    if (questions.length > questionIndex + 1){
       questionIndex += 1;
       setNextDisabled(true);
-      currentProgress += (1/questionArray.length)*100;
+      currentProgress += (1/questions.length)*100;
       currentProgress = Math.ceil(currentProgress);
 
-      if (questionArray.length === questionIndex + 1){
+
+      if (questions.length === questionIndex + 1){
         buttonText = "Submit";
 
       } 
     }
-    setCurrentQuestion(questionArray[questionIndex]);
+    setCurrentQuestion(questions[questionIndex]);
   }
 
     return (
-    <div className="quiz-wrapper">
+      <>
+            <Beforeunload onBeforeunload={() => "You'll lose your data!"} />
+
+        <Modal
+          class="modal"
+          isOpen={modalIsOpen}
+          onAfterOpen={afterOpenModal}
+          style={customStyles}
+          contentLabel="Example Modal"
+           closeTimeoutMS={700}
+        >
+          <h2 class="modal-greeting" ref={_subtitle => (subtitle = _subtitle)}>Get Ready!</h2>
+          <h3 class="modal-subtitle">Enter your name to get started.</h3>
+          <form>
+          <input autofocus class="name-entry" placeholder="e.g. Maya Angelou" />
+            <div onClick={closeModal} className="share-button-wrapper">
+            <a className="start-button" href="/quiz">Start quiz</a>
+            </div>
+          </form>
+        </Modal>
+
+    <div id="quiz-wrapper" className="quiz-wrapper">
+        <div className="background-of-quiz">
+      {Array(questionIndex + 1).fill(<span></span>)}
+    </div>
+
       <div className="Quiz">
-      <Question question={currentQuestion.question}/>
-      {currentQuestion.type === "multipleChoice" &&
+
+      <Question question={currentQuestion.text}/>
+      {currentQuestion.type === "mc" &&
         <MultipleChoice sendData={getData} answers={currentQuestion} questionIndex={questionIndex}/>
       }
-      {currentQuestion.type === "multipleSelect" &&
+      {currentQuestion.type === "check" &&
         <MultiSelect sendData={getData} answers={currentQuestion} questionIndex={questionIndex}/>
       }
       {currentQuestion.type === "slider" &&
@@ -122,6 +367,7 @@ const Quiz = (props) => {
      
     </div>
     </div>
+    </>
 
     );
 }

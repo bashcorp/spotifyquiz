@@ -1,5 +1,5 @@
 import React from 'react';
-import './Share.css';
+import './Share.scss';
 
 
 function Share() {
@@ -7,9 +7,13 @@ function Share() {
 	return (
 
     <div className="Share">
+    <div class="diagonal-box">
+  	<div class="content">
+
 
 
     <h2 id="my-quiz-header">My Quiz</h2>
+
     <ul className="share-wrapper">
 		<li id="take-it">
 		<div className="take-it">
@@ -17,7 +21,7 @@ function Share() {
 		   		<h3>Take it</h3>
 		   	</div>
 
-		   	<p>How well do you know your music taste? We'll generate a quiz from your listening habits to put your knowledge to the test.</p>
+		   	<p>How well do you know your music taste? We'll generate a quiz based on your listening history to put your knowledge to the test.</p>
 
 		   	<div className="share-button-wrapper">
 		   		<a className="share-button" href="/quiz">Start quiz</a>
@@ -31,7 +35,7 @@ function Share() {
 		   		<h3>Link it</h3>
 		   	</div>
 
-		   	<p className="quiz-url-description">Custom URL:</p>
+		   	<p className="quiz-url-description">My unique quiz</p>
 
 			<div className="share-url-wrapper" id="copy-link">
 		   	<span className="share-url">www.spot-on.app/quiz/74628492</span>
@@ -80,6 +84,8 @@ function Share() {
 	    </div>
 	    </li>
 	   </ul>
+    </div>
+    </div>
     </div>
   );
 }

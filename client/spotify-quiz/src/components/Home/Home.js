@@ -6,13 +6,15 @@ const Home = (props) => {
 
     return (
       <div className="Home">
-      <nav>
+      <nav className="topnav">
         <ul>
           <li>
-            <a href="#"><img src={require('./../../assets/newlogo.svg')} /></a>
+            <a href="#">
+              <img src={require('./../../assets/newlogo.svg')} />
+            </a>
           </li>
-          <li>
-            <a class="top-sign-in" href="/dashboard">Sign in</a>
+          <li className="top-sign-in">
+            <a href="/dashboard">Sign in</a>
           </li>
         </ul>
       </nav>
@@ -22,11 +24,11 @@ const Home = (props) => {
     <div class="center-wrapper">
       <div class="flex-container">
         <div class="flex-child right">
-          <img src={require('./../../assets/demo.png')}/>
+          <img src={require('./../../assets/demo.svg')}/>
         </div>
         <div class="flex-child left" id="wcsa-section">
           <div class="title-wrapper">
-            <h1>Taste Quiz</h1>
+            <h1>Spot On</h1>
           </div>
           <div class="description-wrapper">
             <p>Who knows your listening habits the best? Quiz yourself. Quiz your friends.</p>

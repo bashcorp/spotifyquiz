@@ -1,14 +1,12 @@
 .TitleHeader {
 	position: relative;
 	z-index: 1;
-  display: flex;
-  background: #eaeaea;
-  box-shadow:0 8px 8px rgba(0,0,0,0.1);
-  }
+	display: flex;
+}
 
 .TitleHeader h2 {
-	margin: 120px;
+	margin: 60px;
 	font-size: 400%;
 	font-weight: 700;
-	color: #404040;
+	color: #ffffff;
 }

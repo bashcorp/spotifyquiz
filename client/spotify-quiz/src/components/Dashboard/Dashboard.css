@@ -11,6 +11,18 @@
   float:left;
 }
 
+.topnav-dashboard {
+  inset: 0em 0em 2.4em 0em; 
+  overflow: hidden;
+  position: relative;
+  z-index: 1000;
+}
+
+.dashboard-wrapper {
+    background-image: linear-gradient(225deg, #843df5 0%, #129ae2 74%);
+
+}
+
 .parallax1 > use {
   animation: move-forever1 10s linear infinite;
   &:nth-child(1) {

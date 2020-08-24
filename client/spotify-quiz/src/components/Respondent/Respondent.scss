@@ -1,6 +1,44 @@
-.Respondent {
-	padding: 60px 0px 0px 0px;
-	background-color: #313131;
+:root {
+  $width: 100vw;
+  $full-width: 100vw;
+  
+  @media (min-width: 42em) {
+    $width: 42rem;
+  }
+  
+    /*-----------------
+  Magic Number Alert:
+  
+  the 0.09719 is calculated by this formula:
+  tan(11°) / 2
+  11° is the current skewY value.
+  ------------------*/
+  --magic-number: 0.09719;
+  --skew-padding: calc(var($width) * var($magic-number));
+  --clip-padding: calc(var($full-width) * var($magic-number));
+}
+
+.diagonal-box-respondent {
+  position: relative;
+  margin-top: -1px;
+  
+  &:before {
+    content: "";
+    position: absolute;
+    z-index: 2;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    transform: skewy(-3deg);
+    transform-origin: 50% 0;
+    outline: 1px solid transparent;
+    backface-visibility: hidden;
+  }
+}
+
+.content-respondent {
+padding: 7%;
 }
 
 .respondent-list {
@@ -8,33 +46,28 @@
 	flex-wrap: wrap;
 	align-items: flex-start;
 	align-content: space-around;
-	justify-content: space-around;
-	padding: 50px 10%;
-	background-color: #eaeaea;
-	
+	justify-content: space-around;	
 }
 
 #responses-header {
 	font-size: 200%;
 	font-weight: 700;
 	position: relative;
-	top: 45px;
 	color: #fffdf7;
-	padding-left: 10%;
 	z-index: 10;
+	margin-left: 15px;
 }
 
 .respondent {
 	position: relative;
 	z-index: 5;
-	margin: 15px;
+	margin: 24px;
 	padding: 20px;
 	flex: 0 1 25%;
-	margin: 15px;
 	padding: 24px 24px 8px 24px;
 	border-radius: 12px;
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.6);
-	background-color: white;
+	background-color: #f4f4f5;
 	color: #3e3e3e;
 	align-self: stretch;
 	position: relative;
@@ -46,7 +79,7 @@
 	width: 150px;
 	text-align: center;
 	border-radius: 50%;
-	border: solid 3px #404040;
+	border: solid 3px #ffc933;
 	display: block;
   	margin-left: auto;
  	margin-right: auto;
