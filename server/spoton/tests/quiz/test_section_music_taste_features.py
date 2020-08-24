@@ -61,9 +61,9 @@ class QuestionExplicitnessTests(StaticLiveServerTestCase):
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_explicitness(quiz, u)
 
-        self.assertEquals(question.slider_min, 0)
-        self.assertEquals(question.slider_max, 100)
-        self.assertEquals(question.answer, int(100*7/15))
+        self.assertEqual(question.slider_min, 0)
+        self.assertEqual(question.slider_max, 100)
+        self.assertEqual(question.answer, int(100*7/15))
 
 
     def test_question_explicitness_real_request(self):
@@ -76,8 +76,8 @@ class QuestionExplicitnessTests(StaticLiveServerTestCase):
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_explicitness(quiz, u)
 
-        self.assertEquals(question.slider_min, 0)
-        self.assertEquals(question.slider_max, 100)
+        self.assertEqual(question.slider_min, 0)
+        self.assertEqual(question.slider_max, 100)
         self.assertGreaterEqual(question.answer, 0)
         self.assertLessEqual(question.answer, 100)
 
@@ -98,9 +98,9 @@ class QuestionExplicitnessTests(StaticLiveServerTestCase):
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_explicitness(quiz, u)
 
-        self.assertEquals(question.slider_min, 0)
-        self.assertEquals(question.slider_max, 100)
-        self.assertEquals(question.answer, 100)
+        self.assertEqual(question.slider_min, 0)
+        self.assertEqual(question.slider_max, 100)
+        self.assertEqual(question.answer, 100)
 
 
     def test_question_explicitness_none_explicit(self):
@@ -119,9 +119,9 @@ class QuestionExplicitnessTests(StaticLiveServerTestCase):
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_explicitness(quiz, u)
 
-        self.assertEquals(question.slider_min, 0)
-        self.assertEquals(question.slider_max, 100)
-        self.assertEquals(question.answer, 0)
+        self.assertEqual(question.slider_min, 0)
+        self.assertEqual(question.slider_max, 100)
+        self.assertEqual(question.answer, 0)
 
 
 
@@ -168,9 +168,9 @@ class QuestionEnergyTests(StaticLiveServerTestCase):
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_energy(quiz, u)
 
-        self.assertEquals(question.slider_min, 0)
-        self.assertEquals(question.slider_max, 100)
-        self.assertEquals(question.answer, avg)
+        self.assertEqual(question.slider_min, 0)
+        self.assertEqual(question.slider_max, 100)
+        self.assertEqual(question.answer, avg)
 
 
     def test_question_energy_real_request(self):
@@ -183,8 +183,8 @@ class QuestionEnergyTests(StaticLiveServerTestCase):
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_energy(quiz, u)
 
-        self.assertEquals(question.slider_min, 0)
-        self.assertEquals(question.slider_max, 100)
+        self.assertEqual(question.slider_min, 0)
+        self.assertEqual(question.slider_max, 100)
         self.assertGreaterEqual(question.answer, 0)
         self.assertLessEqual(question.answer, 100)
 
@@ -205,9 +205,9 @@ class QuestionEnergyTests(StaticLiveServerTestCase):
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_energy(quiz, u)
 
-        self.assertEquals(question.slider_min, 0)
-        self.assertEquals(question.slider_max, 100)
-        self.assertEquals(question.answer, 0)
+        self.assertEqual(question.slider_min, 0)
+        self.assertEqual(question.slider_max, 100)
+        self.assertEqual(question.answer, 0)
 
 
     def test_question_energy_avg_1(self):
@@ -226,9 +226,9 @@ class QuestionEnergyTests(StaticLiveServerTestCase):
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_energy(quiz, u)
 
-        self.assertEquals(question.slider_min, 0)
-        self.assertEquals(question.slider_max, 100)
-        self.assertEquals(question.answer, 100)
+        self.assertEqual(question.slider_min, 0)
+        self.assertEqual(question.slider_max, 100)
+        self.assertEqual(question.answer, 100)
 
 
 
@@ -278,9 +278,9 @@ class QuestionAcousticnessTests(StaticLiveServerTestCase):
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_acousticness(quiz, u)
 
-        self.assertEquals(question.slider_min, 0)
-        self.assertEquals(question.slider_max, 100)
-        self.assertEquals(question.answer, percentage)
+        self.assertEqual(question.slider_min, 0)
+        self.assertEqual(question.slider_max, 100)
+        self.assertEqual(question.answer, percentage)
 
 
     def test_question_acousticness_real_request(self):
@@ -293,8 +293,8 @@ class QuestionAcousticnessTests(StaticLiveServerTestCase):
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_acousticness(quiz, u)
 
-        self.assertEquals(question.slider_min, 0)
-        self.assertEquals(question.slider_max, 100)
+        self.assertEqual(question.slider_min, 0)
+        self.assertEqual(question.slider_max, 100)
         self.assertGreaterEqual(question.answer, 0)
         self.assertLessEqual(question.answer, 100)
 
@@ -315,9 +315,9 @@ class QuestionAcousticnessTests(StaticLiveServerTestCase):
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_acousticness(quiz, u)
 
-        self.assertEquals(question.slider_min, 0)
-        self.assertEquals(question.slider_max, 100)
-        self.assertEquals(question.answer, 100)
+        self.assertEqual(question.slider_min, 0)
+        self.assertEqual(question.slider_max, 100)
+        self.assertEqual(question.answer, 100)
 
 
     def test_question_acousticness_none_acoustic(self):
@@ -336,9 +336,9 @@ class QuestionAcousticnessTests(StaticLiveServerTestCase):
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_acousticness(quiz, u)
 
-        self.assertEquals(question.slider_min, 0)
-        self.assertEquals(question.slider_max, 100)
-        self.assertEquals(question.answer, 0)
+        self.assertEqual(question.slider_min, 0)
+        self.assertEqual(question.slider_max, 100)
+        self.assertEqual(question.answer, 0)
 
 
 
@@ -387,9 +387,9 @@ class QuestionHappinessTests(StaticLiveServerTestCase):
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_happiness(quiz, u)
 
-        self.assertEquals(question.slider_min, 0)
-        self.assertEquals(question.slider_max, 100)
-        self.assertEquals(question.answer, avg)
+        self.assertEqual(question.slider_min, 0)
+        self.assertEqual(question.slider_max, 100)
+        self.assertEqual(question.answer, avg)
 
 
     def test_question_happiness_real_request(self):
@@ -402,8 +402,8 @@ class QuestionHappinessTests(StaticLiveServerTestCase):
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_happiness(quiz, u)
 
-        self.assertEquals(question.slider_min, 0)
-        self.assertEquals(question.slider_max, 100)
+        self.assertEqual(question.slider_min, 0)
+        self.assertEqual(question.slider_max, 100)
         self.assertGreaterEqual(question.answer, 0)
         self.assertLessEqual(question.answer, 100)
 
@@ -424,9 +424,9 @@ class QuestionHappinessTests(StaticLiveServerTestCase):
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_happiness(quiz, u)
 
-        self.assertEquals(question.slider_min, 0)
-        self.assertEquals(question.slider_max, 100)
-        self.assertEquals(question.answer, 100)
+        self.assertEqual(question.slider_min, 0)
+        self.assertEqual(question.slider_max, 100)
+        self.assertEqual(question.answer, 100)
 
 
     def test_question_happiness_all_sad(self):
@@ -445,9 +445,9 @@ class QuestionHappinessTests(StaticLiveServerTestCase):
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_happiness(quiz, u)
 
-        self.assertEquals(question.slider_min, 0)
-        self.assertEquals(question.slider_max, 100)
-        self.assertEquals(question.answer, 0)
+        self.assertEqual(question.slider_min, 0)
+        self.assertEqual(question.slider_max, 100)
+        self.assertEqual(question.answer, 0)
 
 
 
@@ -496,9 +496,9 @@ class QuestionDanceabilityTests(StaticLiveServerTestCase):
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_danceability(quiz, u)
 
-        self.assertEquals(question.slider_min, 0)
-        self.assertEquals(question.slider_max, 100)
-        self.assertEquals(question.answer, avg)
+        self.assertEqual(question.slider_min, 0)
+        self.assertEqual(question.slider_max, 100)
+        self.assertEqual(question.answer, avg)
 
 
     def test_question_danceability_real_request(self):
@@ -511,8 +511,8 @@ class QuestionDanceabilityTests(StaticLiveServerTestCase):
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_danceability(quiz, u)
 
-        self.assertEquals(question.slider_min, 0)
-        self.assertEquals(question.slider_max, 100)
+        self.assertEqual(question.slider_min, 0)
+        self.assertEqual(question.slider_max, 100)
         self.assertGreaterEqual(question.answer, 0)
         self.assertLessEqual(question.answer, 100)
 
@@ -533,9 +533,9 @@ class QuestionDanceabilityTests(StaticLiveServerTestCase):
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_danceability(quiz, u)
 
-        self.assertEquals(question.slider_min, 0)
-        self.assertEquals(question.slider_max, 100)
-        self.assertEquals(question.answer, 100)
+        self.assertEqual(question.slider_min, 0)
+        self.assertEqual(question.slider_max, 100)
+        self.assertEqual(question.answer, 100)
 
 
     def test_question_danceability_all_1(self):
@@ -554,9 +554,9 @@ class QuestionDanceabilityTests(StaticLiveServerTestCase):
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_danceability(quiz, u)
 
-        self.assertEquals(question.slider_min, 0)
-        self.assertEquals(question.slider_max, 100)
-        self.assertEquals(question.answer, 100)
+        self.assertEqual(question.slider_min, 0)
+        self.assertEqual(question.slider_max, 100)
+        self.assertEqual(question.answer, 100)
 
 
 
@@ -607,7 +607,7 @@ class QuestionDurationTests(StaticLiveServerTestCase):
 
         self.assertLessEqual(question.slider_min, avg-40)
         self.assertGreaterEqual(question.slider_max, avg+40)
-        self.assertEquals(question.answer, avg)
+        self.assertEqual(question.answer, avg)
 
 
     def test_question_duration_real_request(self):
@@ -646,4 +646,128 @@ class QuestionDurationTests(StaticLiveServerTestCase):
 
         self.assertEqual(question.slider_min, 0)
         self.assertGreaterEqual(question.slider_max, avg+40)
-        self.assertEquals(question.answer, avg)
+        self.assertEqual(question.answer, avg)
+
+
+
+class QuestionAverageReleaseDateTests(StaticLiveServerTestCase):
+    """
+    question_average_release_date() should return a question that asks the
+    average release year of the user's music taste.
+    """
+    port = 8000 
+
+    @classmethod 
+    def setUpClass(cls):
+        """
+        These tests only need a user to be logged into a session, so
+        this does it once at class creation. Saves the session data by itself
+        so that each test can have a fresh session with that data.
+        """
+        super(QuestionAverageReleaseDateTests, cls).setUpClass()
+        cls.session = create_authorized_session(cls.live_server_url)
+
+
+    @classmethod
+    def tearDownClass(cls):
+        """
+        At the end of this class, complete any timers that would delete
+        auth_access_tokens, so that they don't hang up the testing program.
+        """
+        super(QuestionAverageReleaseDateTests, cls).tearDownClass()
+        spotify.cleanup_timers()
+
+
+    def test_question_average_release_date(self):
+        """
+        question_average_release_date() should return a question that asks the
+        average release year of the user's music taste.
+        """
+        u = UserData(None)
+        u._music_taste = []
+
+        dates = ['1954-10-02', '1998-04-04', '2020-01-10', '2005-12-25']
+        for i in range(len(dates)):
+            u._music_taste.append(
+                    {
+                        'id': i, 'energy': 0,
+                        'album': {'release_date': dates[i]}
+                    })
+
+        avg = int((1954+1998+2020+2005)/len(dates))
+
+        quiz = Quiz.objects.create(user_id='Cassius')
+        question = question_average_release_date(quiz, u)
+
+        self.assertLessEqual(question.slider_min, 1954)
+        self.assertGreaterEqual(question.slider_max, 2020)
+        self.assertEqual(question.answer, avg)
+
+
+    def test_question_average_release_date_real_request(self):
+        """
+        question_average_release_date() should return a question that asks the
+        average release year of the user's music taste. This tests the
+        question with real Spotify data.
+        """
+        u = UserData(self.session)
+
+        quiz = Quiz.objects.create(user_id='Cassius')
+        question = question_average_release_date(quiz, u)
+
+        self.assertGreaterEqual(question.slider_min, 1900)
+        self.assertLessEqual(question.slider_max, 2050)
+        self.assertGreaterEqual(question.answer, 1900)
+        self.assertLessEqual(question.answer, 2050)
+
+
+    def test_question_average_release_date_min_max_too_close(self):
+        """
+        question_average_release_date() should return a question that asks the
+        average release year of the user's music taste.
+        """
+        u = UserData(None)
+        u._music_taste = []
+
+        dates = ['2015', '2013', '2014', '2012', '2011']
+        for i in range(len(dates)):
+            u._music_taste.append(
+                    {
+                        'id': i, 'energy': 0,
+                        'album': {'release_date': dates[i]}
+                    })
+
+        avg = 2013
+
+        quiz = Quiz.objects.create(user_id='Cassius')
+        question = question_average_release_date(quiz, u)
+
+        self.assertEqual(question.slider_min, 2006)
+        self.assertEqual(question.slider_max, 2020)
+        self.assertEqual(question.answer, avg)
+
+
+    def test_question_average_release_date_min_max_too_close(self):
+        """
+        question_average_release_date() should return a question that asks the
+        average release year of the user's music taste.
+        """
+        u = UserData(None)
+        u._music_taste = []
+
+        dates = ['2017', '2013', '2014', '2016', '2015']
+        for i in range(len(dates)):
+            u._music_taste.append(
+                    {
+                        'id': i, 'energy': 0,
+                        'album': {'release_date': dates[i]}
+                    })
+
+        avg = 2015
+
+        quiz = Quiz.objects.create(user_id='Cassius')
+        question = question_average_release_date(quiz, u)
+
+        self.assertEqual(question.slider_min, 2008)
+        self.assertEqual(question.slider_max, 2020)
+        self.assertEqual(question.answer, avg)

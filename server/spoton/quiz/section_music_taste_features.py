@@ -1,3 +1,4 @@
+import datetime
 import random
 from collections import Counter
 
@@ -158,3 +159,48 @@ def question_duration(quiz, user_data):
             text = "On average, how long are the songs that the user listens to (in seconds)?",
             slider_min = duration_min, slider_max = duration_max, answer = avg_duration)
     return question
+
+
+def question_average_release_date(quiz, user_data):
+    """
+    Creates and returns a question asking about the average release
+    year of the user's music taste. Returns None if data is invalid.
+    """
+    music_taste = user_data.music_taste()
+
+    if not music_taste:
+        return None
+
+    # Calculate the average release year, and find the min and max release
+    # year
+    year_sum = 0
+    year_min = 5000
+    year_max = 0
+    for t in music_taste:
+        date = t['album']['release_date']
+        year = int(date[0:4])
+        year_sum += year
+        if year < year_min:
+            year_min = year
+        if year > year_max:
+            year_max = year
+    year_avg = int(year_sum/len(music_taste))
+
+    # If the min and max values are too close to the answer,
+    # extend them by five
+    if year_min >= year_avg-5:
+        year_min -= 5
+    if year_max <= year_avg+5:
+        year_max += 5
+
+    # If the max year is in the future, restrict it to the present
+    current_year = datetime.datetime.now().year
+    if year_max > current_year:
+        year_max = current_year
+
+    # Create the actual question
+    question = SliderQuestion.objects.create(quiz=quiz,
+            text = "On average, what year was the user's music taste released in?",
+            slider_min = year_min, slider_max = year_max, answer = year_avg)
+    return question
+        
