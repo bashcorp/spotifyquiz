@@ -1,6 +1,8 @@
 info.txt
 todo.todo
 
+static/
+
 *.swp
 
 # Coverage Testing
