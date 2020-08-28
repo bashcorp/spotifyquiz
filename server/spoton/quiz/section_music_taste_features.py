@@ -204,3 +204,28 @@ def question_average_release_date(quiz, user_data):
             slider_min = year_min, slider_max = year_max, answer = year_avg)
     return question
         
+
+def question_music_popularity(quiz, user_data):
+    """
+    Creates and returns a question asking how popular or mainstream the user's
+    music taste is. Returns None if data is invalid.
+    """
+    music_taste = user_data.music_taste()
+
+    if not music_taste:
+        return None
+
+    # Calculate the average track popularity
+    popularity_sum = 0
+    for t in music_taste:
+        popularity_sum += int(t['popularity'])
+    avg_popularity = int(popularity_sum/len(music_taste))
+
+    # Create the actual question
+    question = SliderQuestion.objects.create(quiz=quiz,
+            text = "How mainstream is the user's music taste?",
+            slider_min = 0, slider_max = 100, answer = avg_popularity)
+    return question
+
+
+

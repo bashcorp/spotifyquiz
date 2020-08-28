@@ -771,3 +771,128 @@ class QuestionAverageReleaseDateTests(StaticLiveServerTestCase):
         self.assertEqual(question.slider_min, 2008)
         self.assertEqual(question.slider_max, 2020)
         self.assertEqual(question.answer, avg)
+
+
+
+
+class QuestionMusicPopularityTests(StaticLiveServerTestCase):
+    """
+    question_music_popularity() should return a question that asks the
+    average popularity of the user's music taste.
+    """
+    port = 8000 
+
+    @classmethod 
+    def setUpClass(cls):
+        """
+        These tests only need a user to be logged into a session, so
+        this does it once at class creation. Saves the session data by itself
+        so that each test can have a fresh session with that data.
+        """
+        super(QuestionMusicPopularityTests, cls).setUpClass()
+        cls.session = create_authorized_session(cls.live_server_url)
+
+
+    @classmethod
+    def tearDownClass(cls):
+        """
+        At the end of this class, complete any timers that would delete
+        auth_access_tokens, so that they don't hang up the testing program.
+        """
+        super(QuestionMusicPopularityTests, cls).tearDownClass()
+        spotify.cleanup_timers()
+
+
+    def test_question_music_popularity(self):
+        """
+        question_music_popularity() should return a question that asks the
+        average popularity of the user's music taste.
+        """
+        u = UserData(None)
+        u._music_taste = []
+
+        popularities = [50, 99, 0, 14, 25, 73]
+        for i in range(len(popularities)):
+            u._music_taste.append(
+                    {
+                        'id': i, 'energy': 0,
+                        'popularity': popularities[i]
+                    })
+
+        avg = int(sum(popularities)/len(popularities))
+
+        quiz = Quiz.objects.create(user_id='Cassius')
+        question = question_music_popularity(quiz, u)
+
+        self.assertEqual(question.slider_min, 0)
+        self.assertEqual(question.slider_max, 100)
+        self.assertEqual(question.answer, avg)
+
+
+    def test_question_music_popularity_real_request(self):
+        """
+        question_music_popularity() should return a question that asks the
+        average popularity of the user's music taste. This tests the question
+        with real Spotify data.
+        """
+        u = UserData(self.session)
+
+        quiz = Quiz.objects.create(user_id='Cassius')
+        question = question_music_popularity(quiz, u)
+
+        self.assertEqual(question.slider_min, 0)
+        self.assertEqual(question.slider_max, 100)
+        self.assertLessEqual(question.answer, 100)
+        self.assertGreaterEqual(question.answer, 0)
+
+
+    def test_question_music_popularity_avg_0(self):
+        """
+        question_music_popularity() should return a question that asks the
+        average popularity of the user's music taste.
+        """
+        u = UserData(None)
+        u._music_taste = []
+
+        popularities = [0, 0, 0]
+        for i in range(len(popularities)):
+            u._music_taste.append(
+                    {
+                        'id': i, 'energy': 0,
+                        'popularity': popularities[i]
+                    })
+
+        avg = 0
+
+        quiz = Quiz.objects.create(user_id='Cassius')
+        question = question_music_popularity(quiz, u)
+
+        self.assertEqual(question.slider_min, 0)
+        self.assertEqual(question.slider_max, 100)
+        self.assertEqual(question.answer, avg)
+
+
+    def test_question_music_popularity_avg_100(self):
+        """
+        question_music_popularity() should return a question that asks the
+        average popularity of the user's music taste.
+        """
+        u = UserData(None)
+        u._music_taste = []
+
+        popularities = [100, 100, 100]
+        for i in range(len(popularities)):
+            u._music_taste.append(
+                    {
+                        'id': i, 'energy': 0,
+                        'popularity': popularities[i]
+                    })
+
+        avg = 100
+
+        quiz = Quiz.objects.create(user_id='Cassius')
+        question = question_music_popularity(quiz, u)
+
+        self.assertEqual(question.slider_min, 0)
+        self.assertEqual(question.slider_max, 100)
+        self.assertEqual(question.answer, avg)
