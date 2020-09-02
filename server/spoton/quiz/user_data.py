@@ -108,11 +108,17 @@ class UserData:
         if not playlist:
             return False
 
+        i = playlists.index(playlist)
+
         url = '/v1/playlists/' + playlist_id
         query_dict = { 'fields': 'tracks' }
         results = spotify.make_authorized_request(self.session, url, query_dict=query_dict)
 
+        # Remove tracks so it gets updated
+        del playlist['tracks']
         non_destructive_update(playlist, results.json())
+
+        print(playlist)
 
         self._playlists = playlists
         return playlist

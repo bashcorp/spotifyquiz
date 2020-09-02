@@ -338,7 +338,7 @@ class UserDataCompilationTests(StaticLiveServerTestCase):
         data = u.get_playlist_with_tracks(playlists[0]['id'])
 
         self.assertEquals(data['type'], 'playlist')
-        self.assertIsNotNone(data.get('tracks'))
+        self.assertIsNotNone(data['tracks']['items'])
 
 
 class UserDataErrorTests(StaticLiveServerTestCase):
