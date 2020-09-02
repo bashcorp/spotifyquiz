@@ -836,6 +836,103 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         self.assertTrue(objects[1].answer)
 
 
+    def test_create_playlist_choice_not_answer(self):
+        """
+        create_playlist_choice() should create a Choice object from the given
+        Playlist JSON, and set the Choice's answer field to the argument
+        'answer'.
+        """
+        playlist = {
+            'name': 'Bon Jovi'
+        }
+        quiz = Quiz.objects.create()
+        question = MultipleChoiceQuestion.objects.create(quiz=quiz)
+        Choice.create_playlist_choice(question=question, playlist=playlist)
+
+        self.assertEquals(Choice.objects.count(), 1)
+
+        q = Choice.objects.all()[0]
+        self.assertEquals(q.primary_text, 'Bon Jovi')
+        self.assertIsNone(q.secondary_text)
+        self.assertFalse(q.answer)
+        self.assertEquals(q.question, question)
+
+
+    def test_create_playlist_choice_is_answer(self):
+        """
+        create_playlist_choice() should create a Choice object from the given
+        Playlist JSON, and set the Choice's answer field to the argument
+        'answer'.
+        """
+        playlist = {
+            'name': 'Bon Jovi'
+        }
+        quiz = Quiz.objects.create()
+        question = MultipleChoiceQuestion.objects.create(quiz=quiz)
+        Choice.create_playlist_choice(question=question, playlist=playlist, answer=True)
+
+        self.assertEquals(Choice.objects.count(), 1)
+
+        q = Choice.objects.all()[0]
+        self.assertEquals(q.primary_text, 'Bon Jovi')
+        self.assertIsNone(q.secondary_text)
+        self.assertTrue(q.answer)
+        self.assertEquals(q.question, question)
+
+
+    def test_create_playlist_choices_not_answers(self):
+        """
+        create_playlist_choices() should create Choice objects from the given
+        list of Playlist JSONs, and set the Choices' answer fields to the argument
+        'answer'.
+        """
+        playlists = [
+        { 'name': 'Bon Jovi' },
+        { 'name': 'Cassius' },
+        { 'name': 'Bon Jamin' },
+        ]
+
+        quiz = Quiz.objects.create()
+        question = MultipleChoiceQuestion.objects.create(quiz=quiz)
+        Choice.create_playlist_choices(question=question, playlists=playlists)
+
+        self.assertEquals(Choice.objects.count(), 3)
+
+        objects = Choice.objects.all()
+        self.assertEquals(objects[0].primary_text, 'Bon Jovi')
+        self.assertFalse(objects[0].answer)
+        self.assertEquals(objects[1].primary_text, 'Cassius')
+        self.assertFalse(objects[1].answer)
+        self.assertEquals(objects[2].primary_text, 'Bon Jamin')
+        self.assertFalse(objects[2].answer)
+
+
+    def test_create_playlist_choices_are_answers(self):
+        """
+        create_playlist_choices() should create Choice objects from the given
+        list of Playlist JSONs, and set the Choices' answer fields to the argument
+        'answer'.
+        """
+        playlists = [
+        { 'name': 'Bon Jovi' },
+        { 'name': 'Cassius' },
+        { 'name': 'Bon Jamin' },
+        ]
+
+        quiz = Quiz.objects.create()
+        question = MultipleChoiceQuestion.objects.create(quiz=quiz)
+        Choice.create_playlist_choices(question=question, playlists=playlists, answer=True)
+
+        self.assertEquals(Choice.objects.count(), 3)
+
+        objects = Choice.objects.all()
+        self.assertEquals(objects[0].primary_text, 'Bon Jovi')
+        self.assertTrue(objects[0].answer)
+        self.assertEquals(objects[1].primary_text, 'Cassius')
+        self.assertTrue(objects[1].answer)
+        self.assertEquals(objects[2].primary_text, 'Bon Jamin')
+        self.assertTrue(objects[2].answer)
+
 
 class SliderQuestionTests(TransactionTestCase):
     """

@@ -321,14 +321,37 @@ class Choice(models.Model):
 
     def create_genre_choice(question, genre, answer=False):
         """
-        Creates a Choice object that represents a genre, by using artist data in the JSON
-        format that the Spotify API returns. The Choice's primary text is the genre name,
-        and it has no secondary text.
+        Creates a Choice object that represents a genre, by using artist data
+        in the JSON format that the Spotify API returns. The Choice's primary
+        text is the genre name, and it has no secondary text.
         The Choice's 'answer' field will be set according to the 'answer' argument
         """
         return Choice.objects.create(
                 question = question,
                 primary_text = genre,
+                answer = answer
+        )
+
+
+    def create_playlist_choices(question, playlists, answer=False):
+        """
+        Creates choice objects from a given list of playlists. Sets the primary
+        text to the playlist name, and the secondary text to nothing.
+        Sets them all as correct or incorrect answers according to 'answer'.
+        """
+        for p in playlists:
+            Choice.create_playlist_choice(question, p, answer)
+
+
+    def create_playlist_choice(question, playlist, answer=False):
+        """
+        Creates a Choice object that represents a playlist, by using the
+        playlist name as the primary text, and nothing as the secondary text.
+        The Choice's 'answer' field will be set according to the 'answer' argument.
+        """
+        return Choice.objects.create(
+                question = question,
+                primary_text = playlist['name'],
                 answer = answer
         )
         
