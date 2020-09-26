@@ -117,7 +117,7 @@ class Question(PolymorphicModel):
     quiz = models.ForeignKey('Quiz', related_name='questions', null=False,
             on_delete=models.CASCADE)
 
-    text = models.CharField(max_length=200, default="default question")
+    text = models.CharField(max_length=400, default="default question")
 
     # responses (ResponseAnswer objects)
 
@@ -212,8 +212,8 @@ class Choice(models.Model):
     question = models.ForeignKey("MultipleChoiceQuestion", null=False,
             related_name="choices", on_delete=models.CASCADE)
     answer = models.BooleanField(default=False)
-    primary_text = models.CharField(default="default choice", max_length=50)
-    secondary_text = models.CharField(blank=True, null=True, max_length=50)
+    primary_text = models.CharField(default="default choice", max_length=100)
+    secondary_text = models.CharField(blank=True, null=True, max_length=100)
 
     # picks (ChoiceAnswer objects)
 
