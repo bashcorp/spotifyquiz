@@ -89,7 +89,10 @@ DATABASES = {
         'HOST': 'localhost',
         'TEST': {
             'NAME': 'spoton_test'
-        }
+        },
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+        },
     }
 }
 
