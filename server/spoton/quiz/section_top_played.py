@@ -18,6 +18,7 @@ def question_top_track(quiz, user_data, time_range):
     # Choose three random tracks
     random_choices = random_from_list(top_tracks, 3, start=1)
 
+
     if not random_choices:
         return None
 

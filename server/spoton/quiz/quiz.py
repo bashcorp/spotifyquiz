@@ -4,6 +4,7 @@ import logging
 from spoton import spotify
 from spoton.models import *
 from .section_top_played import question_top_genre
+from .section_top_played import question_top_track
 from .user_data import UserData
 import uuid
 
@@ -17,13 +18,13 @@ def create_quiz(session):
     user_id = spotify.get_user_id(session)
     quiz = Quiz.objects.create(user_id=user_id, uuid=uuid.uuid4())
 
-    q0 = question_top_genre(quiz, data, time_range='short_term')
-    q1 = question_top_genre(quiz, data, time_range='medium_term')
-    q2 = question_top_genre(quiz, data, time_range='long_term')
+    #q0 = question_top_genre(quiz, data, time_range='short_term')
+    #q1 = question_top_genre(quiz, data, time_range='medium_term')
+    #q2 = question_top_genre(quiz, data, time_range='long_term')
 
-    print(q0)
-    print(q1)
-    print(q2)
+    q = question_top_track(quiz, data, time_range='short_term')
+
+    #print(q)
 
     """
     q1 = question_top_track_6_months(session, quiz)
