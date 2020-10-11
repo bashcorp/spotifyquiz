@@ -1419,3 +1419,29 @@ class DeleteModelsTests(TransactionTestCase):
         self.assertEquals(ChoiceAnswer.objects.count(), 0)
         self.assertEquals(ResponseAnswer.objects.count(), answer_count)
         self.assertEquals(Choice.objects.count(), choice_count)
+
+class ModelTextTests(TransactionTestCase):
+    """
+    These test the models that contain text-based fields.
+    """
+
+    def test_supplementary_unicode_test(self):
+        """
+        Tests that models' text fields can support supplementary unicode
+        characters (utf8mb4 encoding)
+        """
+
+        # Bon Iver causing trouble with his song names..
+        quiz = Quiz.objects.create(user_id='715 - CRΣΣKS')
+        q1 = MultipleChoiceQuestion.objects.create(quiz=quiz,
+                text='715 - CRΣΣKS')
+        c = Choice.objects.create(question=q1,
+                primary_text='715 - CRΣΣKS', secondary_text='715 - CRΣΣKS')
+        r = Response.objects.create(quiz=quiz, name='715 - CRΣΣKS')
+
+        self.assertIsNotNone(quiz)
+        self.assertIsNotNone(q1)
+        self.assertIsNotNone(c)
+        self.assertIsNotNone(r)
+
+        

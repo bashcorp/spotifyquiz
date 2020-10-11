@@ -106,9 +106,10 @@ class UserData:
                 break
 
         if not playlist:
-            return False
+            return None
 
-        i = playlists.index(playlist)
+        if playlist['tracks'].get('items') is not None:
+            return playlist
 
         url = '/v1/playlists/' + playlist_id
         query_dict = { 'fields': 'tracks' }
@@ -117,8 +118,6 @@ class UserData:
         # Remove tracks so it gets updated
         del playlist['tracks']
         non_destructive_update(playlist, results.json())
-
-        print(playlist)
 
         self._playlists = playlists
         return playlist
