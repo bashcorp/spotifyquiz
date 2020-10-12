@@ -75,3 +75,43 @@ def call_rand_functions(functions, args, num):
         return None
 
     return results
+
+
+def call_rand_functions_arg_sets(functions, args, num):
+    """
+    """
+
+    # If there aren't enough functions, fail
+    if len(functions) < num:
+        return None
+
+
+    results = []
+
+    # Copy the list so that it can delete elements from it
+    copy = functions.copy()
+
+    # Keep going until collected enough results or no functions left in the list
+    while copy and len(results) < num:
+        # Pick random function, call it
+        func_index = random.randint(0, len(copy)-1)
+
+        arg_list = []
+        if args:
+            arg_list = args[random.randint(0, len(args)-1)]
+
+
+        result = copy[func_index](*arg_list)
+
+        # If non-None value, add to results list
+        if result:
+            results.append(result)
+
+        # Remove from the list, so can't be picked again
+        del copy[func_index]
+
+    # If there weren't enough non-None return values, fail
+    if len(results) != num:
+        return None
+
+    return results
