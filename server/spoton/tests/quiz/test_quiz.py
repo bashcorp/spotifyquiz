@@ -192,3 +192,13 @@ class CallRandFunctionsArgSetsTests(TestCase):
         results = call_rand_functions_arg_sets(functions, args, 4)
 
         self.assertIsNone(results)
+
+
+    def test_call_rand_functions_arg_sets_ensure_pairings(self):
+        functions = [func0, func1, func2, func3]
+        args = [[4], [3], [2], [1]]
+
+        results = call_rand_functions_arg_sets(functions, args, 3)
+
+        self.assertCountEqual(results, [4, 4, 4])
+
