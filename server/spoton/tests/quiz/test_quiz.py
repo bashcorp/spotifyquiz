@@ -66,6 +66,15 @@ class CallRandFunctionsTests(TestCase):
         self.assertCountEqual(results, [1, 2])
 
 
+    def test_call_rand_functions_zero_return(self):
+        functions = [func0, func0]
+        args = [0]
+
+        results = call_rand_functions(functions, args, 1)
+
+        self.assertCountEqual(results, [0])
+
+
     def test_call_rand_functions_not_enough_funcs(self):
         """
         call_rand_functions() should return None if there aren't enough functions to return
@@ -106,15 +115,36 @@ class CallRandFunctionsArgSetsTests(TestCase):
         Each function should be passed the arguments stored in the given arg list
         """
         functions = [func0, func0, func0, func0]
-        args = [[3], [4], [5]]
+        args = [[3], [4], [5], [6]]
 
         results = call_rand_functions_arg_sets(functions, args, 3)
 
         self.assertIsNotNone(results)
 
-        poss_results = list(range(3, 6))
+        poss_results = list(range(3, 7))
         for i in results:
             self.assertIn(i, poss_results)
+
+        unique = list(set(results))
+        self.assertEqual(len(unique), len(results))
+
+
+    def test_call_rand_functions_arg_sets_just_enough(self):
+        functions = [func0, func0, func0]
+        args = [[1], [2], [3]]
+
+        results = call_rand_functions_arg_sets(functions, args, 3)
+
+        self.assertCountEqual(results, [1, 2, 3])
+
+
+    def test_call_rand_functions_arg_sets_zero_return(self):
+        functions = [func0, func0]
+        args = [[0], [0]]
+
+        results = call_rand_functions_arg_sets(functions, args, 2)
+
+        self.assertCountEqual(results, [0, 0])
 
 
     def test_call_rand_functions_arg_sets_no_args(self):
@@ -126,19 +156,7 @@ class CallRandFunctionsArgSetsTests(TestCase):
 
         results = call_rand_functions_arg_sets(functions, args, 2)
 
-        self.assertCountEqual(results, [1, 2])
-
-
-    def test_call_rand_functions_arg_sets_one_arglist(self):
-        """
-
-        """
-        functions = [func0, func0, func0]
-        args = [[3]]
-        
-        results = call_rand_functions_arg_sets(functions, args, 2)
-
-        self.assertCountEqual(results, [3, 3])
+        self.assertIsNone(results)
 
 
     def test_call_rand_functions_arg_sets_not_enough_funcs(self):
@@ -147,7 +165,7 @@ class CallRandFunctionsArgSetsTests(TestCase):
         the proper number of return values.
         """
         functions = [func0, func1, func2, func3]
-        args = [[3], [4]]
+        args = [[3], [4], [5], [6], [7], [8]]
 
         results = call_rand_functions_arg_sets(functions, args, 5)
 
@@ -165,3 +183,10 @@ class CallRandFunctionsArgSetsTests(TestCase):
         results = call_rand_functions_arg_sets(functions, args, 4)
 
         self.assertIsNone(results)
+
+    
+    def test_call_rand_functions_arg_sets_not_enough_args(self):
+        functions = [func0, func0, func0, func0]
+        args = [[0], [0]]
+
+        results = call_rand_functions_arg_sets(functions, args, 3)
