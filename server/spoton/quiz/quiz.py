@@ -85,9 +85,8 @@ def call_rand_functions_arg_sets(functions, args, num):
     if len(functions) < num:
         return None
 
-    if len(args) < num:
+    if len(args) != len(functions):
         return None
-
 
     results = []
 
@@ -98,19 +97,17 @@ def call_rand_functions_arg_sets(functions, args, num):
     # Keep going until collected enough results or no functions left in the list
     while func_copy and arg_copy and len(results) < num:
         # Pick random function, call it
-        func_index = random.randint(0, len(func_copy)-1)
-        arg_index = random.randint(0, len(arg_copy)-1)
+        i = random.randint(0, len(func_copy)-1)
 
-
-        result = func_copy[func_index](*(arg_copy[arg_index]))
+        result = func_copy[i](*(arg_copy[i]))
 
         # If non-None value, add to results list
         if result is not None:
             results.append(result)
 
         # Remove from the list, so can't be picked again
-        del func_copy[func_index]
-        del arg_copy[arg_index]
+        del func_copy[i]
+        del arg_copy[i]
 
     # If there weren't enough non-None return values, fail
     if len(results) != num:

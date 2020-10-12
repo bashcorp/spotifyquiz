@@ -165,9 +165,18 @@ class CallRandFunctionsArgSetsTests(TestCase):
         the proper number of return values.
         """
         functions = [func0, func1, func2, func3]
-        args = [[3], [4], [5], [6], [7], [8]]
+        args = [[3], [4], [5], [6]]
 
         results = call_rand_functions_arg_sets(functions, args, 5)
+
+        self.assertIsNone(results)
+
+
+    def test_call_rand_functions_arg_sets_not_enough_arguments(self):
+        functions = [func0, func1, func2, func3]
+        args = [[3], [4], [5]]
+
+        results = call_rand_functions_arg_sets(functions, args, 2)
 
         self.assertIsNone(results)
 
@@ -178,15 +187,8 @@ class CallRandFunctionsArgSetsTests(TestCase):
         of them return None.
         """
         functions = [func0, func1, func2, func6, func6]
-        args = [[5], [3]]
+        args = [[3], [4], [5], [6], [7]]
 
         results = call_rand_functions_arg_sets(functions, args, 4)
 
         self.assertIsNone(results)
-
-    
-    def test_call_rand_functions_arg_sets_not_enough_args(self):
-        functions = [func0, func0, func0, func0]
-        args = [[0], [0]]
-
-        results = call_rand_functions_arg_sets(functions, args, 3)
