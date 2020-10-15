@@ -4,8 +4,26 @@ from collections import Counter
 
 from spoton import spotify
 from spoton.models import *
-from .utils import random_from_list
+from .utils import *
     
+
+
+def pick_questions_music_taste(quiz, user_data):
+    questions = [
+        question_explicitness,
+        question_energy,
+        question_acousticness,
+        question_happiness,
+        question_danceability,
+        question_duration,
+        question_average_release_date,
+        question_music_popularity
+    ]
+
+    args = [quiz, user_data]
+
+    return call_rand_functions(questions, args, 3)
+
 
 
 def question_explicitness(quiz, user_data):

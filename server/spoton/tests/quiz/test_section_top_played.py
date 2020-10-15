@@ -269,7 +269,7 @@ class QuestionTopArtistTests(StaticLiveServerTestCase):
 
 
 
-    def _test_question_top_artist_real_request_long_term(self):
+    def test_question_top_artist_real_request_long_term(self):
         """
         When the user has valid data, question_top_artist() should return a proper Question
         about the user's top artist. This tests the question with real Spotify data.
@@ -277,7 +277,7 @@ class QuestionTopArtistTests(StaticLiveServerTestCase):
         self._test_question_top_artist_real_request('long_term')
 
 
-    def _test_question_top_artist_real_request_medium_term(self):
+    def test_question_top_artist_real_request_medium_term(self):
         """
         When the user has valid data, question_top_artist() should return a proper Question
         about the user's top artist. This tests the question with real Spotify data.
@@ -285,7 +285,7 @@ class QuestionTopArtistTests(StaticLiveServerTestCase):
         self._test_question_top_artist_real_request('medium_term')
 
 
-    def _test_question_top_artist_real_request_short_term(self):
+    def test_question_top_artist_real_request_short_term(self):
         """
         When the user has valid data, question_top_artist() should return a proper Question
         about the user's top artist. This tests the question with real Spotify data.
@@ -396,7 +396,7 @@ class QuestionTopGenreTests(StaticLiveServerTestCase):
         self._test_question_top_genre('medium_term')
 
 
-    def test_question_top_genre_medium_term(self):
+    def test_question_top_genre_short_term(self):
         """
         When the user has valid data, question_top_genre() should return a proper Question
         about the user's top genre.
@@ -441,7 +441,7 @@ class QuestionTopGenreTests(StaticLiveServerTestCase):
 
 
 
-    def _test_question_top_genre_real_request_long_term(self):
+    def test_question_top_genre_real_request_long_term(self):
         """
         When the user has valid data, question_top_genre() should return a proper Question
         about the user's top genre. This tests the question with real Spotify data.
@@ -449,7 +449,7 @@ class QuestionTopGenreTests(StaticLiveServerTestCase):
         self._test_question_top_genre_real_request('long_term')
 
 
-    def _test_question_top_genre_real_request_medium_term(self):
+    def test_question_top_genre_real_request_medium_term(self):
         """
         When the user has valid data, question_top_genre() should return a proper Question
         about the user's top genre. This tests the question with real Spotify data.
@@ -457,7 +457,7 @@ class QuestionTopGenreTests(StaticLiveServerTestCase):
         self._test_question_top_genre_real_request('medium_term')
 
 
-    def _test_question_top_genre_real_request_short_term(self):
+    def test_question_top_genre_real_request_short_term(self):
         """
         When the user has valid data, question_top_genre() should return a proper Question
         about the user's top genre. This tests the question with real Spotify data.
@@ -470,7 +470,7 @@ class QuestionTopGenreTests(StaticLiveServerTestCase):
         When the user has valid data, question_top_genre() should return a proper Question
         about the user's top genre. This tests the question with real Spotify data.
 
-        This method is used by the 3 method above to test different time_ranges.
+        This method is used by the 3 methods above to test different time_ranges.
         """
         u = UserData(self.session)
 
@@ -484,31 +484,93 @@ class QuestionTopGenreTests(StaticLiveServerTestCase):
 
 
 
-    def test_question_followed_artists_long_term_not_enough_choices(self):
+    def test_question_top_genres_empty_genre_lists_long_term(self):
+        """
+        question_top_genre() should return a proper Question about the user's top genre
+        when some of the genre lists are empty, but there are still enough full ones to use.
+        """
+        self._test_question_top_genre_real_request('long_term')
+
+
+    def test_question_top_genres_empty_genre_lists_medium_term(self):
+        """
+        question_top_genre() should return a proper Question about the user's top genre
+        when some of the genre lists are empty, but there are still enough full ones to use.
+        """
+        self._test_question_top_genre_real_request('medium_term')
+
+
+    def test_question_top_genres_empty_genre_lists_short_term(self):
+        """
+        question_top_genre() should return a proper Question about the user's top genre
+        when some of the genre lists are empty, but there are still enough full ones to use.
+        """
+        self._test_question_top_genre_real_request('short_term')
+
+
+    def _test_question_top_genres_empty_genre_lists(self, time_range):
+        """
+        question_top_genre() should return a proper Question about the user's top genre
+        when some of the genre lists are empty, but there are still enough full ones to use.
+
+        This method is used by the 3 methods above to test different time_ranges.
+        """
+        u = UserData()
+        u._top_genres[time_range] = [
+            ['pop', 'opo'],
+            ['rock', 'stone', 'pebble'],
+            ['punk', 'munk', 'lunk', 'dunk'],
+            [],
+            [],
+            ['ung', 'bung', 'mung', 'crung'],
+        ]
+
+        quiz = Quiz.objects.create(user_id='cassius')
+        q = question_top_genre(quiz, u, time_range)
+
+        self.assertEqual(q.choices.count(), 4)
+        self.assertEqual(q.answers().count(), 1)
+        self.assertEqual(q.incorrect_answers().count(), 3)
+
+        c = q.answers()[0]
+        self.assertIn(c.primary_text, u._top_genres[time_range][0])
+        
+        for c in q.incorrect_answers():
+            title = c.primary_text
+            found = False
+            for g in u._top_genres[time_range]:
+                if title in g:
+                    found = True
+            self.assertTrue(found)
+
+
+
+
+    def test_question_top_genres_long_term_not_enough_choices(self):
         """
         question_top_genre() should return None if there are not enough genres to fill
         the choices.
         """
-        self._test_question_followed_artists_not_enough_choices('long_term')
+        self._test_question_top_genres_not_enough_choices('long_term')
 
 
-    def test_question_followed_artists_medium_term_not_enough_choices(self):
+    def test_question_top_genres_medium_term_not_enough_choices(self):
         """
         question_top_genre() should return None if there are not enough genres to fill
         the choices.
         """
-        self._test_question_followed_artists_not_enough_choices('medium_term')
+        self._test_question_top_genres_not_enough_choices('medium_term')
 
 
-    def test_question_followed_artists_short_term_not_enough_choices(self):
+    def test_question_top_genres_short_term_not_enough_choices(self):
         """
         question_top_genre() should return None if there are not enough genres to fill
         the choices.
         """
-        self._test_question_followed_artists_not_enough_choices('short_term')
+        self._test_question_top_genres_not_enough_choices('short_term')
 
 
-    def _test_question_followed_artists_not_enough_choices(self, time_range):
+    def _test_question_top_genres_not_enough_choices(self, time_range):
         """
         question_top_genre() should return None if there are not enough genres to fill
         the choices.
@@ -520,11 +582,12 @@ class QuestionTopGenreTests(StaticLiveServerTestCase):
             ['pop', 'opo'],
             ['rock', 'stone', 'pebble'],
             ['punk', 'munk', 'lunk', 'dunk'],
+            [],
+            [],
         ]
 
         quiz = Quiz.objects.create(user_id='cassius')
         q = question_top_genre(quiz, u, time_range)
 
         self.assertIsNone(q)
-
 

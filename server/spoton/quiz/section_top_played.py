@@ -3,8 +3,42 @@ from collections import Counter
 
 from spoton import spotify
 from spoton.models import *
-from .utils import random_from_list
+from .utils import *
     
+
+def pick_questions_top_played(quiz, user_data):
+    questions = [
+        question_top_track,
+        question_top_track,
+        question_top_track,
+
+        question_top_artist,
+        question_top_artist,
+        question_top_artist,
+
+        question_top_genre,
+        question_top_genre,
+        question_top_genre
+    ]
+
+    args = [[quiz, user_data, 'long_term'],
+            [quiz, user_data, 'medium_term'],
+            [quiz, user_data, 'short_term'],
+
+            [quiz, user_data, 'long_term'],
+            [quiz, user_data, 'medium_term'],
+            [quiz, user_data, 'short_term'],
+
+            [quiz, user_data, 'long_term'],
+            [quiz, user_data, 'medium_term'],
+            [quiz, user_data, 'short_term'],
+    ]
+
+    return call_rand_functions_arg_sets(questions, args, 3)
+
+
+
+
 
 def question_top_track(quiz, user_data, time_range):
     # Get the user's top artists from the last 6 months
@@ -34,7 +68,7 @@ def question_top_track(quiz, user_data, time_range):
 
 
      
-def question_top_artist(quiz, user_data, time_range='medium_term'):
+def question_top_artist(quiz, user_data, time_range):
     """
     A MultipleChoiceQuestion: what is the user's most listened to artist
     of the past 6 months.
@@ -66,17 +100,28 @@ def question_top_artist(quiz, user_data, time_range='medium_term'):
 def question_top_genre(quiz, user_data, time_range):
     top_genres = user_data.top_genres(time_range)
 
+    # Remove any empty genre lists (some songs might not have genres associated with them)
+    i = 0
+    while i < len(top_genres):
+        if not top_genres[i]:
+            del top_genres[i]
+        else:
+            i+=1
+
     if not top_genres:
         return None
 
+
+    # The top genre list is at the beginning of the list, so pick one of its genres
     top_genre_list = top_genres[0]
     top_genre = top_genre_list[random.randint(0, len(top_genre_list)-1)]
 
-    # Pick three other genres the user listened to
+    # Pick three other genre lists the user listened to
     random_choice_lists = random_from_list(top_genres, 3, start=1)
     if not random_choice_lists:
         return None
 
+    # For each chosen genre list, pick a random genre
     random_choices = [l[random.randint(0, len(l)-1)] for l in random_choice_lists]
 
     # Create the models

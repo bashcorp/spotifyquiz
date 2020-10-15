@@ -2,7 +2,20 @@ import random
 
 from spoton.models import *
 from spoton import spotify
-from .utils import random_from_list, choose_items_not_in_list
+from .utils import *
+
+
+def pick_questions_popularity_playlists(quiz, user_data):
+    questions = [
+        question_user_followers,
+        question_popular_playlist,
+        question_playlist_tracks
+    ]
+
+    args = [quiz, user_data]
+
+    return call_rand_functions(questions, args, 2)
+
 
 
 def question_user_followers(quiz, user_data):

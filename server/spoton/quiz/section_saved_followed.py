@@ -6,6 +6,20 @@ from spoton.models import *
 from .utils import *
 
 
+def pick_questions_saved_followed(quiz, user_data):
+    questions = [
+        question_saved_albums,
+        question_saved_tracks,
+        question_followed_artists
+    ]
+
+    args = [quiz, user_data]
+
+    return call_rand_functions(questions, args, 2)
+
+
+
+
 def question_saved_albums(quiz, user_data):
     # Get the user's top artists from the last 6 months
     saved_albums = user_data.saved_albums()
