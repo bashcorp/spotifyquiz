@@ -28,7 +28,7 @@ def quiz(request, uuid):
         return render(request, react_mainpage, context={'quiz': quiz.json()})
 
     #TODO Add error page
-    return render(request, react_mainpage)
+    return render(request, react_mainpage, context={'quiz': 'testing123')
 
 
 def dashboard(request):
@@ -41,7 +41,7 @@ def dashboard(request):
         for q in quizzes:
             q.delete()
         logger.debug("Deleted existing quiz")
-    #quiz = create_quiz(request.session)
+    quiz = create_quiz(request.session)
 
     return render(request, react_mainpage, context={})
 
@@ -49,7 +49,7 @@ def dashboard(request):
 
 
 def login(request):
-    redirect_view = 'dashboard'
+    redirect_view = 'index'
     query_args = {
         'client_id': '70be5e3cac9044b4951ace6b5d2475e1',
         'response_type': 'code',
