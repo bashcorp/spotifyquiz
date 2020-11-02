@@ -28,7 +28,7 @@ def quiz(request, uuid):
         return render(request, react_mainpage, context={'quiz': quiz.json()})
 
     #TODO Add error page
-    return render(request, react_mainpage, context={'quiz': 'testing123')
+    return render(request, react_mainpage, context={'quiz': 'testing123'})
 
 
 def dashboard(request):
