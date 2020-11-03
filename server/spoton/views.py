@@ -22,7 +22,7 @@ def index(request):
 
 
 def quiz(request, uuid):
-    quiz = Quiz.objects.filter(user_uuid=uuid)[0]
+    quiz = Quiz.objects.filter(uuid=uuid)[0]
 
     if quiz:
         return render(request, react_mainpage, context={'quiz': quiz.json()})
