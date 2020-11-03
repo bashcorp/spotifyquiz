@@ -13,13 +13,14 @@ let questionIndex = 0;
 let buttonText = "Next";
 let returnArray = [];
 
-let quiz = JSON.parse(window.context.quiz);
+let quiz = window.context.quiz;
+let questions = quiz["questions"];
 
 for(var prop in quiz) {
   console.log(prop,quiz[prop]);  
 }
 
-let questions = [
+/*let questions = [
 {
     id: 34,
     text: "This is a slider question?",
@@ -271,7 +272,7 @@ let questions = [
       }
     ],
   }
-];
+];*/
 
 const customStyles = {
   content : {

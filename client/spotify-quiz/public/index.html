@@ -38,9 +38,14 @@
      a variable to avoid naming conflicts. 
   */
   window.context = {
-    quiz: '{{quiz}}',
+    quiz: {{quiz|safe}},
   };
-  console.log(window.context.quiz);
+
+  console.log("Read in: \n" + window.context.quiz);
+
+  console.log("\n\nParse JSON: \n");
+  window.context.quiz = JSON.parse(window.context.quiz);
+  console.log("\n\n------\n");
 </script>
 
     

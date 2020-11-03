@@ -48,8 +48,8 @@ const MultiSelect = (props) => {
 					<li style={{ boxShadow: (selected.includes(option.id) ? '0 6px 14px 0 #454545' : ''),
 								 transform: (selected.includes(option.id) ? 'scale(1.07)' : '')}}
 								 key={option.id} count={option} onClick={() => handleSelectionClick(option)}>
-						<span>{option.text}</span>
-						<span className="artist">{option.text}</span>
+						<span>{option.primary_text}</span>
+						<span className="artist">{option.secondary_text}</span>
 					</li>
 					))}
 				</ul>
