@@ -141,7 +141,7 @@ STATICFILES_DIRS = [
 
 
 if DEBUG:
-    log_level = 'INFO'
+    log_level = 'DEBUG'
     formatter = 'concise'
 else:
     log_level = 'WARNING'
