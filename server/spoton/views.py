@@ -5,6 +5,7 @@ import requests
 import urllib
 import base64
 import logging
+import json
 
 from . import spotify
 from spoton.models import Quiz
@@ -25,13 +26,12 @@ def quiz(request, uuid):
     results = Quiz.objects.filter(uuid=uuid)
 
     if results:
-        logger.debug(results[0])
-        return render(request, react_mainpage, context={'quiz': results[0].json()})
+        quiz = results[0].json()
+        return render(request, react_mainpage, context={"quiz": json.dumps(quiz)})
 
     #TODO Add error page
-    context = {'quiz': {'user_id': 'testing123'}}
-    logger.debug(context)
-    return render(request, react_mainpage, context=context)
+    context = {"user_id": "testing123"}
+    return render(request, react_mainpage, context={"quiz": json.dumps(context)})
 
 
 def dashboard(request):

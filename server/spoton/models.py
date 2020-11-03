@@ -47,8 +47,8 @@ class Quiz(models.Model):
         questions = [q.json() for q in self.questions.all()]
 
         return {
-            'user_id': self.user_id,
-            'questions': questions
+            "user_id": self.user_id,
+            "questions": questions
         }
 
     def __str__(self):
@@ -176,10 +176,10 @@ class MultipleChoiceQuestion(Question):
         choices = [c.json() for c in self.choices.all()]
 
         return {
-            'id': self.id,
-            'text': self.text,
-            'choices': choices,
-            'type': ('check' if self.is_checklist_question() else 'mc')
+            "id": self.id,
+            "text": self.text,
+            "choices": choices,
+            "type": ("check" if self.is_checklist_question() else "mc")
         }
 
 
@@ -223,11 +223,11 @@ class Choice(models.Model):
         display this choice on the client.
         """
         dict = {
-            'id': self.id,
-            'primary_text': self.primary_text,
+            "id": self.id,
+            "primary_text": self.primary_text,
         }
         if self.secondary_text:
-            dict['secondary_text'] = self.secondary_text
+            dict["secondary_text"] = self.secondary_text
 
         return dict
 
@@ -396,11 +396,11 @@ class SliderQuestion(Question):
         this question on the client.
         """
         return {
-            'id': self.id,
-            'text': self.text,
-            'min': self.slider_min,
-            'max': self.slider_max,
-            'type': 'slider',
+            "id": self.id,
+            "text": self.text,
+            "min": self.slider_min,
+            "max": self.slider_max,
+            "type": "slider",
         }
 
 
