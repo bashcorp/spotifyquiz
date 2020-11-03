@@ -21,7 +21,7 @@ I've included a `requirements.txt` in the github repository, so you should insta
 
 
 # Starting the Server
-`source` into your virtual environment and then run `python manage.py runserver`. This will start the server, which will be on localhost:8000
+`source` into your virtual environment and then run `python3 manage.py runserver`. This will start the server, which will be on localhost:8000
 
 
 # Adding Front-End Resources
