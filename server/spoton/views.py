@@ -22,13 +22,13 @@ def index(request):
 
 
 def quiz(request, uuid):
-    quiz = Quiz.objects.filter(uuid=uuid)[0]
+    results = Quiz.objects.filter(uuid=uuid)
 
-    if quiz:
-        return render(request, react_mainpage, context={'quiz': quiz.json()})
+    if results:
+        return render(request, react_mainpage, context={'quiz': results[0].json()})
 
     #TODO Add error page
-    return render(request, react_mainpage, context={'quiz': 'testing123'})
+    return render(request, react_mainpage, context={'quiz': { 'user_id': 'testing123' } })
 
 
 def dashboard(request):
