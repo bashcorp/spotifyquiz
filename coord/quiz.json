@@ -30,7 +30,7 @@
                     "answer": false
                 }
             ],
-            "is_checklist": "check"
+            "type": "check"
         },
         {
             "id": 33,
