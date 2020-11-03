@@ -264,7 +264,7 @@ def login(session, authorization_code):
     data = {
         'grant_type': 'authorization_code',
         'code': authorization_code,
-        'redirect_uri': 'http://localhost:8000/logged_in?redirect=index'
+        'redirect_uri': 'http://localhost:8000/logged_in?redirect=dashboard'
     }
     auth = '70be5e3cac9044b4951ace6b5d2475e1:870dc2491458410ebe2d9f6f578d24ef'
     encoded_auth = base64.b64encode(auth.encode("utf-8"))
