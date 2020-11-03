@@ -57,9 +57,9 @@ For each user:
 
 Questions:
 
-Created: 
+__Created__: 
 
-_Top Played_ (Choose 2)
+_Top Played_ (Choose 3)
 (MC) What is the user's most listened to track? (of all time, 6 months, 4 weeks)
 (MC) What is the user's most listened to artist? (of all time, 6 months, 4 weeks)
 (MC) What is the user's most listened to genre? (of all time, 6 months, 4 weeks)
@@ -77,30 +77,25 @@ _Music Taste Features_ (Choose 3)
 (Sl) How happy is the user's music taste?
 (Sl) How danceable is the user's music taste?
 (Sl) How old is the music that the user listens to?
+(Sl) What is the average popularity of the user's music taste?
+
+_Popularity and Playlists_
+(Choose 2)
+(MC) What is the user's most popular public playlist (by # of followers)?
+(Sl) How many followers does the user have?
+(Cl) Which tracks are on this playlist?
 
 
 
-To create: 
+
+
+__Removed__: 
+(Sl) How loud is the user's music, on average?
 
 _Recently Played_ (Choose 1)
 (MC) What is the user's most recently played song (as of the timestamp of quiz creation)?
 (Cl) Which of these did the user listen to recently?
 
 
-_Popularity and Playlists_
-(Choose 2)
-(MC) What is the user's most popular public playlist (by # of followers)?
-(Sl) How many followers does the user's most popular public playlist have?
-(Sl) How many followers does the user have?
-(Sl) What is the average popularity of the user's music taste?
-
-(Choose 1)
-(Cl) Which tracks are on this playlist?
 (Sl) The user has X# of public playlists. How many private playlists does the user have?
 (Sl) How many collaborative playlists does the user have?
-
-
-
-
-Removed: 
-(Sl) How loud is the user's music, on average?
