@@ -7,7 +7,6 @@
 	text-decoration: none;
 	font-size: 150%;
 	cursor: pointer;
-	opacity: 100%;
 	background-color: #fafafa;
 	border-radius: 500px;
 	font-weight: 700;
@@ -16,7 +15,6 @@
 	box-shadow:0 4px 10px rgba(0,0,0,0.2);
   	margin: 30px auto;
   	filter: brightness(100%);
-
 }
 
 .Next button:disabled {
@@ -27,7 +25,6 @@
 	text-decoration: none;
 	font-size: 150%;
 	cursor: pointer;
-	opacity: 100%;
 	background-color: rgba(255,255,255,.9);
 	border-radius: 500px;
 	font-weight: 700;
