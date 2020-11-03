@@ -1,46 +1,7 @@
-nav img {
-  height: 80px;
-}
 
-.topnav {
-  background: rgba(0, 0, 0, 0.4); ;
-  overflow: hidden;
-  position: relative;
-  z-index: 1000;
-  box-shadow:0 2px 2px rgba(0,0,0,.5);
-}
-
-nav ul {
-  list-style: none;
-  display: flex;
-  justify-content: space-between;
-  padding: 0px 96px;
-}
 
 h1 {
     font-size: 1.5em;
-}
-
-.top-sign-in {
-  height: 40px;
-  margin-top: 26px;
-  position: relative;
-  z-index: 1000;
-}
-
-.top-sign-in a {
-  border-radius: 500px;
-  padding: 12px 24px;
-  font-size: 1.2em;
-  background-color: #1DB954;
-  text-align: center;
-  line-height: 30px;
-  color: #ffffff;
-  transition: all .5s ease;
-}
-
-.top-sign-in a:hover{
-  background-color: #18a148;
 }
 
 .Home {
@@ -97,12 +58,6 @@ a {
   margin-top: 0;
   transition: all .5s ease;
   box-shadow:0 4px 10px rgba(0,0,0,0.2);
-}
-
-.head-b-generate-quiz:hover{
-  color: white;
-  margin-top: 1px;
-  background-color: #18a148;
 }
 
 .flex-container {
