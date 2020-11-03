@@ -11,7 +11,7 @@ class QuestionInline(admin.TabularInline):
 
 @admin.register(Quiz)
 class QuizAdmin(admin.ModelAdmin):
-    readonly_fields = ('user_id', '_admin_get_quiz_questions',)
+    readonly_fields = ('user_id', 'uuid', '_admin_get_quiz_questions',)
     list_display = ('user_id',)
 
 #class MultipleChoice

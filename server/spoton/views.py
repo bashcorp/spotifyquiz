@@ -25,10 +25,13 @@ def quiz(request, uuid):
     results = Quiz.objects.filter(uuid=uuid)
 
     if results:
+        logger.debug(results[0])
         return render(request, react_mainpage, context={'quiz': results[0].json()})
 
     #TODO Add error page
-    return render(request, react_mainpage, context={'quiz': { 'user_id': 'testing123' } })
+    context = {'quiz': {'user_id': 'testing123'}}
+    logger.debug(context)
+    return render(request, react_mainpage, context=context)
 
 
 def dashboard(request):
