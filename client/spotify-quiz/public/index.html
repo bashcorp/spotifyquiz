@@ -6,7 +6,7 @@
   {% load static %}
   <link rel="stylesheet" type="text/css" href="{% static 'reset.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'nav.css' %}">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap"> 
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oxygen:wght@400;700&display=swap"> 
 
   <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -38,10 +38,14 @@
     <script type="text/javascript">
   /* Put your context vars here. I recommend putting them under 
      a variable to avoid naming conflicts. 
-  */
-  var context = {
-    quiz: '{{quiz}}',
+
+       var context = {
+    quiz: 'sup',
   };
+  */
+
+  window.REP_LOG_APP_PROPS = {{quiz}};
+
 </script>
 
     
