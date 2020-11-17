@@ -29,3 +29,8 @@ db.sqlite3
 *.DS_Store
 
 credentials/
+server/cash/
+server/build
+server/get-pip.py
+server/requirements.txt
+server/requirements.txt
