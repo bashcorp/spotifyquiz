@@ -16,7 +16,7 @@ const Home = (props) => {
         </h1>
         <h2 className="description">
           Generate and share a personalized quiz to put your music taste to the
-          test. Powered by Spotify.
+          test. Powered by Spotify<span className="rightsReserved">®</span>.
         </h2>
       </div>
       <div className="sectionBottom">

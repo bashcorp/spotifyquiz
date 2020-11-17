@@ -16,8 +16,6 @@ nav {
 .Home {
   height: 100vh;
   width: 100vw;
-  background: $rockGreen;
-  background-image: url("https://mdn.mozillademos.org/files/16761/star.gif");
   background-image: linear-gradient(
     110deg,
     $offWhite,
@@ -65,7 +63,13 @@ nav {
 .description {
   font-size:calc(12px + 1vw);
   color: #262626;
-  margin: 24px 0 0 12px;
+  margin: 24px 0 0 12px
+}
+
+.rightsReserved {
+  font-size: 8px;
+  vertical-align: 100%;
+  padding-left: 2px;
 }
 
 .sectionBottom {
