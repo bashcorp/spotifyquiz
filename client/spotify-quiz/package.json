@@ -9,7 +9,6 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "history": "^5.0.0",
-    "node-sass": "^4.14.1",
     "react": "^16.13.1",
     "react-beforeunload": "^2.2.2",
     "react-dom": "^16.13.1",
@@ -39,5 +38,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "node-sass": "^4.14.1",
+    "sass-loader": "^10.1.0"
   }
 }
