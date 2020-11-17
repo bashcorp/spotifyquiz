@@ -37,18 +37,17 @@
   /* Put your context vars here. I recommend putting them under 
      a variable to avoid naming conflicts. 
   */
-  window.context = {
+
+  try {
+      window.context = {
     quiz: {{quiz|safe}},
   };
 
-  console.log("Read in: \n" + window.context.quiz);
+} catch {
+    // no binding or parameter to handle it
+}
 
-  console.log("\n\nParse JSON: \n");
-  window.context.quiz = JSON.parse(window.context.quiz);
-  console.log("\n\n------\n");
 </script>
-
-    
 
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
