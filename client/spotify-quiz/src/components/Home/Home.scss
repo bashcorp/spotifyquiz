@@ -1,6 +1,8 @@
-$rockGreen: rgba(36, 191, 91, 1);
-$offWhite: #F5F5F5;
-$signInButton: #2382BA;
+$rockGreen: #bf81d3;
+$bgSlate: #4268c4;
+$offWhite: #F2F2F2;
+$signInButton: #eb3e58;
+$gray: #f2f2f2;
 
 * {
   margin: 0px;
@@ -14,12 +16,12 @@ nav {
 }
 
 .Home {
-  height: 100vh;
+  height:100vh;
   width: 100vw;
   background-image: linear-gradient(
     110deg,
-    $offWhite,
-    $offWhite 42.8%,
+    $bgSlate,
+    $bgSlate 42.8%,
     $rockGreen 43%,
     $rockGreen
   ); /* W3C */
@@ -36,7 +38,7 @@ nav {
 
 
 .navSignIn a {
-  font-size:calc(18px + .5vw);
+  font-size:calc(16px + .3vw);
   color: $offWhite;
   text-decoration: none;
 }
@@ -45,8 +47,8 @@ nav {
   margin-left: 36px;
   position: absolute;
   max-width: 35VW;
-  top: 40%;
-  color: #262626;
+  top: 35%;
+  color: $gray;
 }
 
 .title {
@@ -57,13 +59,14 @@ nav {
 }
 
 .highlight {
-  color: $rockGreen;
+  color: $gray;
 }
 
 .description {
   font-size:calc(12px + 1vw);
-  color: #262626;
-  margin: 24px 0 0 12px
+  color: $gray;
+  margin: 36px 0 0 12px;
+  display: inline-block;
 }
 
 .rightsReserved {
@@ -88,31 +91,38 @@ nav {
 }
 
 .heroButton {
-  background-color: $signInButton;
+  display: inline-block;
+  margin: 36px 0 0 12px;
+  background: $signInButton;
+  font-size:calc(16px + .3vw);
   color: $offWhite;
-  font-size:calc(18px + 1vw);
   text-align: center;
   padding: 18px 36px;
-  border-radius: 500px;
+  border-radius: 16px;
   font-weight: 700;
   text-decoration: none;
   transition: all 0.5s ease;
   animation: home-pulse 2s infinite;
 }
 
+.dashboardLink {
+	 color: #e3e3e3;
+	 margin-left: 24px;
+}
+
 @keyframes home-pulse {
   0% {
     transform: scale(0.98);
-    box-shadow: 0 0 0 0 rgba(35, 130, 186, .7);
+    box-shadow: 0 0 0 0 rgba(235, 62, 88, .7);
   }
 
   70% {
     transform: scale(1);
-    box-shadow: 0 0 0 15px rgba(35, 130, 186, 0);
+    box-shadow: 0 0 0 8px rgba(235, 62, 88, 0);
   }
 
   100% {
     transform: scale(0.98);
-    box-shadow: 0 0 0 0 rgba(35, 130, 186, 0);
+    box-shadow: 0 0 0 0 rgba(235, 62, 88, 0);
   }
 }

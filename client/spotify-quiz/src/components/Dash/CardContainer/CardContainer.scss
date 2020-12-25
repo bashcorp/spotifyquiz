@@ -1,0 +1,40 @@
+.card-container-wrapper {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 10px 30px 10px 10px;
+}
+
+.child {
+  display: inline-block;
+  font-family: "Open Sans", Arial;
+  font-size: 16px;
+  color: #FFF;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 12px;
+  min-height: 150px;
+  min-width: 100px;
+  padding: 10px 18px;
+  flex:2;
+}
+
+.child:not(:first-child) {
+  flex: 1 35%;
+}
+
+ .child:nth-child(1) {
+  background: #eb3e58;
+}
+ .child:nth-child(2) {
+  background: #bf81d3;
+}
+ .child:nth-child(3) {
+  background: #f19b2a;
+}
+ .child:nth-child(4) {
+  background: #4268c4;
+}
+ .child:nth-child(5) {
+  background: #4fba90;
+}

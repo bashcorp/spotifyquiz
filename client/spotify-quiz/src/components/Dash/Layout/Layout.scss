@@ -1,0 +1,32 @@
+ .layout-wrapper {
+	max-height: 100vh;
+}
+
+ .column {
+  float: left;
+}
+
+.left {
+  width: 50%;
+}
+
+.right {
+  width: 49%;
+    background-color: #4268c4;
+      border-radius: 12px;
+      margin-top:22px;
+}
+
+.headerText {
+	text-align: center;
+	margin-top: 12px;
+}
+
+
+
+
+@media screen and (max-width: 900px) {
+  .column {
+    width: 100%;
+  }
+}

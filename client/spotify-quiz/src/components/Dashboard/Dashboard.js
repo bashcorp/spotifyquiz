@@ -3,8 +3,8 @@ import React from 'react';
 import './Dashboard.css';
 import './bubbles.css';
 import TitleHeader from '../TitleHeader/TitleHeader';
+import Layout from '../Dash/Layout/Layout';
 import Share from '../Share/Share';
-import Respondent from '../Respondent/Respondent';
 
 let respondent = {
   imageSrc: 'https://cdn.pixabay.com/photo/2018/10/30/16/06/water-lily-3784022__340.jpg',
@@ -25,21 +25,9 @@ respondent, respondent
 function Dashboard() {
 
 	return (
-	<div className="dashboard-wrapper">
-  <nav className="topnav-dashboard">
-        <ul>
-          <li>
-            <a href="#">
-              <img src={require('./../../assets/newlogo.svg')} />
-            </a>
-          </li>
-          <li className="top-sign-in">
-            <a href="/dashboard">Start quiz</a>
-          </li>
-        </ul>
-      </nav>
+	<div className="dashboard">
 
-<div class="animation-area">
+   {/*<div class="animation-area">
     <TitleHeader />
     <Share />
 
@@ -54,7 +42,8 @@ function Dashboard() {
 </div>
 
 
-    <Respondent respondents={respondents}/>
+ <Respondent respondents={respondents}/>*/}
+    <Layout />
     </div>
   );
 }
