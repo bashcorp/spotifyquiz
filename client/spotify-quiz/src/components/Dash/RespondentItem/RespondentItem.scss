@@ -1,0 +1,41 @@
+$backgroundSize: 115px;
+
+.respondent-image {
+	height: $backgroundSize;
+	width: $backgroundSize;
+	border-radius: 500px;
+	text-align: center;
+	display: inline-block;
+	margin-bottom: 4px;
+}
+
+.center-emoji {
+	line-height: $backgroundSize;
+	height: $backgroundSize;
+	text-align: center;
+}
+
+.respondent-image p {
+	font-size: $backgroundSize/3;
+}
+
+.respondent-name h3 {
+	font-size: 14px;
+	color: #323232;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.respondent-score h3 {
+	color: #4268c4;
+	font-size: 13px;
+}
+
+.RespondentItem {
+	text-align: center;
+}
+
+.RespondentItem a {
+	text-decoration: none;
+}

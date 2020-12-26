@@ -3,27 +3,44 @@ import "./RespondentContainer.scss";
 import RespondentItem from "../RespondentItem/RespondentItem";
 
 const RespondentContainer = (props) => {
+	const [filter, setFilter] = React.useState("");
+
+	const clearInput = () => {
+    setFilter("");
+    document.getElementById("filter-respondents").value = "";
+  	}
+
 	return (
 		<div className="respondent-container">
-			<form onsubmit="event.preventDefault();" role="search">
-				<label for="search">Search for stuff</label>
+			<form role="filter-respondents">
+				<label htmlFor="filter-respondents">Search for stuff</label>
 				<input
-					id="search"
+					id="filter-respondents"
 					type="search"
 					placeholder="Filter respondents..."
-					autofocus
+					autoFocus
+					onChange={(e) => setFilter(e.target.value.toLowerCase())}
 				/>
-				<button type="submit">Clear</button>
+				<button onClick={(e) => clearInput()}>Clear</button>
 			</form>
-			<ul className="respondent-list">
-				{props.respondents.map((respondent) => {
-					return (
-						<li className="respondent">
-							<RespondentItem respondent={respondent} />
-						</li>
-					);
-				})}
-			</ul>
+
+			<div className="wrapper">
+				<div id="infoi"></div>
+
+				<div className="respondent-items">
+					{props.respondents.map((respondent) => {
+						if (respondent.name.toLowerCase().includes(filter)) {
+							console.log(filter);
+							return (
+								<RespondentItem
+									key={respondent.key}
+									respondent={respondent}
+								/>
+							);
+						}
+					})}
+				</div>
+			</div>
 		</div>
 	);
 };
