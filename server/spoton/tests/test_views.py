@@ -7,6 +7,9 @@ from django.test.client import Client
 from django.urls import reverse
 from selenium.webdriver import Firefox
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 
 from spoton.tests.setup_tests import *
 from spoton import spotify
@@ -52,6 +55,10 @@ class LoginTests(StaticLiveServerTestCase):
 
         auth_accept_btn = self.browser.find_element_by_id('auth-accept')
         auth_accept_btn.click()
+
+
+        # Creating the quiz can take a while, so wait until the page is loaded
+        elem = WebDriverWait(self.browser, 60).until(EC.presence_of_element_located((By.CLASS_NAME, 'TitleHeader')))
         
 
         id = self.browser.get_cookie('sessionid').get('value')

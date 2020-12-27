@@ -4,8 +4,16 @@ from django.conf import settings
 from django.urls import reverse
 from selenium.webdriver import Firefox
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 
 from spoton import spotify
+
+
+# Disable debug messages on the tests' output
+import logging
+logging.disable(logging.WARNING)
 
 
 
@@ -84,6 +92,8 @@ def create_authorized_session(live_server_url):
         auth_accept_btn = browser.find_element_by_id('auth-accept')
         auth_accept_btn.click()
         
+        # Creating the quiz can take a while, so wait until the page is loaded
+        elem = WebDriverWait(browser, 60).until(EC.presence_of_element_located((By.CLASS_NAME, 'TitleHeader')))
 
         id = browser.get_cookie('sessionid').get('value')
         session = create_session_store(id)
