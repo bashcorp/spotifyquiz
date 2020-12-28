@@ -5,6 +5,8 @@ import QuestionSlider from "../QuestionSlider/QuestionSlider.js";
 import Glide from "@glidejs/glide";
 
 const Quiz = () => {
+	const [index, setIndex] = React.useState("1");
+
 	var questions = {
 		questions: [
 			{ id: 0, text: "plan 0", price: 0 },
@@ -19,13 +21,14 @@ const Quiz = () => {
 	};
 	const handleSelection = (id) => {
 		console.log("handleOffer clicked, id: ", id);
+		setIndex(id + 2);
 	};
 
 	const carouselOptions = {
 		type: "track",
 		gap: 250,
 		perView: 1,
-		peek: 400,
+		peek: 300,
 		startAt: 0,
 		animationDuration: 400,
 		dragThreshold: false,
@@ -33,35 +36,40 @@ const Quiz = () => {
 			1400: {
 				perView: 1,
 				gap: 200,
-				peek: 350,
+				peek: 275,
 			},
 
 			1300: {
 				perView: 1,
 				gap: 200,
-				peek: 300,
+				peek: 250,
 			},
 			1200: {
 				perView: 1,
-				gap: 175,
-				peek: 250,
+				gap: 150,
+				peek: 200,
 			},
 			1100: {
 				perView: 1,
-				gap: 125,
+				gap: 150,
 				peek: 200,
 			},
 
 			1000: {
 				perView: 1,
-				gap: 125,
-				peek: 0,
+				gap: 30,
+				peek: 100,
 			},
 		},
 	};
 
 	return (
+
+		<div className="Quiz">
+		<p id="watermark-index">{index}</p>
 		<div className="home-section test">
+
+	
 			<QuestionSlider options={carouselOptions}>
 				{questions.questions.map((plan) => (
 					<Question
@@ -71,6 +79,7 @@ const Quiz = () => {
 					/>
 				))}
 			</QuestionSlider>
+		</div>
 		</div>
 	);
 };

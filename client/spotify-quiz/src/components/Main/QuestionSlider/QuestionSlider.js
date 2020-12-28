@@ -9,7 +9,8 @@ export default class QuestionSlider extends Component {
     // Generated random id
     this.setState(
       { id: `glide-${Math.ceil(Math.random() * 100)}` },
-      this.initializeGlider
+      this.initializeGlider,
+      this.goRight
     );
   };
 
@@ -27,11 +28,11 @@ export default class QuestionSlider extends Component {
   render = () => (
     // controls
     <div id={this.state.id} className="slider">
-      <div className="two-controls-btns" data-glide-el="controls">
+      <div className="hidden" data-glide-el="controls">
         <button className="arrow-left" data-glide-dir="<" title="start">
           <span className="hidden">Start</span>
         </button>
-        <button className="arrow-right" data-glide-dir=">" title="end">
+        <button className="arrow-right" id="right-butt" data-glide-dir=">" title="end">
           <span className="hidden">End</span>
         </button>
       </div>

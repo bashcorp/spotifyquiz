@@ -1,5 +1,6 @@
 body {
   margin: 0;
+  height: 100%;
   font-family: "Oxygen";
   font-weight: 700;
   -webkit-font-smoothing: antialiased;
@@ -10,3 +11,17 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+html {
+	height: 100%;
+}
+
+#root {
+	height: 100%;
+}
+
+.App {
+	height: 100%;
+}
+
+
