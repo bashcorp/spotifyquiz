@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import Quiz from './components/Quiz/Quiz';
+import Quiz from './components/Main/Quiz/Quiz';
 import Home from './components/Home/Home';
 import Results from './components/Results/Results';
 import Dashboard from './components/Dashboard/Dashboard';

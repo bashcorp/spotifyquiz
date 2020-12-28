@@ -7,7 +7,7 @@ const RespondentContainer = (props) => {
 
 	const clearInput = () => {
     setFilter("");
-    document.getElementById("filter-respondents").value = "";
+   // document.getElementById("filter-respondents").value = "";
   	}
 
 	return (
@@ -21,7 +21,7 @@ const RespondentContainer = (props) => {
 					autoFocus
 					onChange={(e) => setFilter(e.target.value.toLowerCase())}
 				/>
-				<button onClick={(e) => clearInput()}>Clear</button>
+				<button id="clear-filter" onClick={(e) => clearInput()}>Clear</button>
 			</form>
 
 			<div className="wrapper">
