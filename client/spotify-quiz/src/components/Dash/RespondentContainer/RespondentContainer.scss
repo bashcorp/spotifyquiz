@@ -74,7 +74,7 @@ form {
   border-radius: var(--rad);
   margin-top: 12px;
 }
-input, button {
+#filter-respondents, #clear-filter {
   height: var(--height);
   font-family: var(--font-fam);
   border: 0;
@@ -83,7 +83,7 @@ input, button {
   height: 30px;
   background-color: #f3f3f3;
 }
-input[type="search"] {
+#filter-respondents[type="search"] {
   outline: 0; 
   width: 100%;
   background: var(--color-light);
@@ -97,7 +97,7 @@ input[type="search"] {
   border: solid 1px lightgray;
 
 }
-button {
+#clear-filter {
   display: none;
   position: absolute;
   top: 0;
@@ -108,7 +108,7 @@ button {
   background: var(--color-brand);
   border-radius: 0 var(--rad) var(--rad) 0;
 }
-input:not(:placeholder-shown) {
+#filter-respondents:not(:placeholder-shown) {
   border-radius: var(--rad) 0 0 var(--rad);
   width: calc(100% - var(--btn-width));
   + button {

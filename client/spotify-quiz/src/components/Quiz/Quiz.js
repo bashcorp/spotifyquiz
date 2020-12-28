@@ -29,7 +29,79 @@ const customStyles = {
 
 const Quiz = (props) => {
 
-  let quiz = window.context.quiz;
+ // let quiz = window.context.quiz;
+ let quiz= {
+    "user_id": "21a452hnlj6ppe3gcvy3yx3di",
+    "questions": [
+        {
+            "id": 32,
+            "text": "What is their most listened to track in the last 6 months?",
+            "choices": [
+                {
+                    "id": 106,
+                    "primary_text": "Earthen Dweller",
+                    "secondary_text": "Gnome",
+                    "answer": true
+                },
+                {
+                    "id": 107,
+                    "primary_text": "California Rain",
+                    "secondary_text": "Silvertide",
+                    "answer": false
+                },
+                {
+                    "id": 108,
+                    "primary_text": "Superman",
+                    "secondary_text": "Skee-Lo",
+                    "answer": true 
+                },
+                {
+                    "id": 109,
+                    "primary_text": "Foxhole J.C.",
+                    "secondary_text": "Silvertide",
+                    "answer": false
+                }
+            ],
+            "type": "check"
+        },
+        {
+            "id": 33,
+            "text": "What is their most listened to artist in the last 6 months?",
+            "choices": [
+                {
+                    "id": 110,
+                    "primary_text": "Skee-Lo",
+                    "answer": true
+                },
+                {
+                    "id": 111,
+                    "primary_text": "100 gecs",
+                    "answer": false
+                },
+                {
+                    "id": 112,
+                    "primary_text": "Hozier",
+                    "answer": false
+                },
+                {
+                    "id": 113,
+                    "primary_text": "Willie Peyote",
+                    "answer": false
+                }
+            ],
+            "type": "mc"
+        },
+        {
+            "id": 34,
+            "text": "This is a slider question?",
+            "min": 3,
+            "max": 17,
+            "answer": 11,
+            "type": "slider"
+        }
+    ]
+}
+
   let questions = quiz["questions"];
   let currentProgress = Math.ceil((questionIndex+1/questions.length)*100);
 
