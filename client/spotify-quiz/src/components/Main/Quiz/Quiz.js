@@ -26,36 +26,14 @@ const Quiz = () => {
 
 	const carouselOptions = {
 		type: "track",
-		gap: 250,
+		gap: 150,
 		perView: 1,
-		peek: 300,
+		peek: 225,
 		startAt: 0,
 		animationDuration: 400,
 		dragThreshold: false,
 		breakpoints: {
-			1400: {
-				perView: 1,
-				gap: 200,
-				peek: 275,
-			},
-
-			1300: {
-				perView: 1,
-				gap: 200,
-				peek: 250,
-			},
 			1200: {
-				perView: 1,
-				gap: 150,
-				peek: 200,
-			},
-			1100: {
-				perView: 1,
-				gap: 150,
-				peek: 200,
-			},
-
-			1000: {
 				perView: 1,
 				gap: 30,
 				peek: 100,
