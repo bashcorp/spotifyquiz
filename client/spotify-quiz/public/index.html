@@ -12,7 +12,6 @@
 </script>
  
   <link rel="stylesheet" type="text/css" href="{% static 'reset.css' %}">
-  <link rel="stylesheet" type="text/css" href="{% static 'nav.css' %}">
   <link rel="stylesheet" href="node_modules/@glidejs/glide/dist/css/glide.core.min.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oxygen:wght@400;700&display=swap"> 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -44,17 +43,19 @@
   /* Put your context vars here. I recommend putting them under 
      a variable to avoid naming conflicts. 
   */
+    {% if quiz %}
 
-  try {
-      window.context = {
-    quiz: {{quiz|safe}},
-  };
+      try {
+        window.context = {
+          quiz: {{quiz|safe}},
+        };
 
-} catch {
-    // no binding or parameter to handle it
-}
+      } catch {
+            // no binding or parameter to handle it
+      }
+    {% endif %}
 
-</script>
+    </script>
 
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
