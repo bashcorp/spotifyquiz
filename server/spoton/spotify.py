@@ -244,7 +244,7 @@ def logout(session):
 
 
 
-def login(session, authorization_code):
+def login(session, authorization_code, redirect_target):
     """
     Logs in a user associated with the given authorization_code. Requests
     an access token, refresh token, and the user's User ID from Spotify, and
@@ -254,6 +254,12 @@ def login(session, authorization_code):
     was given to it, and include the Authorization Code in the query string
     of that URL. You should grab that Authorization Code from there, and
     then call this function to remember the user.
+    
+    To get an access token, this module needs the redirect URL that was
+    originally used to log in. Whoever calls this function will have the
+    authorization_code from the url, so they should also get the redirect
+    URL target and pass it here. The target is the value from the query string,
+    'index', 'dashboard', etc.
 
     When logging in, the function immediately requests an access token,
     which seems to always come with a refresh token. So the session only needs
@@ -264,7 +270,7 @@ def login(session, authorization_code):
     data = {
         'grant_type': 'authorization_code',
         'code': authorization_code,
-        'redirect_uri': 'http://localhost:8000/logged_in?redirect=dashboard'
+        'redirect_uri': 'http://localhost:8000/logged_in?redirect=' + redirect_target
     }
     auth = '70be5e3cac9044b4951ace6b5d2475e1:870dc2491458410ebe2d9f6f578d24ef'
     encoded_auth = base64.b64encode(auth.encode("utf-8"))

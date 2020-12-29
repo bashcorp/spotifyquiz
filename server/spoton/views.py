@@ -52,7 +52,7 @@ def dashboard(request):
 
 
 def login(request):
-    redirect_view = 'index'
+    redirect_view = 'dashboard'
     query_args = {
         'client_id': '70be5e3cac9044b4951ace6b5d2475e1',
         'response_type': 'code',
@@ -83,18 +83,18 @@ def logged_in(request):
         logger.error("Login to Spotify: redirect didn't provide authorization code, but no error was included in query string")
         return redirect('index')
 
-    
-    if not spotify.login(request.session, code):
-        # TODO
-        # Error handling, login failed
-        logger.error("Logging into session failed")
-        return redirect('index')
-
 
     # Redirect to the desired page
     redirect_uri = request.GET.get('redirect')
     if not redirect_uri:
         logger.error("RedirectUri not included in Spotify's login redirect.")
+        return redirect('index')
+
+    # Log into Spotify (get access codes and etc.)
+    if not spotify.login(request.session, code, redirect_uri):
+        # TODO
+        # Error handling, login failed
+        logger.error("Logging into session failed")
         return redirect('index')
 
     return redirect(redirect_uri)

@@ -366,7 +366,7 @@ class LoginTests(TestCase):
         session variables.
         """
         session = self.client.session
-        spotify.login(session, 'bad_code')
+        spotify.login(session, 'bad_code', 'target')
 
         self.assertIsNone(session.get(spotify.REFRESH_TOKEN))
         self.assertIsNone(session.get(spotify.USER_ID))
