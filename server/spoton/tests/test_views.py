@@ -58,7 +58,7 @@ class LoginTests(StaticLiveServerTestCase):
 
 
         # Creating the quiz can take a while, so wait until the page is loaded
-        elem = WebDriverWait(self.browser, 60).until(EC.presence_of_element_located((By.CLASS_NAME, 'TitleHeader')))
+        elem = WebDriverWait(self.browser, 60).until(EC.presence_of_element_located((By.CLASS_NAME, 'headerText')))
         
 
         id = self.browser.get_cookie('sessionid').get('value')

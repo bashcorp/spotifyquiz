@@ -93,7 +93,7 @@ def create_authorized_session(live_server_url):
         auth_accept_btn.click()
         
         # Creating the quiz can take a while, so wait until the page is loaded
-        elem = WebDriverWait(browser, 60).until(EC.presence_of_element_located((By.CLASS_NAME, 'TitleHeader')))
+        elem = WebDriverWait(browser, 60).until(EC.presence_of_element_located((By.CLASS_NAME, 'headerText')))
 
         id = browser.get_cookie('sessionid').get('value')
         session = create_session_store(id)
