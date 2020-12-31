@@ -4,7 +4,7 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from spoton import spotify
 from spoton.quiz.user_data import UserData
 from spoton.tests.setup_tests import create_authorized_session
-from spoton.models import *
+from spoton.models.quiz import *
 from spoton.quiz.section_top_played import *
 
 class QuestionTopTrackTests(StaticLiveServerTestCase):

@@ -2,7 +2,7 @@ import random
 from collections import Counter
 
 from spoton import spotify
-from spoton.models import *
+from spoton.models.quiz import *
 from .utils import *
     
 

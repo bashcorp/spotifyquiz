@@ -5,7 +5,8 @@ from django.core.exceptions import ValidationError,ObjectDoesNotExist
 from django.db import transaction
 from django.db.utils import OperationalError,IntegrityError
 
-from spoton.models import *
+from spoton.models.quiz import *
+from spoton.models.response import *
 
 #TransactionTestCase works when testing operations that throw database errors
 #https://stackoverflow.com/questions/43978468/django-test-transactionmanagementerror-you-cant-execute-queries-until-the-end
@@ -461,7 +462,12 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         }
         quiz = Quiz.objects.create()
         question = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        Choice.create_album_choice(question=question, album=album)
+        ret = Choice.create_album_choice(question=question, album=album)
+
+        self.assertEquals(ret.primary_text, 'Album')
+        self.assertEquals(ret.secondary_text, 'Cash')
+        self.assertFalse(ret.answer)
+        self.assertEquals(ret.question, question)
 
         self.assertEquals(Choice.objects.count(), 1)
 
@@ -483,7 +489,12 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         }
         quiz = Quiz.objects.create()
         question = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        Choice.create_album_choice(question=question, album=album, answer=True)
+        ret = Choice.create_album_choice(question=question, album=album, answer=True)
+
+        self.assertEquals(ret.primary_text, 'Album')
+        self.assertEquals(ret.secondary_text, 'Cash')
+        self.assertTrue(ret.answer)
+        self.assertEquals(ret.question, question)
 
         self.assertEquals(Choice.objects.count(), 1)
 
@@ -512,7 +523,14 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
 
         quiz = Quiz.objects.create()
         question = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        Choice.create_album_choices(question=question, albums=albums)
+        ret = Choice.create_album_choices(question=question, albums=albums)
+
+        self.assertEquals(ret[0].primary_text, 'Album')
+        self.assertEquals(ret[0].secondary_text, 'Cash')
+        self.assertFalse(ret[0].answer)
+        self.assertEquals(ret[1].primary_text, 'Album2')
+        self.assertEquals(ret[1].secondary_text, 'Ben')
+        self.assertFalse(ret[1].answer)
 
         self.assertEquals(Choice.objects.count(), 2)
 
@@ -543,7 +561,14 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
 
         quiz = Quiz.objects.create()
         question = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        Choice.create_album_choices(question=question, albums=albums, answer=True)
+        ret = Choice.create_album_choices(question=question, albums=albums, answer=True)
+
+        self.assertEquals(ret[0].primary_text, 'Album')
+        self.assertEquals(ret[0].secondary_text, 'Cash')
+        self.assertTrue(ret[0].answer)
+        self.assertEquals(ret[1].primary_text, 'Album2')
+        self.assertEquals(ret[1].secondary_text, 'Ben')
+        self.assertTrue(ret[1].answer)
 
         self.assertEquals(Choice.objects.count(), 2)
 
@@ -566,7 +591,12 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         }
         quiz = Quiz.objects.create()
         question = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        Choice.create_artist_choice(question=question, artist=artist)
+        ret = Choice.create_artist_choice(question=question, artist=artist)
+
+        self.assertEquals(ret.primary_text, 'Bon Jovi')
+        self.assertIsNone(ret.secondary_text)
+        self.assertFalse(ret.answer)
+        self.assertEquals(ret.question, question)
 
         self.assertEquals(Choice.objects.count(), 1)
 
@@ -587,7 +617,12 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         }
         quiz = Quiz.objects.create()
         question = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        Choice.create_artist_choice(question=question, artist=artist, answer=True)
+        ret = Choice.create_artist_choice(question=question, artist=artist, answer=True)
+
+        self.assertEquals(ret.primary_text, 'Bon Jovi')
+        self.assertIsNone(ret.secondary_text)
+        self.assertTrue(ret.answer)
+        self.assertEquals(ret.question, question)
 
         self.assertEquals(Choice.objects.count(), 1)
 
@@ -611,7 +646,14 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
 
         quiz = Quiz.objects.create()
         question = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        Choice.create_artist_choices(question=question, artists=artists)
+        ret = Choice.create_artist_choices(question=question, artists=artists)
+
+        self.assertEquals(ret[0].primary_text, 'Bon Jovi')
+        self.assertFalse(ret[0].answer)
+        self.assertEquals(ret[1].primary_text, 'Cassius')
+        self.assertFalse(ret[1].answer)
+        self.assertEquals(ret[2].primary_text, 'Bon Jamin')
+        self.assertFalse(ret[2].answer)
 
         self.assertEquals(Choice.objects.count(), 3)
 
@@ -637,7 +679,14 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
 
         quiz = Quiz.objects.create()
         question = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        Choice.create_artist_choices(question=question, artists=artists, answer=True)
+        ret = Choice.create_artist_choices(question=question, artists=artists, answer=True)
+        
+        self.assertEquals(ret[0].primary_text, 'Bon Jovi')
+        self.assertTrue(ret[0].answer)
+        self.assertEquals(ret[1].primary_text, 'Cassius')
+        self.assertTrue(ret[1].answer)
+        self.assertEquals(ret[2].primary_text, 'Bon Jamin')
+        self.assertTrue(ret[2].answer)
 
         self.assertEquals(Choice.objects.count(), 3)
 
@@ -661,7 +710,12 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         }
         quiz = Quiz.objects.create()
         question = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        Choice.create_track_choice(question=question, track=track)
+        ret = Choice.create_track_choice(question=question, track=track)
+
+        self.assertEquals(ret.primary_text, 'YGLABN')
+        self.assertEquals(ret.secondary_text, 'Bon Jovi')
+        self.assertFalse(ret.answer)
+        self.assertEquals(ret.question, question)
 
         self.assertEquals(Choice.objects.count(), 1)
 
@@ -683,7 +737,12 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         }
         quiz = Quiz.objects.create()
         question = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        Choice.create_track_choice(question=question, track=track, answer=True)
+        ret = Choice.create_track_choice(question=question, track=track, answer=True)
+
+        self.assertEquals(ret.primary_text, 'YGLABN')
+        self.assertEquals(ret.secondary_text, 'Bon Jovi')
+        self.assertTrue(ret.answer)
+        self.assertEquals(ret.question, question)
 
         self.assertEquals(Choice.objects.count(), 1)
 
@@ -711,7 +770,14 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
 
         quiz = Quiz.objects.create()
         question = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        Choice.create_track_choices(question=question, tracks=tracks)
+        ret = Choice.create_track_choices(question=question, tracks=tracks)
+
+        self.assertEquals(ret[0].primary_text, 'YGLABN')
+        self.assertEquals(ret[0].secondary_text, 'Bon Jovi')
+        self.assertFalse(ret[0].answer)
+        self.assertEquals(ret[1].primary_text, 'Country Song')
+        self.assertEquals(ret[1].secondary_text, 'Cassius')
+        self.assertFalse(ret[1].answer)
 
         self.assertEquals(Choice.objects.count(), 2)
 
@@ -741,7 +807,14 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
 
         quiz = Quiz.objects.create()
         question = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        Choice.create_track_choices(question=question, tracks=tracks, answer=True)
+        ret = Choice.create_track_choices(question=question, tracks=tracks, answer=True)
+
+        self.assertEquals(ret[0].primary_text, 'YGLABN')
+        self.assertEquals(ret[0].secondary_text, 'Bon Jovi')
+        self.assertTrue(ret[0].answer)
+        self.assertEquals(ret[1].primary_text, 'Country Song')
+        self.assertEquals(ret[1].secondary_text, 'Cassius')
+        self.assertTrue(ret[1].answer)
 
         self.assertEquals(Choice.objects.count(), 2)
 
@@ -762,7 +835,12 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         genre = "Pop"
         quiz = Quiz.objects.create()
         question = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        Choice.create_genre_choice(question=question, genre=genre)
+        ret = Choice.create_genre_choice(question=question, genre=genre)
+
+        self.assertEquals(ret.primary_text, 'Pop')
+        self.assertIsNone(ret.secondary_text)
+        self.assertFalse(ret.answer)
+        self.assertEquals(ret.question, question)
 
         self.assertEquals(Choice.objects.count(), 1)
 
@@ -781,7 +859,12 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         genre = "Pop"
         quiz = Quiz.objects.create()
         question = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        Choice.create_genre_choice(question=question, genre=genre, answer=True)
+        ret = Choice.create_genre_choice(question=question, genre=genre, answer=True)
+
+        self.assertEquals(ret.primary_text, 'Pop')
+        self.assertIsNone(ret.secondary_text)
+        self.assertTrue(ret.answer)
+        self.assertEquals(ret.question, question)
 
         self.assertEquals(Choice.objects.count(), 1)
 
@@ -801,7 +884,14 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
 
         quiz = Quiz.objects.create()
         question = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        Choice.create_genre_choices(question=question, genres=genres)
+        ret = Choice.create_genre_choices(question=question, genres=genres)
+
+        self.assertEquals(ret[0].primary_text, 'Pop')
+        self.assertIsNone(ret[0].secondary_text)
+        self.assertFalse(ret[0].answer)
+        self.assertEquals(ret[1].primary_text, 'Rock')
+        self.assertIsNone(ret[1].secondary_text)
+        self.assertFalse(ret[1].answer)
 
         self.assertEquals(Choice.objects.count(), 2)
 
@@ -823,7 +913,14 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
 
         quiz = Quiz.objects.create()
         question = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        Choice.create_genre_choices(question=question, genres=genres, answer=True)
+        ret = Choice.create_genre_choices(question=question, genres=genres, answer=True)
+
+        self.assertEquals(ret[0].primary_text, 'Pop')
+        self.assertIsNone(ret[0].secondary_text)
+        self.assertTrue(ret[0].answer)
+        self.assertEquals(ret[1].primary_text, 'Rock')
+        self.assertIsNone(ret[1].secondary_text)
+        self.assertTrue(ret[1].answer)
 
         self.assertEquals(Choice.objects.count(), 2)
 
@@ -847,7 +944,12 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         }
         quiz = Quiz.objects.create()
         question = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        Choice.create_playlist_choice(question=question, playlist=playlist)
+        ret = Choice.create_playlist_choice(question=question, playlist=playlist)
+        
+        self.assertEquals(ret.primary_text, 'Bon Jovi')
+        self.assertIsNone(ret.secondary_text)
+        self.assertFalse(ret.answer)
+        self.assertEquals(ret.question, question)
 
         self.assertEquals(Choice.objects.count(), 1)
 
@@ -869,7 +971,12 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         }
         quiz = Quiz.objects.create()
         question = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        Choice.create_playlist_choice(question=question, playlist=playlist, answer=True)
+        ret = Choice.create_playlist_choice(question=question, playlist=playlist, answer=True)
+
+        self.assertEquals(ret.primary_text, 'Bon Jovi')
+        self.assertIsNone(ret.secondary_text)
+        self.assertTrue(ret.answer)
+        self.assertEquals(ret.question, question)
 
         self.assertEquals(Choice.objects.count(), 1)
 
@@ -894,7 +1001,14 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
 
         quiz = Quiz.objects.create()
         question = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        Choice.create_playlist_choices(question=question, playlists=playlists)
+        ret = Choice.create_playlist_choices(question=question, playlists=playlists)
+
+        self.assertEquals(ret[0].primary_text, 'Bon Jovi')
+        self.assertFalse(ret[0].answer)
+        self.assertEquals(ret[1].primary_text, 'Cassius')
+        self.assertFalse(ret[1].answer)
+        self.assertEquals(ret[2].primary_text, 'Bon Jamin')
+        self.assertFalse(ret[2].answer)
 
         self.assertEquals(Choice.objects.count(), 3)
 
@@ -921,7 +1035,14 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
 
         quiz = Quiz.objects.create()
         question = MultipleChoiceQuestion.objects.create(quiz=quiz)
-        Choice.create_playlist_choices(question=question, playlists=playlists, answer=True)
+        ret = Choice.create_playlist_choices(question=question, playlists=playlists, answer=True)
+
+        self.assertEquals(ret[0].primary_text, 'Bon Jovi')
+        self.assertTrue(ret[0].answer)
+        self.assertEquals(ret[1].primary_text, 'Cassius')
+        self.assertTrue(ret[1].answer)
+        self.assertEquals(ret[2].primary_text, 'Bon Jamin')
+        self.assertTrue(ret[2].answer)
 
         self.assertEquals(Choice.objects.count(), 3)
 

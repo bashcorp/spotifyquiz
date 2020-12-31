@@ -8,7 +8,7 @@ import logging
 import json
 
 from . import spotify
-from spoton.models import Quiz
+from spoton.models.quiz import Quiz
 from spoton.quiz import create_quiz
 
 logger = logging.getLogger(__name__)

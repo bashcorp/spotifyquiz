@@ -2,7 +2,7 @@ import random
 import logging
 
 from spoton import spotify
-from spoton.models import *
+from spoton.models.quiz import *
 from .section_top_played import pick_questions_top_played
 from .section_saved_followed import pick_questions_saved_followed
 from .section_music_taste_features import pick_questions_music_taste

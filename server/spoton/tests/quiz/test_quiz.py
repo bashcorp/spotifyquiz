@@ -3,7 +3,7 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 
 from spoton.tests.setup_tests import create_authorized_session
 
-from spoton.models import Question
+from spoton.models.quiz import Question
 from spoton.quiz.quiz import *
 from spoton.quiz.section_top_played import pick_questions_top_played
 from spoton.quiz.section_saved_followed import pick_questions_saved_followed

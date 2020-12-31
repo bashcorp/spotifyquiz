@@ -2,9 +2,8 @@ from django.contrib import admin
 from django.urls import *
 from django.utils.html import format_html
 
-# Register your models here.
-
-from .models import *
+from spoton.models.quiz import *
+from spoton.models.response import *
 
 class QuestionInline(admin.TabularInline):
     model = Question

@@ -1,6 +1,6 @@
 import random
 
-from spoton.models import *
+from spoton.models.quiz import *
 from spoton import spotify
 from .utils import *
 
