@@ -13,18 +13,18 @@ class QuizAdmin(admin.ModelAdmin):
     readonly_fields = ('user_id', 'uuid', '_admin_get_quiz_questions',)
     list_display = ('user_id',)
 
-#class MultipleChoice
+#class Checkbox
 
 
 
 # Register the database models so they show up on the admin dashboard
 admin.site.register(Question)
-admin.site.register(MultipleChoiceQuestion)
+admin.site.register(CheckboxQuestion)
 admin.site.register(Choice)
 admin.site.register(SliderQuestion)
 admin.site.register(Response)
-admin.site.register(ResponseAnswer)
-admin.site.register(MultipleChoiceAnswer)
-admin.site.register(ChoiceAnswer)
-admin.site.register(SliderAnswer)
+admin.site.register(QuestionResponse)
+admin.site.register(CheckboxResponse)
+admin.site.register(ChoiceResponse)
+admin.site.register(SliderResponse)
 

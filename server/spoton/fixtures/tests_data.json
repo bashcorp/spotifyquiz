@@ -39,7 +39,7 @@
   "fields": {
     "polymorphic_ctype": [
       "spoton",
-      "multiplechoicequestion"
+      "checkboxquestion"
     ],
     "quiz": "d8f49ba6-ccd8-4a9d-a15c-42daba014842",
     "text": "Question 1.3"
@@ -51,7 +51,7 @@
   "fields": {
     "polymorphic_ctype": [
       "spoton",
-      "multiplechoicequestion"
+      "checkboxquestion"
     ],
     "quiz": "d8f49ba6-ccd8-4a9d-a15c-42daba014842",
     "text": "Question 1.4"
@@ -75,7 +75,7 @@
   "fields": {
     "polymorphic_ctype": [
       "spoton",
-      "multiplechoicequestion"
+      "checkboxquestion"
     ],
     "quiz": "5a0ce787-8dde-4eda-a3f4-ceb539580efa",
     "text": "Question 2.2"
@@ -87,29 +87,29 @@
   "fields": {
     "polymorphic_ctype": [
       "spoton",
-      "multiplechoicequestion"
+      "checkboxquestion"
     ],
     "quiz": "5a0ce787-8dde-4eda-a3f4-ceb539580efa",
     "text": "Question 2.3"
   }
 },
 {
-  "model": "spoton.multiplechoicequestion",
+  "model": "spoton.checkboxquestion",
   "pk": 3,
   "fields": {}
 },
 {
-  "model": "spoton.multiplechoicequestion",
+  "model": "spoton.checkboxquestion",
   "pk": 4,
   "fields": {}
 },
 {
-  "model": "spoton.multiplechoicequestion",
+  "model": "spoton.checkboxquestion",
   "pk": 6,
   "fields": {}
 },
 {
-  "model": "spoton.multiplechoicequestion",
+  "model": "spoton.checkboxquestion",
   "pk": 7,
   "fields": {}
 },
@@ -317,111 +317,111 @@
   }
 },
 {
-  "model": "spoton.responseanswer",
+  "model": "spoton.questionresponse",
   "pk": 1,
   "fields": {
     "polymorphic_ctype": [
       "spoton",
-      "slideranswer"
+      "sliderresponse"
     ],
     "question": 1,
     "response": 1
   }
 },
 {
-  "model": "spoton.responseanswer",
+  "model": "spoton.questionresponse",
   "pk": 2,
   "fields": {
     "polymorphic_ctype": [
       "spoton",
-      "slideranswer"
+      "sliderresponse"
     ],
     "question": 2,
     "response": 1
   }
 },
 {
-  "model": "spoton.responseanswer",
+  "model": "spoton.questionresponse",
   "pk": 3,
   "fields": {
     "polymorphic_ctype": [
       "spoton",
-      "multiplechoiceanswer"
+      "checkboxresponse"
     ],
     "question": 3,
     "response": 1
   }
 },
 {
-  "model": "spoton.responseanswer",
+  "model": "spoton.questionresponse",
   "pk": 4,
   "fields": {
     "polymorphic_ctype": [
       "spoton",
-      "multiplechoiceanswer"
+      "checkboxresponse"
     ],
     "question": 4,
     "response": 1
   }
 },
 {
-  "model": "spoton.responseanswer",
+  "model": "spoton.questionresponse",
   "pk": 5,
   "fields": {
     "polymorphic_ctype": [
       "spoton",
-      "slideranswer"
+      "sliderresponse"
     ],
     "question": 5,
     "response": 2
   }
 },
 {
-  "model": "spoton.responseanswer",
+  "model": "spoton.questionresponse",
   "pk": 6,
   "fields": {
     "polymorphic_ctype": [
       "spoton",
-      "multiplechoiceanswer"
+      "checkboxresponse"
     ],
     "question": 6,
     "response": 2
   }
 },
 {
-  "model": "spoton.responseanswer",
+  "model": "spoton.questionresponse",
   "pk": 7,
   "fields": {
     "polymorphic_ctype": [
       "spoton",
-      "multiplechoiceanswer"
+      "checkboxresponse"
     ],
     "question": 7,
     "response": 2
   }
 },
 {
-  "model": "spoton.multiplechoiceanswer",
+  "model": "spoton.checkboxresponse",
   "pk": 3,
   "fields": {}
 },
 {
-  "model": "spoton.multiplechoiceanswer",
+  "model": "spoton.checkboxresponse",
   "pk": 4,
   "fields": {}
 },
 {
-  "model": "spoton.multiplechoiceanswer",
+  "model": "spoton.checkboxresponse",
   "pk": 6,
   "fields": {}
 },
 {
-  "model": "spoton.multiplechoiceanswer",
+  "model": "spoton.checkboxresponse",
   "pk": 7,
   "fields": {}
 },
 {
-  "model": "spoton.choiceanswer",
+  "model": "spoton.choiceresponse",
   "pk": 1,
   "fields": {
     "choice": 3,
@@ -429,7 +429,7 @@
   }
 },
 {
-  "model": "spoton.choiceanswer",
+  "model": "spoton.choiceresponse",
   "pk": 2,
   "fields": {
     "choice": 8,
@@ -437,7 +437,7 @@
   }
 },
 {
-  "model": "spoton.choiceanswer",
+  "model": "spoton.choiceresponse",
   "pk": 3,
   "fields": {
     "choice": 10,
@@ -445,7 +445,7 @@
   }
 },
 {
-  "model": "spoton.choiceanswer",
+  "model": "spoton.choiceresponse",
   "pk": 4,
   "fields": {
     "choice": 11,
@@ -453,7 +453,7 @@
   }
 },
 {
-  "model": "spoton.choiceanswer",
+  "model": "spoton.choiceresponse",
   "pk": 5,
   "fields": {
     "choice": 16,
@@ -461,21 +461,21 @@
   }
 },
 {
-  "model": "spoton.slideranswer",
+  "model": "spoton.sliderresponse",
   "pk": 1,
   "fields": {
     "answer": 7
   }
 },
 {
-  "model": "spoton.slideranswer",
+  "model": "spoton.sliderresponse",
   "pk": 2,
   "fields": {
     "answer": 7
   }
 },
 {
-  "model": "spoton.slideranswer",
+  "model": "spoton.sliderresponse",
   "pk": 5,
   "fields": {
     "answer": 67

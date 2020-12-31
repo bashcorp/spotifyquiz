@@ -49,7 +49,7 @@ def question_saved_albums(quiz, user_data):
 
     # Create the database items at the end, once all the data has been
     # successfully assembled.
-    question = MultipleChoiceQuestion.objects.create(quiz=quiz, text="Which of these albums does the user have saved to their library")
+    question = CheckboxQuestion.objects.create(quiz=quiz, text="Which of these albums does the user have saved to their library")
 
     Choice.create_album_choices(question, correct_choices, answer=True)
     Choice.create_album_choices(question, incorrect_choices)
@@ -86,7 +86,7 @@ def question_saved_tracks(quiz, user_data):
 
     # Create the database items at the end, once all the data has been
     # successfully assembled.
-    question = MultipleChoiceQuestion.objects.create(quiz=quiz, text="Which of these tracks does the user have saved to their library")
+    question = CheckboxQuestion.objects.create(quiz=quiz, text="Which of these tracks does the user have saved to their library")
 
     Choice.create_track_choices(question, correct_choices, answer=True)
     Choice.create_track_choices(question, incorrect_choices)
@@ -123,7 +123,7 @@ def question_followed_artists(quiz, user_data):
 
     # Create the database items at the end, once all the data has been
     # successfully assembled.
-    question = MultipleChoiceQuestion.objects.create(quiz=quiz, text="Which of these tracks does the user have saved to their library")
+    question = CheckboxQuestion.objects.create(quiz=quiz, text="Which of these tracks does the user have saved to their library")
 
     Choice.create_artist_choices(question, correct_choices, answer=True)
     Choice.create_artist_choices(question, incorrect_choices)

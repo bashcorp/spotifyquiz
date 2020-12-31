@@ -17,7 +17,7 @@ class Response(models.Model):
     """Stores a user's response to a certain quiz.
 
     Stores a user's response to a quiz (their answers to the
-    questions). Should hold a ResponseAnswer object for each
+    questions). Should hold a QuestionResponse object for each
     question of the quiz.
 
     Attributes
@@ -30,7 +30,7 @@ class Response(models.Model):
     quiz : ForeignKey
         The associated quiz that this response is to (quiz.Quiz model)
     answers
-        A set of users' responses to each question, (ResponseAnswer
+        A set of users' responses to each question, (QuestionResponse
         model)
     """
 
@@ -46,7 +46,8 @@ class Response(models.Model):
             on_delete=models.CASCADE)    
 
     ### Attributes defined implicitly (reverse-FK relationships)
-    # answers (ResponseAnswer objects)
+    # answers (QuestionResponse objects)
+
 
     def delete(self, *args, **kwargs):
         """ Overrides delete() to work with Django-Polymorphic models
@@ -75,7 +76,7 @@ class Response(models.Model):
 
 
 
-class ResponseAnswer(PolymorphicModel):
+class QuestionResponse(PolymorphicModel):
     """Stores the response to one quiz question, should be subclassed.
 
     Holds data about a user's response to a quiz question (Question
@@ -94,7 +95,7 @@ class ResponseAnswer(PolymorphicModel):
 
     See Also
     --------
-    MultipleChoiceAnswer, SliderAnswer
+    CheckboxResponse, SliderResponse
     """
 
     # Overrides the QuerySet so that delete() below is called when
@@ -118,13 +119,13 @@ class ResponseAnswer(PolymorphicModel):
         try:
             self.question
         except:
-            raise ValidationError("A ResponseAnswer was created without \
+            raise ValidationError("A QuestionResponse was created without \
                     giving it an associated Question.")
 
         try:
             self.response
         except:
-            raise ValidationError("A ResponseAnswer was created without \
+            raise ValidationError("A QuestionResponse was created without \
                     giving it an associated Response.")
 
         if self.question not in self.response.quiz.questions.all():
@@ -141,18 +142,18 @@ class ResponseAnswer(PolymorphicModel):
         set up properly, as checked by clean().
         """
         self.clean()
-        super(ResponseAnswer, self).save(*args, **kwargs)
+        super(QuestionResponse, self).save(*args, **kwargs)
 
 
     def __str__(self):
-        return "<ResponseAnswer: Response=" + self.response.name + \
+        return "<QuestionResponse: Response=" + self.response.name + \
                 ", Question=" + self.question.text + ">"
 
 
 
 
 
-class MultipleChoiceAnswer(ResponseAnswer):
+class CheckboxResponse(QuestionResponse):
     """Stores a user's response to a checkbox question.
 
     Stores a user's response to a checkbox question (CheckboxQuestion
@@ -161,21 +162,21 @@ class MultipleChoiceAnswer(ResponseAnswer):
     Attributes
     ----------
     choices
-        A set of the chosen answers for this question, (ChoiceAnswer
+        A set of the chosen answers for this question, (ChoiceResponse
         model)
     """
 
     ### Attributes defined implicitly (reverse-FK relationships)
-    # choices (ChoiceAnswer objects)
+    # choices (ChoiceResponse objects)
 
     def __str__(self):
-        return "<MultipleChoiceAnswer: Response=" + self.response.name + \
+        return "<CheckboxResponse: Response=" + self.response.name + \
                 ", Choices=[" + ", ".join(choice.choice.primary_text for choice in self.choices.all()) + "]>"
 
 
 
 
-class ChoiceAnswer(models.Model):
+class ChoiceResponse(models.Model):
     """Represents one of a user's chosen answers to a Checkbox question.
 
     Represents one of a user's chosen answers to a Checkbox question.
@@ -185,13 +186,13 @@ class ChoiceAnswer(models.Model):
     choice : ForeignKey
         The Choice model chosen as this answer.
     answer : ForeignKey
-        The ResponseAnswer associated with the question this choice
+        The QuestionResponse associated with the question this choice
         belongs to.
     """
 
     choice = models.ForeignKey('Choice', null=False,
             related_name="picks", on_delete=models.CASCADE)
-    answer = models.ForeignKey('MultipleChoiceAnswer', null=False,
+    answer = models.ForeignKey('CheckboxResponse', null=False,
             related_name="choices", on_delete=models.CASCADE)
 
 
@@ -200,22 +201,22 @@ class ChoiceAnswer(models.Model):
 
         Raises ValidationErrors if the choice this model is
         associated with does not belong to the question that the given
-        ResponseAnswer is associated with.
+        QuestionResponse is associated with.
         """
         try:
             self.answer
         except:
-            raise ValidationError("A ChoiceAnswer was created without \
-                    giving it an associated ResponseAnswer")
+            raise ValidationError("A ChoiceResponse was created without \
+                    giving it an associated QuestionResponse")
 
         try:
             self.choice
         except:
-            raise ValidationError("A ChoiceAnswer was created without \
+            raise ValidationError("A ChoiceResponse was created without \
                     giving it a choice (Choice)")
 
         if self.choice not in self.answer.question.choices.all():
-            raise ValidationError("A ChoiceAnswer was created that \
+            raise ValidationError("A ChoiceResponse was created that \
                     chooses a Choice not in the question it \
                     is responding to")
 
@@ -228,17 +229,17 @@ class ChoiceAnswer(models.Model):
         set up properly, as checked by clean().
         """
         self.clean()
-        super(ChoiceAnswer, self).save(*args, **kwargs)
+        super(ChoiceResponse, self).save(*args, **kwargs)
 
 
     def __str__(self):
-        return "<ChoiceAnswer: Response=" + self.answer.response.name + \
+        return "<ChoiceResponse: Response=" + self.answer.response.name + \
                 ", Question=" + self.answer.question.text + \
                 ", Choice=" + self.choice.primary_text + ">"
 
 
 
-class SliderAnswer(ResponseAnswer):
+class SliderResponse(QuestionResponse):
     """Stores a user's response to a slider question.
 
     Stores a user's response to a slider question (SliderQuestion
@@ -253,7 +254,7 @@ class SliderAnswer(ResponseAnswer):
 
 
     def __str__(self):
-        return "<SliderAnswer: Response=" + str(self.response.name) + \
+        return "<SliderResponse: Response=" + str(self.response.name) + \
                 ", Question=" + str(self.question.text) + \
                 ", Answer=" + str(self.answer) + ">"
                 

@@ -138,7 +138,7 @@ class Question(PolymorphicModel):
 
     See Also
     --------
-    MultipleChoiceQuestion, SliderQuestion
+    CheckboxQuestion, SliderQuestion
     """
 
     # Overrides the QuerySet so that delete() below is called when
@@ -159,7 +159,7 @@ class Question(PolymorphicModel):
 
 
 
-class MultipleChoiceQuestion(Question):
+class CheckboxQuestion(Question):
     """Stores a checkbox question with multiple Choices.
 
     Holds data about a checkbox question in a quiz (associated with the
@@ -194,7 +194,7 @@ class MultipleChoiceQuestion(Question):
 
         # TODO This isn't strictly necessary. Why do this?
         if not choices:
-            raise ValidationError('Multiple Choice Question: none of the choices are marked as the correct answer')
+            raise ValidationError('Checkbox Question: none of the choices are marked as the correct answer')
 
         return choices
 
@@ -205,8 +205,7 @@ class MultipleChoiceQuestion(Question):
         return self.choices.filter(answer=False)
 
 
-    #TODO Rename to Checkbox 
-    def is_checklist_question(self):
+    def is_mc_question(self):
         """Returns whether the question is a multiple choice question.
 
         Returns true if the question has multiple correct answers,
@@ -220,7 +219,7 @@ class MultipleChoiceQuestion(Question):
         """
 
         choices = self.answers()
-        if len(choices) > 1:
+        if len(choices) == 1:
             return True
         return False
 
@@ -242,7 +241,7 @@ class MultipleChoiceQuestion(Question):
             "id": self.id,
             "text": self.text,
             "choices": choices,
-            "type": ("check" if self.is_checklist_question() else "mc")
+            "type": ("mc" if self.is_mc_question() else "check")
         }
 
 
@@ -268,7 +267,7 @@ class MultipleChoiceQuestion(Question):
 
 
     def __str__(self):
-        return "<MultipleChoiceQuestion: " + self.text + \
+        return "<CheckboxQuestion: " + self.text + \
             ", Choices=[" + ", ".join( \
             (choice.primary_text + (" (answer)" if choice.answer else "")) \
             for choice in self.choices.all()) + "]>"
@@ -288,7 +287,7 @@ class Choice(models.Model):
     Attributes
     ----------
     question : ForeignKey
-        The associated MultipleChoiceQuestion object.
+        The associated CheckboxQuestion object.
     answer : BooleanField
         Whether the Choice is a correct answer or not.
     primary_text : CharField
@@ -300,7 +299,7 @@ class Choice(models.Model):
         (response.ChoiceAnswer objects)
     """
 
-    question = models.ForeignKey("MultipleChoiceQuestion", null=False,
+    question = models.ForeignKey("CheckboxQuestion", null=False,
             related_name="choices", on_delete=models.CASCADE)
 
     answer = models.BooleanField(default=False)
@@ -347,7 +346,7 @@ class Choice(models.Model):
         Parameters
         ----------
         question : quiz.Question
-            The checkbox question model object that owns these choices.
+            The CheckboxQuestion model object that owns these choices.
         albums : list
             A list of albums, each being JSON in Spotify API format.
         answer : bool
@@ -373,7 +372,7 @@ class Choice(models.Model):
         Parameters
         ----------
         question : quiz.Question
-            The checkbox question model object that owns this choice.
+            The CheckboxQuestion model object that owns this choice.
         album : dict 
             Album JSON data in the Spotify API format.
         answer : bool
@@ -403,7 +402,7 @@ class Choice(models.Model):
         Parameters
         ----------
         question : quiz.Question
-            The checkbox question model object that owns these choices.
+            The CheckboxQuestion model object that owns these choices.
         artists : list
             A list of artists, each being JSON in Spotify API format.
         answer : bool
@@ -429,7 +428,7 @@ class Choice(models.Model):
         Parameters
         ----------
         question : quiz.Question
-            The checkbox question model object that owns this choice.
+            The CheckboxQuestion model object that owns this choice.
         artist : dict 
             Artist JSON data in the Spotify API format.
         answer : bool
@@ -458,7 +457,7 @@ class Choice(models.Model):
         Parameters
         ----------
         question : quiz.Question
-            The checkbox question model object that owns these choices.
+            The CheckboxQuestion model object that owns these choices.
         tracks : list
             A list of tracks, each being JSON in Spotify API format.
         answer : bool
@@ -484,7 +483,7 @@ class Choice(models.Model):
         Parameters
         ----------
         question : quiz.Question
-            The checkbox question model object that owns this choice.
+            The CheckboxQuestion model object that owns this choice.
         track : dict 
             Track JSON data in the Spotify API format.
         answer : bool
@@ -513,7 +512,7 @@ class Choice(models.Model):
         Parameters
         ----------
         question : quiz.Question
-            The checkbox question model object that owns these choices.
+            The CheckboxQuestion model object that owns these choices.
         genres : list
             A list of genres, each being a str.
         answer : bool
@@ -538,7 +537,7 @@ class Choice(models.Model):
         Parameters
         ----------
         question : quiz.Question
-            The checkbox question model object that owns this choice.
+            The CheckboxQuestion model object that owns this choice.
         genre : str
             The genre
         answer : bool
@@ -567,7 +566,7 @@ class Choice(models.Model):
         Parameters
         ----------
         question : quiz.Question
-            The checkbox question model object that owns these choices.
+            The CheckboxQuestion model object that owns these choices.
         playlists : list
             A list of playlists, each being JSON in Spotify API format.
         answer : bool
@@ -593,7 +592,7 @@ class Choice(models.Model):
         Parameters
         ----------
         question : quiz.Question
-            The checkbox question model object that owns this choice.
+            The CheckboxQuestion model object that owns this choice.
         playlist : dict 
             Playlist JSON data in the Spotify API format.
         answer : bool

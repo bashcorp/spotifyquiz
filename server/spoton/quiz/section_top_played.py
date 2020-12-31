@@ -58,7 +58,7 @@ def question_top_track(quiz, user_data, time_range):
 
     # Create the database items at the end, once all the data has been
     # successfully assembled.
-    question = MultipleChoiceQuestion.objects.create(quiz=quiz, text="What is their most listened to track in the last 6 months?")
+    question = CheckboxQuestion.objects.create(quiz=quiz, text="What is their most listened to track in the last 6 months?")
 
     # Create correct choice and three other random choices 
     Choice.create_track_choice(question, top_track, answer=True)
@@ -70,7 +70,7 @@ def question_top_track(quiz, user_data, time_range):
      
 def question_top_artist(quiz, user_data, time_range):
     """
-    A MultipleChoiceQuestion: what is the user's most listened to artist
+    A CheckboxQuestion: what is the user's most listened to artist
     of the past 6 months.
     """
     top_artists = user_data.top_artists(time_range)
@@ -88,7 +88,7 @@ def question_top_artist(quiz, user_data, time_range):
 
     # Create the database items at the end, once all the data has been
     # successfully assembled.
-    question = MultipleChoiceQuestion.objects.create(quiz=quiz, text="What is their most listened to artist in the last 6 months?")
+    question = CheckboxQuestion.objects.create(quiz=quiz, text="What is their most listened to artist in the last 6 months?")
 
     # Create correct choice and three random choices
     Choice.create_artist_choice(question, top_artist, answer=True)
@@ -125,7 +125,7 @@ def question_top_genre(quiz, user_data, time_range):
     random_choices = [l[random.randint(0, len(l)-1)] for l in random_choice_lists]
 
     # Create the models
-    question = MultipleChoiceQuestion.objects.create(quiz=quiz, text="What is their most listened to genre in the last 6 months?")
+    question = CheckboxQuestion.objects.create(quiz=quiz, text="What is their most listened to genre in the last 6 months?")
 
     Choice.create_genre_choice(question, top_genre, answer=True)
     Choice.create_genre_choices(question, random_choices)
