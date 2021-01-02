@@ -116,17 +116,6 @@ class QuestionResponse(PolymorphicModel):
         associated with does not belong to the quiz that the given
         response is associated with.
         """
-        try:
-            self.question
-        except:
-            raise ValidationError("A QuestionResponse was created without \
-                    giving it an associated Question.")
-
-        try:
-            self.response
-        except:
-            raise ValidationError("A QuestionResponse was created without \
-                    giving it an associated Response.")
 
         if self.question not in self.response.quiz.questions.all():
             raise ValidationError("Question " + str(self.question) + \
@@ -203,17 +192,6 @@ class ChoiceResponse(models.Model):
         associated with does not belong to the question that the given
         QuestionResponse is associated with.
         """
-        try:
-            self.answer
-        except:
-            raise ValidationError("A ChoiceResponse was created without \
-                    giving it an associated QuestionResponse")
-
-        try:
-            self.choice
-        except:
-            raise ValidationError("A ChoiceResponse was created without \
-                    giving it a choice (Choice)")
 
         if self.choice not in self.answer.question.choices.all():
             raise ValidationError("A ChoiceResponse was created that \

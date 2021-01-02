@@ -47,53 +47,6 @@ class ParentFieldsAreRequiredTests(TransactionTestCase):
         self.assertRaises(IntegrityError, Response.objects.create)
 
 
-    def test_answer_has_no_response(self):
-        """
-        Trying to create a QuestionResponse with no associated Response
-        should raise an error.
-        """
-        quiz = Quiz.objects.create(user_id='cassius')
-        q = Question.objects.create(quiz=quiz)
-        self.assertRaises(ValidationError, QuestionResponse.objects.create, question=q)
-        self.assertRaises(ValidationError, CheckboxResponse.objects.create, question=q)
-        self.assertRaises(ValidationError, SliderResponse.objects.create, question=q)
-        
-
-    def test_answer_has_no_question(self):
-        """
-        Trying to create a QuestionResponse with no associated Question
-        should raise an error.
-        """
-        quiz = Quiz.objects.create(user_id='cassius')
-        r = Response.objects.create(quiz=quiz)
-        self.assertRaises(ValidationError, QuestionResponse.objects.create, response=r)
-        self.assertRaises(ValidationError, CheckboxResponse.objects.create, response=r)
-        self.assertRaises(ValidationError, SliderResponse.objects.create, response=r)
-
-
-    def test_response_choice_has_no_answer(self):
-        """
-        Trying to create a ChoiceResponse with no associated
-        CheckboxResponse should raise an error.
-        """
-        quiz = Quiz.objects.create(user_id='cassius')
-        q = CheckboxQuestion.objects.create(quiz=quiz)
-        c = Choice.objects.create(question=q)
-        self.assertRaises(ValidationError, ChoiceResponse.objects.create, choice=c)
-
-
-    def test_response_choice_has_no_choice(self):
-        """
-        Trying to create a ChoiceResponse with no associated Choice
-        should raise an error.
-        """
-        quiz = Quiz.objects.create(user_id='cassius')
-        question = CheckboxQuestion.objects.create(quiz=quiz)
-        choice = Choice.objects.create(question=question)
-        response = Response.objects.create(quiz=quiz)
-        answer = CheckboxResponse.objects.create(response=response, question=question)
-        self.assertRaises(ValidationError, ChoiceResponse.objects.create, answer=answer)
-
 
 
 class ModelsContainProperLists(TransactionTestCase):
