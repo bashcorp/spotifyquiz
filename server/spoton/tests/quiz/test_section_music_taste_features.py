@@ -5,6 +5,8 @@ from spoton.quiz import UserData
 from spoton.tests.setup_tests import create_authorized_session
 from spoton.quiz.section_music_taste_features import *
 
+import datetime
+
 
 class QuestionExplicitnessTests(StaticLiveServerTestCase):
     """
@@ -742,8 +744,10 @@ class QuestionAverageReleaseDateTests(StaticLiveServerTestCase):
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_average_release_date(quiz, u)
 
+        curr_year = datetime.datetime.now().year
+
         self.assertEqual(question.slider_min, 2006)
-        self.assertEqual(question.slider_max, 2020)
+        self.assertEqual(question.slider_max, curr_year)
         self.assertEqual(question.answer, avg)
 
 
@@ -768,8 +772,10 @@ class QuestionAverageReleaseDateTests(StaticLiveServerTestCase):
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_average_release_date(quiz, u)
 
+        curr_year = datetime.datetime.now().year
+
         self.assertEqual(question.slider_min, 2008)
-        self.assertEqual(question.slider_max, 2020)
+        self.assertEqual(question.slider_max, curr_year)
         self.assertEqual(question.answer, avg)
 
 
