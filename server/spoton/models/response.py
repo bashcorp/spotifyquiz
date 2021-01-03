@@ -10,16 +10,19 @@ from polymorphic.query import PolymorphicQuerySet
 
 import uuid
 
-from .quiz import *
+from . import quiz
 from .utils import *
 
 
-class Response(models.Model):
+class Response(CleanOnSaveMixin, models.Model):
     """Stores a user's response to a certain quiz.
 
     Stores a user's response to a quiz (their answers to the
     questions). Should hold a QuestionResponse object for each
     question of the quiz.
+
+    Uses the CleanOnSaveMixin so that objects will be validated before
+    they are saved.
 
     Attributes
     ----------
@@ -41,7 +44,7 @@ class Response(models.Model):
     objects = PolyOwnerQuerySet.as_manager()
 
     # The user's name
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, default="Ben")
 
     quiz = models.ForeignKey('Quiz', related_name='responses', null=False,
             on_delete=models.CASCADE)    
@@ -77,13 +80,16 @@ class Response(models.Model):
 
 
 
-class QuestionResponse(PolymorphicModel):
+class QuestionResponse(CleanOnSaveMixin, PolymorphicModel):
     """Stores the response to one quiz question, should be subclassed.
 
     Holds data about a user's response to a quiz question (Question
     model). This is a PolymorphicModel, which means it's a general
     question response model. Subclasses should implement responses for
     different types of questions.
+
+    Uses the CleanOnSaveMixin so that objects will be validated before
+    they are saved.
 
     Attributes
     ----------
@@ -118,21 +124,14 @@ class QuestionResponse(PolymorphicModel):
         response is associated with.
         """
 
+        super().clean()
+
         if self.question not in self.response.quiz.questions.all():
-            raise ValidationError("Question " + str(self.question) + \
-                "is in Response " + str(self.response) + \
-                ", but not in the associated quiz.")
-        
-
-    def save(self, *args, **kwargs):
-        """(overridden) saves model to the database, checks for errors
-
-        Overrides the save() function that saves this object to the
-        data tables. Ensure that the object is only saved if it is
-        set up properly, as checked by clean().
-        """
-        self.clean()
-        super(QuestionResponse, self).save(*args, **kwargs)
+            raise ValidationError(
+                    "Tried to add a Question to a Response, but the "
+                    "question isn't in the quiz that belongs to "
+                    "the response."
+            )
 
 
     def __str__(self):
@@ -157,6 +156,22 @@ class CheckboxResponse(QuestionResponse):
 
     ### Attributes defined implicitly (reverse-FK relationships)
     choices = models.ManyToManyField('Choice', related_name='choice_responses')
+
+    def clean(self):
+        """Ensures attributes are valid and raises errors if not.
+
+        Raises ValidationErrors if the question field is not a
+        CheckboxQuestion.
+        """
+
+        super().clean()
+
+        if not isinstance(self.question, quiz.CheckboxQuestion):
+            raise ValidationError(
+                    "Question given to CheckboxResponse is not a "
+                    "CheckboxQuestion."
+            )
+
 
     def __str__(self):
         return "<CheckboxResponse: Response=" + self.response.name + \
@@ -196,6 +211,22 @@ class SliderResponse(QuestionResponse):
         The number value the user chose as their answer.
     """
     answer = models.IntegerField()
+
+
+    def clean(self):
+        """Ensures attributes are valid and raises errors if not.
+
+        Raises ValidationErrors if the question field is not a
+        SliderQuestion.
+        """
+
+        super().clean()
+
+        if not isinstance(self.question, quiz.SliderQuestion):
+            raise ValidationError(
+                    "Question given to SliderResponse is not a "
+                    "SliderQuestion."
+            )
 
 
     def __str__(self):

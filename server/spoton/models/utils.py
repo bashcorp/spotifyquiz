@@ -1,7 +1,21 @@
 """Miscellaneous models used by the Spotify quiz models."""
 
 from django.db import models
+from polymorphic.models import PolymorphicModel
 from polymorphic.query import PolymorphicQuerySet
+
+
+class CleanOnSaveMixin:
+    """A mixin to for Model classes that cleans models before saving.
+
+    A mixin for any Django Model class or subclass that cleans the
+    models before saving them, so that when models are saved, their
+    fields are validated.
+    """
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)
+
 
 
 class PolyOwnerQuerySet(models.QuerySet):

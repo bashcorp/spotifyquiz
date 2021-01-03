@@ -27,9 +27,9 @@ class ParentFieldsAreRequiredTests(TransactionTestCase):
         Trying to create a Question without giving it a Quiz to be associated with should
         raise an error.
         """
-        self.assertRaises(IntegrityError, Question.objects.create)
-        self.assertRaises(IntegrityError, CheckboxQuestion.objects.create)
-        self.assertRaises(IntegrityError, SliderQuestion.objects.create)
+        self.assertRaises(ValidationError, Question.objects.create)
+        self.assertRaises(ValidationError, CheckboxQuestion.objects.create)
+        self.assertRaises(ValidationError, SliderQuestion.objects.create)
 
 
     def test_choice_has_no_mc_question(self):
@@ -37,7 +37,7 @@ class ParentFieldsAreRequiredTests(TransactionTestCase):
         Trying to create a Choice without no associated
         CheckboxQuestion should raise an error.
         """
-        self.assertRaises(IntegrityError, Choice.objects.create)
+        self.assertRaises(ValidationError, Choice.objects.create)
 
 
     def test_response_has_no_quiz(self):
@@ -45,7 +45,7 @@ class ParentFieldsAreRequiredTests(TransactionTestCase):
         Trying to create Response with no associated Quiz should raise an
         error.
         """
-        self.assertRaises(IntegrityError, Response.objects.create)
+        self.assertRaises(ValidationError, Response.objects.create)
 
 
 
@@ -314,7 +314,7 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
             'name': 'Album',
             'artists': [{'name': 'Cash'}]
         }
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id="cash")
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = Choice.create_album_choice(question=question, album=album)
 
@@ -341,8 +341,8 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
             'name': 'Album',
             'artists': [{'name': 'Cash'}]
         }
-        quiz = Quiz.objects.create()
-        question = CheckboxQuestion.objects.create(quiz=quiz)
+        q = Quiz.objects.create(user_id="cash")
+        question = CheckboxQuestion.objects.create(quiz=q)
         ret = Choice.create_album_choice(question=question, album=album, answer=True)
 
         self.assertEquals(ret.primary_text, 'Album')
@@ -375,7 +375,7 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
             },
         ]
 
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id="cash")
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = Choice.create_album_choices(question=question, albums=albums)
 
@@ -413,7 +413,7 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
             },
         ]
 
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id="cash")
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = Choice.create_album_choices(question=question, albums=albums, answer=True)
 
@@ -443,7 +443,7 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         artist = {
             'name': 'Bon Jovi'
         }
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id="cash")
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = Choice.create_artist_choice(question=question, artist=artist)
 
@@ -469,7 +469,7 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         artist = {
             'name': 'Bon Jovi'
         }
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id="cash")
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = Choice.create_artist_choice(question=question, artist=artist, answer=True)
 
@@ -498,7 +498,7 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         { 'name': 'Bon Jamin' },
         ]
 
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id="cash")
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = Choice.create_artist_choices(question=question, artists=artists)
 
@@ -531,7 +531,7 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         { 'name': 'Bon Jamin' },
         ]
 
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id="cash")
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = Choice.create_artist_choices(question=question, artists=artists, answer=True)
         
@@ -562,7 +562,7 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
             'name': 'YGLABN',
             'artists': [{'name': 'Bon Jovi'}, {'name': 'Unknown'}]
         }
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id="cash")
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = Choice.create_track_choice(question=question, track=track)
 
@@ -589,7 +589,7 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
             'name': 'YGLABN',
             'artists': [{'name': 'Bon Jovi'}, {'name': 'Unknown'}]
         }
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id="cash")
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = Choice.create_track_choice(question=question, track=track, answer=True)
 
@@ -622,7 +622,7 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
             'artists': [{'name': 'Cassius'}, {'name': 'Ben Jamin'}]
         }]
 
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id="cash")
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = Choice.create_track_choices(question=question, tracks=tracks)
 
@@ -659,7 +659,7 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
             'artists': [{'name': 'Cassius'}, {'name': 'Ben Jamin'}]
         }]
 
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id="cash")
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = Choice.create_track_choices(question=question, tracks=tracks, answer=True)
 
@@ -687,7 +687,7 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         set the Choice's answer field to the argument 'answer'.
         """
         genre = "Pop"
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id="cash")
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = Choice.create_genre_choice(question=question, genre=genre)
 
@@ -711,7 +711,7 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         set the Choice's answer field to the argument 'answer'.
         """
         genre = "Pop"
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id="cash")
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = Choice.create_genre_choice(question=question, genre=genre, answer=True)
 
@@ -736,7 +736,7 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         """
         genres = ["Pop", "Rock"]
 
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id="cash")
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = Choice.create_genre_choices(question=question, genres=genres)
 
@@ -765,7 +765,7 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         """
         genres = ["Pop", "Rock"]
 
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id="cash")
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = Choice.create_genre_choices(question=question, genres=genres, answer=True)
 
@@ -796,7 +796,7 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         playlist = {
             'name': 'Bon Jovi'
         }
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id="cash")
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = Choice.create_playlist_choice(question=question, playlist=playlist)
         
@@ -823,7 +823,7 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         playlist = {
             'name': 'Bon Jovi'
         }
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id="cash")
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = Choice.create_playlist_choice(question=question, playlist=playlist, answer=True)
 
@@ -853,7 +853,7 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         { 'name': 'Bon Jamin' },
         ]
 
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id="cash")
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = Choice.create_playlist_choices(question=question, playlists=playlists)
 
@@ -887,7 +887,7 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         { 'name': 'Bon Jamin' },
         ]
 
-        quiz = Quiz.objects.create()
+        quiz = Quiz.objects.create(user_id="cash")
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = Choice.create_playlist_choices(question=question, playlists=playlists, answer=True)
 
@@ -1063,13 +1063,38 @@ class CheckboxResponseTests(TransactionTestCase):
             answer.choices.add(c2)
     
 
+    def test_wrong_question_type(self):
+        """
+        Creating a CheckboxResponse with a SliderQuestion should raise
+        a ValidationError.
+        """
+
+        quiz = Quiz.objects.create(user_id='cassius')
+        q1 = SliderQuestion.objects.create(quiz=quiz)
+        response = Response.objects.create(quiz=quiz)
+        with self.assertRaises(ValidationError):
+            CheckboxResponse.objects.create(response=response,question=q1)
+
+
 
 class SliderResponseTests(TransactionTestCase):
     """
     A database model that represents a user's answer to a SliderQuestion,
     which is just the user's choice of integer in the question's range.
     """
-    pass
+
+    def test_wrong_question_type(self):
+        """
+        Creating a SliderResponse with a CheckboxQuestion should raise
+        a ValidationError.
+        """
+
+        quiz = Quiz.objects.create(user_id='cassius')
+        q1 = CheckboxQuestion.objects.create(quiz=quiz)
+        response = Response.objects.create(quiz=quiz)
+        with self.assertRaises(ValidationError):
+            SliderResponse.objects.create(response=response,question=q1)
+
 
 
 class DeleteModelsTests(TransactionTestCase):

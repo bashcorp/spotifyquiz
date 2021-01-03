@@ -13,12 +13,15 @@ from .utils import *
 from .response import *
 
 
-class Quiz(models.Model):
+class Quiz(CleanOnSaveMixin, models.Model):
     """Stores questions and responses for quiz on a user's music taste
 
     Stores a quiz associated with a Spotify user about that user's
     music taste and listening history. Contains the quiz's questions
     and the response data of anyone who has taken the quiz.
+
+    Uses the CleanOnSaveMixin so that objects will be validated before
+    they are saved.
 
     Attributes
     ----------
@@ -116,13 +119,16 @@ class Quiz(models.Model):
 
 
 
-class Question(PolymorphicModel):
+class Question(CleanOnSaveMixin, PolymorphicModel):
     """Stores one question in a Quiz, can have multiple subclasses.
 
     Holds data about one question in a quiz (associated with the Quiz
     model). This is a PolymorphicModel, which means it's a general
     question model. Subclasses should implement different types of
     questions.
+
+    Uses the CleanOnSaveMixin so that objects will be validated before
+    they are saved.
 
     Attributes
     ----------
@@ -275,7 +281,7 @@ class CheckboxQuestion(Question):
 
 
 
-class Choice(models.Model):
+class Choice(CleanOnSaveMixin, models.Model):
     """Stores one choice of a checkbox question.
 
     Holds data about one choice in a checkbox question. A choice
@@ -283,6 +289,9 @@ class Choice(models.Model):
     the main answers, and the latter is considered additional
     information. A Choice can be considered a correct or incorrect
     answer.
+
+    Uses the CleanOnSaveMixin so that objects will be validated before
+    they are saved.
 
     Attributes
     ----------
@@ -634,6 +643,7 @@ class SliderQuestion(Question):
     slider_max = models.IntegerField(default=10)
     answer = models.IntegerField(default=5)
 
+
     def clean(self):
         """Ensures attributes are valid and raises errors if not.
 
@@ -642,22 +652,15 @@ class SliderQuestion(Question):
         or if the answer is not between the two.
         """
 
+        super().clean()
+
         if self.slider_min >= self.slider_max:
-            raise ValidationError('Slider Question: minimum value must be less than maximum value')
+            raise ValidationError(
+                    'Minimum slider value must be less than maximum value')
+
         if self.answer < self.slider_min or self.answer > self.slider_max:
-            raise ValidationError('Slider Question: answer must be in between min and max')
-
-
-    def save(self, *args, **kwargs):
-        """(overridden) saves model to the database, checks for errors
-
-        Overrides the save() function that saves this object to the
-        data tables. Ensure that the object is only saved if it is
-        formatted properly, as checked by clean().
-        """
-
-        self.clean()
-        super(SliderQuestion, self).save(*args, **kwargs)
+            raise ValidationError(
+                    'Slider answer must be in between min and max')
 
 
     def json(self):
