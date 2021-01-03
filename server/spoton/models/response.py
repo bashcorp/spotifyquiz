@@ -2,6 +2,7 @@
 
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.dispatch import receiver
 from django.utils.html import format_html_join, format_html
 from polymorphic.managers import PolymorphicManager
 from polymorphic.models import PolymorphicModel
@@ -102,7 +103,7 @@ class QuestionResponse(PolymorphicModel):
     # a set of Responses is deleted.
     objects = PolyOwnerPolymorphicQuerySet.as_manager()
 
-    question = models.ForeignKey('Question', related_name="responses",
+    question = models.ForeignKey('Question', related_name="question_responses",
             null=False, on_delete=models.CASCADE)
 
     response = models.ForeignKey('Response', related_name="answers",
@@ -151,69 +152,35 @@ class CheckboxResponse(QuestionResponse):
     Attributes
     ----------
     choices
-        A set of the chosen answers for this question, (ChoiceResponse
-        model)
+        A set of the chosen answers for this question, (Choice model)
     """
 
     ### Attributes defined implicitly (reverse-FK relationships)
-    # choices (ChoiceResponse objects)
+    choices = models.ManyToManyField('Choice', related_name='choice_responses')
 
     def __str__(self):
         return "<CheckboxResponse: Response=" + self.response.name + \
-                ", Choices=[" + ", ".join(choice.choice.primary_text for choice in self.choices.all()) + "]>"
+                ", Choices=[" + ", ".join(choice.primary_text for choice in self.choices.all()) + "]>"
 
 
-
-
-class ChoiceResponse(models.Model):
-    """Represents one of a user's chosen answers to a Checkbox question.
-
-    Represents one of a user's chosen answers to a Checkbox question.
-
-    Attributes
-    ----------
-    choice : ForeignKey
-        The Choice model chosen as this answer.
-    answer : ForeignKey
-        The QuestionResponse associated with the question this choice
-        belongs to.
+@receiver(models.signals.m2m_changed, sender=CheckboxResponse.choices.through)
+def clean_choices(sender, **kwargs):
+    """Validate when a choice is added to CheckboxResponse
+    
+    A signal handler for the m2m_changed signal, which is sent when the
+    choices field in CheckboxResponse is changed. This will make sure
+    that the added Choice belongs to the CheckboxQuestion that this
+    CheckboxResponse is responding to, and raise a ValidationError if
+    it's not.
     """
 
-    choice = models.ForeignKey('Choice', null=False,
-            related_name="picks", on_delete=models.CASCADE)
-    answer = models.ForeignKey('CheckboxResponse', null=False,
-            related_name="choices", on_delete=models.CASCADE)
-
-
-    def clean(self):
-        """Ensures attributes are valid and raises errors if not.
-
-        Raises ValidationErrors if the choice this model is
-        associated with does not belong to the question that the given
-        QuestionResponse is associated with.
-        """
-
-        if self.choice not in self.answer.question.choices.all():
-            raise ValidationError("A ChoiceResponse was created that \
-                    chooses a Choice not in the question it \
-                    is responding to")
-
-
-    def save(self, *args, **kwargs):
-        """(overridden) saves model to the database, checks for errors
-
-        Overrides the save() function that saves this object to the
-        data tables. Ensure that the object is only saved if it is
-        set up properly, as checked by clean().
-        """
-        self.clean()
-        super(ChoiceResponse, self).save(*args, **kwargs)
-
-
-    def __str__(self):
-        return "<ChoiceResponse: Response=" + self.answer.response.name + \
-                ", Question=" + self.answer.question.text + \
-                ", Choice=" + self.choice.primary_text + ">"
+    instance = kwargs['instance']
+    for c in instance.choices.all():
+        if c not in instance.question.choices.all():
+            raise ValidationError(
+                    "Tried to add a Choice to a CheckboxResponse that " +
+                    "doesn't belong to the CheckboxQuestion the " +
+                    "CheckboxResponse is to.")
 
 
 

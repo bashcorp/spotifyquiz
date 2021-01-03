@@ -3,6 +3,7 @@ import uuid
 from django.test import TestCase, TransactionTestCase
 from django.core.exceptions import ValidationError,ObjectDoesNotExist
 from django.db import transaction
+from django.db.models.signals import m2m_changed
 from django.db.utils import OperationalError,IntegrityError
 
 from spoton.models.quiz import *
@@ -45,108 +46,6 @@ class ParentFieldsAreRequiredTests(TransactionTestCase):
         error.
         """
         self.assertRaises(IntegrityError, Response.objects.create)
-
-
-
-
-class ModelsContainProperLists(TransactionTestCase):
-    """
-    These tests make sure that the reverse foreign key relationships are
-    working and named properly. An example is with Question. Each Question
-    holds a ForeignKey that links it to a specific Quiz. From a given Quiz
-    objects, you can get a list of it's questions by reversing that
-    relationship.
-    """
-
-    # Load already existing data for testing
-    fixtures = ['tests_data.json']
-
-    def test_quizzes_have_proper_questions(self): 
-        """
-        A Quiz object should have a reverse ForeignKey relationship called
-        'questions' that has all of its Question objects.
-        """
-        quiz1 = Quiz.objects.all()[1]
-        quiz2 = Quiz.objects.all()[0]
-
-        set1 = Question.objects.filter(id__in=[1,2,3,4])
-        set2 = Question.objects.filter(id__in=[5,6,7])
-
-        self.assertCountEqual(quiz1.questions.all(), set1)
-        self.assertCountEqual(quiz2.questions.all(), set2)
-
-
-    def test_questions_have_proper_choices(self):
-        """
-        A Question object should have a reverse ForeignKey relationship called
-        'choices' that has all of its Choice objects.
-        """
-
-        question1 = Question.objects.filter(id=3)[0]
-        question2 = Question.objects.filter(id=4)[0]
-        question3 = Question.objects.filter(id=6)[0]
-        question4 = Question.objects.filter(id=7)[0]
-
-        set1 = Choice.objects.filter(id__in=[1,2,3,4])
-        set2 = Choice.objects.filter(id__in=[5,6,7,8])
-        set3 = Choice.objects.filter(id__in=[9,10,11,12])
-        set4 = Choice.objects.filter(id__in=[13,14,15,16])
-
-        self.assertCountEqual(question1.choices.all(), set1)
-        self.assertCountEqual(question2.choices.all(), set2)
-        self.assertCountEqual(question3.choices.all(), set3)
-        self.assertCountEqual(question4.choices.all(), set4)
-
-
-    def test_quizzes_have_proper_responses(self):
-        """
-        A Quiz object should have a reverse ForeignKey relationship called
-        'responses' that has all of its Response objects.
-        """
-        quiz1 = Quiz.objects.all()[1]
-        quiz2 = Quiz.objects.all()[0]
-
-        set1 = Response.objects.filter(id=1)
-        set2 = Response.objects.filter(id=2)
-
-        self.assertCountEqual(quiz1.responses.all(), set1)
-        self.assertCountEqual(quiz2.responses.all(), set2)
-
-
-    def test_responses_have_proper_questions(self):
-        """
-        A Response object should have a reverse ForeignKey relationship called
-        'answers' that has all of its QuestionResponse objects.
-        """
-        response1 = Response.objects.filter(id=1)[0]
-        response2 = Response.objects.filter(id=2)[0]
-
-        set1 = QuestionResponse.objects.filter(id__in=[1,2,3,4])
-        set2 = QuestionResponse.objects.filter(id__in=[5,6,7])
-
-        self.assertCountEqual(response1.answers.all(), set1)
-        self.assertCountEqual(response2.answers.all(), set2)
-
-
-    def test_response_choice_answers_have_proper_choices(self):
-        """
-        A CheckboxResponse should have a reverse ForeignKey relationship
-        called 'choices' that has all of its ChoiceResponse objects.
-        """
-        answer1 = CheckboxResponse.objects.filter(id=3)[0]
-        answer2 = CheckboxResponse.objects.filter(id=4)[0]
-        answer3 = CheckboxResponse.objects.filter(id=6)[0]
-        answer4 = CheckboxResponse.objects.filter(id=7)[0]
-
-        set1 = ChoiceResponse.objects.filter(id=1)
-        set2 = ChoiceResponse.objects.filter(id=2)
-        set3 = ChoiceResponse.objects.filter(id__in=[3,4])
-        set4 = ChoiceResponse.objects.filter(id=5)
-
-        self.assertCountEqual(answer1.choices.all(), set1)
-        self.assertCountEqual(answer2.choices.all(), set2)
-        self.assertCountEqual(answer3.choices.all(), set3)
-        self.assertCountEqual(answer4.choices.all(), set4)
 
 
 
@@ -1129,22 +1028,30 @@ class CheckboxResponseTests(TransactionTestCase):
     CheckboxQuestion. A user can have selected multiple
     of the question's choices.
     """
-    pass
 
-
-class ChoiceResponseTests(TransactionTestCase):
-    """
-    A database model that represents one specific choice in a
-    CheckboxResponse. A user can pick multiple of these as their answers.
-    """
-
-    def test_choice_answer_has_invalid_choice(self):
+    def test_add_choice(self):
         """
-        When you create a CheckboxResponse, you give it one or more
-        ChoiceResponses that represent which choices the user picked. If one
-        of those ChoiceResponses represents a choice that is not in the question,
-        an error should be raised.
+        After the CheckboxResponse object is saved to the database,
+        you should be able to add Choices from the associated question
+        to the response's list of selected choices.
         """
+
+        quiz = Quiz.objects.create(user_id='cassius')
+        q1 = CheckboxQuestion.objects.create(quiz=quiz)
+        c1 = Choice.objects.create(question=q1)
+        c2 = Choice.objects.create(question=q1)
+        response = Response.objects.create(quiz=quiz)
+        answer = CheckboxResponse.objects.create(response=response, question=q1)
+        answer.choices.add(c1)
+        answer.choices.add(c2)
+
+
+    def test_add_invalid_choice(self):
+        """
+        Adding a Choice from a different question to a CheckboxResponse
+        should raise a ValidationError.
+        """
+
         quiz = Quiz.objects.create(user_id='cassius')
         q1 = CheckboxQuestion.objects.create(quiz=quiz)
         q2 = CheckboxQuestion.objects.create(quiz=quiz)
@@ -1152,7 +1059,8 @@ class ChoiceResponseTests(TransactionTestCase):
         c2 = Choice.objects.create(question=q2)
         response = Response.objects.create(quiz=quiz)
         answer = CheckboxResponse.objects.create(response=response,question=q1)
-        self.assertRaises(ValidationError, ChoiceResponse.objects.create, answer=answer, choice=c2)
+        with self.assertRaises(ValidationError):
+            answer.choices.add(c2)
     
 
 
@@ -1165,115 +1073,72 @@ class SliderResponseTests(TransactionTestCase):
 
 
 class DeleteModelsTests(TransactionTestCase):
-    """
-    Tests that when deleting an object, the proper objects are also deleted.
+    """Tests that deleting models delete the proper associated objects.
+
+    These tests ensure that when model objects are deleted, the proper
+    associated models are deleted or preserved. For example, deleting
+    a user's response to a quiz should not delete the quiz itself.
     """
 
     fixtures = ['tests_data.json']
 
-    def test_delete_quiz(self):
+    @classmethod
+    def setUpClass(cls):
         """
-        Deleting a quiz should delete all data associated with it
+        Disconnect the m2m signal handler before the fixture is loaded,
+        because it messes up when loading a fixture.
         """
-        # Compile refrences to associated objects
-        quiz = Quiz.objects.all()[0]
-        questions = quiz.questions.all()
-        choices = []
-        for q in CheckboxQuestion.objects.filter(quiz=quiz):
-            choices.extend(q.choices.all())
-        responses = quiz.responses.all()
 
-        # Compile list of all answers, and just checkbox answers,
-        # so can get all mc answer choices with a filter.
-        # This is because filtering with django-polymorphic will break
-        # if answer__in holds a QuestionResponse that is not the right
-        # subclass.
-        answers = []
-        mc_answers = []
-        for r in responses:
-            answers.extend(r.answers.all())
-            for a in r.answers.all():
-                if isinstance(a, CheckboxResponse):
-                    mc_answers.append(a)
-        answer_choices = ChoiceResponse.objects.filter(answer__in=mc_answers)
+        super(DeleteModelsTests, cls).setUpClass()
+        m2m_changed.disconnect(clean_choices)
 
 
-        quiz.delete()
-
-        # Check that all associated objects do not exist, unless they should
-        self.assertFalse(Quiz.objects.filter(user_id=quiz.user_id).exists())
-        for q in questions:
-            self.assertFalse(Question.objects.filter(id=q.id).exists())
-        for c in choices:
-            self.assertFalse(Choice.objects.filter(id=c.id).exists())
-        for r in responses:
-            self.assertFalse(Response.objects.filter(id=r.id).exists())
-        for a in answers:
-            self.assertFalse(QuestionResponse.objects.filter(id=a.id).exists())
-        for c in answer_choices:
-            self.assertFalse(ChoiceResponse.objects.filter(id=c.id).exists())
-
-
-    def test_delete_all_quizzes(self):
+    @classmethod
+    def tearDownClass(cls):
         """
-        Deleting all the quizzes as a QuerySet should delete each quiz
-        and associated data.
+        Reconnect the m2m signal handler once the tests are finished.
         """
+        m2m_changed.connect(clean_choices)
+        super(DeleteModelsTests, cls).tearDownClass()
+
+
+    def test_delete_quizzes(self):
+        """
+        Deleting a Quiz should also delete its associated questions and
+        responses.
+        """
+
         Quiz.objects.all().delete()
 
         self.assertEquals(Quiz.objects.count(), 0)
         self.assertEquals(Question.objects.count(), 0)
-        self.assertEquals(Choice.objects.count(), 0)
         self.assertEquals(Response.objects.count(), 0)
-        self.assertEquals(QuestionResponse.objects.count(), 0)
-        self.assertEquals(ChoiceResponse.objects.count(), 0)
 
 
-    def test_delete_all_questions(self):
+    def test_delete_questions(self):
         """
-        Deleting every question should delete each question's associated
-        responses and choices, if appropriate.
+        Deleting a Question should also delete its associated
+        QuestionResponses, as well as any other associated models (like
+        Choice), but not delete the Quiz it belongs to.
         """
+        
         quiz_count = Quiz.objects.count()
-        response_count = Response.objects.count()
 
         Question.objects.all().delete()
 
         self.assertEquals(Quiz.objects.count(), quiz_count)
         self.assertEquals(Question.objects.count(), 0)
         self.assertEquals(Choice.objects.count(), 0)
-        self.assertEquals(Response.objects.count(), response_count)
         self.assertEquals(QuestionResponse.objects.count(), 0)
-        self.assertEquals(ChoiceResponse.objects.count(), 0)
 
 
-    def test_delete_mc_question(self):
+    def test_delete_checkbox_questions(self):
         """
-        Deleting a CheckboxQuestion should also delete all of its choices
-        and any associated QuestionResponse objects.
+        Deleting a CheckboxQuestion should also delete its associated
+        CheckboxResponses and Choices, but not delete the Quiz it
+        belongs to.
         """
-        # Compile refrences to associated objects
-        q = CheckboxQuestion.objects.all()[0]
-        quiz = q.quiz
-        choices = q.choices.all()
-        responses = q.responses.all()
 
-        q.delete()
-
-        # Check that all associated objects do not exist, unless the should
-        self.assertTrue(Quiz.objects.filter(user_id=quiz.user_id).exists())
-        self.assertFalse(Question.objects.filter(id=q.id).exists())
-        for c in choices:
-            self.assertFalse(Choice.objects.filter(id=c.id).exists())
-        for r in responses:
-            self.assertFalse(QuestionResponse.objects.filter(id=r.id).exists())
-
-
-    def test_delete_all_mc_questions(self):
-        """
-        Deleting CheckboxQuestions from a QuerySet should work properly and delete
-        all associated data.
-        """
         quiz_count = Quiz.objects.count()
 
         CheckboxQuestion.objects.all().delete()
@@ -1281,64 +1146,31 @@ class DeleteModelsTests(TransactionTestCase):
         self.assertEquals(CheckboxQuestion.objects.count(), 0)
         self.assertEquals(Choice.objects.count(), 0)
         self.assertEquals(CheckboxResponse.objects.count(), 0)
-        self.assertEquals(ChoiceResponse.objects.count(), 0)
         self.assertEquals(Quiz.objects.count(), quiz_count)
 
 
-    def test_delete_question_choice(self):
+    def test_delete_choices(self):
         """
-        Deleting a question_choice should not delete its related question.
+        Deleting a Choice should not delete its associated
+        CheckboxQuestions or CheckboxResponses.
         """
-        c = Choice.objects.all()[0]
-        question = c.question
-        picks = c.picks.all()
 
-        c.delete()
-
-        self.assertFalse(Choice.objects.filter(id=c.id).exists())
-        self.assertTrue(CheckboxQuestion.objects.filter(id=question.id).exists())
-        for p in picks:
-            self.assertFalse(ChoiceResponse.objects.filter(id=p.id).exists())
-
-
-    def test_delete_all_question_choices(self):
-        """
-        Deleting Choices from a queryset should work properly and should delete
-        all associated data.
-        """
         question_count = Question.objects.count()
+        response_count = QuestionResponse.objects.count()
 
         Choice.objects.all().delete()
 
         self.assertEquals(Choice.objects.count(), 0)
-        self.assertEquals(ChoiceResponse.objects.count(), 0)
         self.assertEquals(Question.objects.count(), question_count)
+        self.assertEquals(QuestionResponse.objects.count(), response_count)
 
 
-    def test_delete_slider_question(self):
+    def test_delete_slider_questions(self):
         """
-        Deleting a SliderQuestion should also delete all of its associated QuestionResponse
-        objects.
+        Deleting a SliderQuestion should also delete its associated
+        SliderResponses, but not the Quiz it belongs to.
         """
-        # Compile refrences to associated objects
-        q = SliderQuestion.objects.all()[0]
-        quiz = q.quiz
-        responses = q.responses.all()
 
-        q.delete()
-
-        # Check that all associated objects do not exist, unless the should
-        self.assertTrue(Quiz.objects.filter(user_id=quiz.user_id).exists())
-        self.assertFalse(Question.objects.filter(id=q.id).exists())
-        for r in responses:
-            self.assertFalse(QuestionResponse.objects.filter(id=r.id).exists())
-
-
-    def test_delete_all_slider_questions(self):
-        """
-        Deleting SliderQuestions from a QuerySet should work properly and delete
-        all associated data.
-        """
         quiz_count = Quiz.objects.count()
 
         SliderQuestion.objects.all().delete()
@@ -1348,113 +1180,63 @@ class DeleteModelsTests(TransactionTestCase):
         self.assertEquals(Quiz.objects.count(), quiz_count)
 
 
-    def test_delete_response(self):
+    def test_delete_responses(self):
         """
-        Deleting a Response should also delete all of its QuestionResponse objects.
+        Deleting a Response should also delete its QuestionResponses,
+        but not the Quiz it responds to.
         """
-        # Compile refrences to associated objects
-        r = Response.objects.all()[0]
-        quiz = r.quiz
-        answers = r.answers.all()
 
-        r.delete()
-
-        # Check that all associated objects do not exist, unless the should
-        self.assertTrue(Quiz.objects.filter(user_id=quiz.user_id).exists())
-        self.assertFalse(Response.objects.filter(id=r.id).exists())
-        for a in answers:
-            self.assertFalse(QuestionResponse.objects.filter(id=a.id).exists())
-
-
-    def test_delete_all_responses(self):
-        """
-        Deleting every Response should remove all associated response data 
-        (QuestionResponse, ChoiceResponse)
-        """
         quiz_count = Quiz.objects.count()
+
         Response.objects.all().delete()
 
         self.assertEquals(Response.objects.count(), 0)
         self.assertEquals(QuestionResponse.objects.count(), 0)
-        self.assertEquals(ChoiceResponse.objects.count(), 0)
         self.assertEquals(Quiz.objects.count(), quiz_count)
 
 
-    def test_delete_all_answers(self):
+    def test_delete_question_responses(self):
         """
-        Deleting QuestionResponses from a queryset should work properly and delete all
-        associated data.
+        Deleting a QuestionResponse should not delete the Response it
+        belongs to nor the Question it responds to. It also should not
+        delete any other models it is linked to (like Choice).
         """
+        
         response_count = Response.objects.count()
         question_count = Question.objects.count()
+        choice_count = Choice.objects.count()
 
         QuestionResponse.objects.all().delete()
 
         self.assertEquals(QuestionResponse.objects.count(), 0)
-        self.assertEquals(ChoiceResponse.objects.count(), 0)
         self.assertEquals(Response.objects.count(), response_count)
         self.assertEquals(Question.objects.count(), question_count)
+        self.assertEquals(Choice.objects.count(), choice_count)
 
 
-    def test_delete_mc_answer(self):
+    def test_delete_checkbox_responses(self):
         """
-        Deleting a CheckboxResponse should delete associated ChoiceResponse objects.
+        Deleting a CheckboxResponse should not delete its associated
+        Choices, the Response it belongs to, nor the CheckboxQuestion
+        it responds to.
         """
-        # Compile refrences to associated objects
-        a = CheckboxResponse.objects.all()[0]
-        response = a.response
-        quiz = response.quiz
-        choices = a.choices.all()
 
-        a.delete()
-
-        # Check that all associated objects do not exist, unless the should
-        self.assertTrue(Response.objects.filter(id=response.id).exists())
-        self.assertTrue(Quiz.objects.filter(user_id=quiz.user_id).exists())
-        self.assertFalse(CheckboxResponse.objects.filter(id=a.id).exists())
-        for c in choices:
-            self.assertFalse(ChoiceResponse.objects.filter(id=c.id).exists())
-
-
-    def test_delete_all_mc_answers(self):
-        """
-        Deleting CheckboxResponses from a queryset should work properly and should delete
-        all associated data with those answers.
-        """
         question_count = Question.objects.count()
         response_count = Response.objects.count()
+        choice_count = Choice.objects.count()
 
         CheckboxResponse.objects.all().delete()
 
         self.assertEquals(CheckboxResponse.objects.count(), 0)
-        self.assertEquals(ChoiceResponse.objects.count(), 0)
         self.assertEquals(Question.objects.count(), question_count)
         self.assertEquals(Response.objects.count(), response_count)
+        self.assertEquals(Choice.objects.count(), choice_count)
 
 
-
-    def test_delete_slider_response(self):
+    def test_delete_slider_responses(self):
         """
-        Deleting a SliderResponse should work. There is nothing to cascade delete at this
-        level.
-        """
-        # Compile refrences to associated objects
-        a = SliderResponse.objects.all()[0]
-        response = a.response
-        quiz = response.quiz
-
-        a.delete()
-
-        # Check that all associated objects do not exist, unless the should
-        self.assertTrue(Response.objects.filter(id=response.id).exists())
-        self.assertTrue(Quiz.objects.filter(user_id=quiz.user_id).exists())
-        self.assertFalse(SliderResponse.objects.filter(id=a.id).exists())
-
-
-    def test_delete_all_slider_responses(self):
-        """
-        Deleting SliderResponses from a queryset should work properly and delete all
-        associated data with those answers.
+        Deleting a SliderResponse should not delete the Response it
+        belongs to nor the SliderQuestion it responds to.
         """
         response_count = Response.objects.count()
         question_count = Question.objects.count()
@@ -1466,35 +1248,7 @@ class DeleteModelsTests(TransactionTestCase):
         self.assertEquals(Response.objects.count(), response_count)
 
 
-    def test_delete_choice_answer(self):
-        """
-        Deleting a ChoiceResponse should preserve its associated Choice and 
-        QuestionResponse objects.
-        """
-        a = ChoiceResponse.objects.all()[0]
-        answer = a.answer
-        choice = a.choice
 
-        a.delete()
-
-        self.assertTrue(CheckboxResponse.objects.filter(id=answer.id).exists())
-        self.assertTrue(Choice.objects.filter(id=choice.id).exists())
-        self.assertFalse(ChoiceResponse.objects.filter(id=a.id).exists())
-
-
-    def test_delete_all_choice_answers(self):
-        """
-        Deleting ChoiceResponse objects from a queryset should work properly and preserve
-        their associated Choices and QuestionResponses.
-        """
-        answer_count = QuestionResponse.objects.count()
-        choice_count = Choice.objects.count()
-
-        ChoiceResponse.objects.all().delete()
-
-        self.assertEquals(ChoiceResponse.objects.count(), 0)
-        self.assertEquals(QuestionResponse.objects.count(), answer_count)
-        self.assertEquals(Choice.objects.count(), choice_count)
 
 class ModelTextTests(TransactionTestCase):
     """

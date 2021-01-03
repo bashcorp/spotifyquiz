@@ -25,6 +25,5 @@ admin.site.register(SliderQuestion)
 admin.site.register(Response)
 admin.site.register(QuestionResponse)
 admin.site.register(CheckboxResponse)
-admin.site.register(ChoiceResponse)
 admin.site.register(SliderResponse)
 
