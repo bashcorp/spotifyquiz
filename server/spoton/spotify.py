@@ -7,6 +7,7 @@ import threading
 import logging
 from urllib.parse import urlencode
 import atexit
+import os
 
 
 logger = logging.getLogger(__name__)
@@ -55,6 +56,10 @@ USER_ID = 'user_id'
 noauth_access_token = None
 
 SCOPES = 'user-read-private user-top-read user-library-read playlist-read-collaborative playlist-read-private user-follow-read user-read-recently-played'
+
+
+f = open(os.path.dirname(__file__) + "/../credentials/spotclient.txt", "r")
+client_authorization = base64.b64encode(f.readline()[:-1].encode("utf-8"))
 
 
 def cleanup_timers():
@@ -272,10 +277,8 @@ def login(session, authorization_code, redirect_target):
         'code': authorization_code,
         'redirect_uri': 'http://localhost:8000/logged_in?redirect=' + redirect_target
     }
-    auth = '70be5e3cac9044b4951ace6b5d2475e1:870dc2491458410ebe2d9f6f578d24ef'
-    encoded_auth = base64.b64encode(auth.encode("utf-8"))
     headers = {
-        'Authorization': 'Basic '+ str(encoded_auth, "utf-8"),
+        'Authorization': 'Basic '+ str(client_authorization, "utf-8"),
     }
     url = 'https://accounts.spotify.com/api/token'
     results = requests.post(url, data=data, headers=headers)
@@ -346,10 +349,8 @@ def request_authorized_token(session):
         'refresh_token': session.get(REFRESH_TOKEN)
     }
     # The rest of the request's data (client authentication)
-    auth = '70be5e3cac9044b4951ace6b5d2475e1:870dc2491458410ebe2d9f6f578d24ef'
-    encoded_auth = base64.b64encode(auth.encode("utf-8"))
     headers = {
-        'Authorization': 'Basic '+ str(encoded_auth, "utf-8"),
+        'Authorization': 'Basic '+ str(client_authorization, "utf-8"),
     }
     url = 'https://accounts.spotify.com/api/token'
 
@@ -385,14 +386,11 @@ def request_noauth_access_token():
     """
 
     # The request data and headers
-    auth = '70be5e3cac9044b4951ace6b5d2475e1:870dc2491458410ebe2d9f6f578d24ef'
-    encoded_auth = base64.b64encode(auth.encode("utf-8"))
-
     data = {
         'grant_type': 'client_credentials'
     }
     headers = {
-        'Authorization': 'Basic '+ str(encoded_auth, "utf-8"),
+        'Authorization': 'Basic '+ str(client_authorization, "utf-8"),
     }
     url = 'https://accounts.spotify.com/api/token'
      
