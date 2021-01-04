@@ -9,53 +9,24 @@ from django.db.utils import OperationalError,IntegrityError
 from spoton.models.quiz import *
 from spoton.models.response import *
 
-#TransactionTestCase works when testing operations that throw database errors
-#https://stackoverflow.com/questions/43978468/django-test-transactionmanagementerror-you-cant-execute-queries-until-the-end
-
-class ParentFieldsAreRequiredTests(TransactionTestCase):
-    """
-    Tests that the important ForeignKey relationships are not null.
-
-    In the quiz models, often ForeignKey relationships are required. It makes no sense, for
-    example, that a Question can exist without being connected with a Quiz, or a Question
-    Choice to exist without a Checkbox Question to belong to. These tests make sure
-    that these objects cannot be saved to the database without having these relationships.
-    """
-
-    def test_question_has_no_quiz(self):
-        """
-        Trying to create a Question without giving it a Quiz to be associated with should
-        raise an error.
-        """
-        self.assertRaises(ValidationError, Question.objects.create)
-        self.assertRaises(ValidationError, CheckboxQuestion.objects.create)
-        self.assertRaises(ValidationError, SliderQuestion.objects.create)
-
-
-    def test_choice_has_no_mc_question(self):
-        """
-        Trying to create a Choice without no associated
-        CheckboxQuestion should raise an error.
-        """
-        self.assertRaises(ValidationError, Choice.objects.create)
-
-
-    def test_response_has_no_quiz(self):
-        """
-        Trying to create Response with no associated Quiz should raise an
-        error.
-        """
-        self.assertRaises(ValidationError, Response.objects.create)
 
 
 
 class QuizTests(TransactionTestCase):
     """
-    Tests functions for the database model quiz.models.Quiz, which holds Spotify
-    Quizzes and their data.
+    Tests function of the Quiz model, which holds questions for a quiz
+    about a Spotify user's music taste and data on users' responses to
+    the quiz.
+
+    Tests the model's custom functions.
     """
 
     def test_quiz_json(self):
+        """
+        json() in Quiz should return a JSON-formatted dictionary with
+        the quiz's questions and primary_key.
+        """
+
         quiz = Quiz.objects.create(user_id='cassius')
         q1 = CheckboxQuestion.objects.create(quiz=quiz)
         c = Choice.objects.create(question=q1,answer=True)
@@ -68,7 +39,12 @@ class QuizTests(TransactionTestCase):
         self.assertEquals(quiz.json(), json)
 
 
-    def test_quiz_json_no_question(self):
+    def test_quiz_json_no_questions(self):
+        """
+        json() in Quiz should work even if the quiz has no questions:
+        it should return an empty list for the 'questions' key.
+        """
+
         quiz = Quiz.objects.create(user_id='cassius')
 
         json = {
@@ -82,24 +58,29 @@ class QuizTests(TransactionTestCase):
 
 class QuestionTests(TransactionTestCase):
     """
-    Tests the database model Question, which holds one Question in a Quiz, and
-    all its related data.
+    Tests functions of the model Question, which holds one Question in
+    a Quiz, and all of its related data.
     """
+
     pass
 
 
 
 class CheckboxQuestionTests(TransactionTestCase):
     """
-    Tests the database model CheckboxQuestion, which is a specific type of
-    Question that has several text-based choices as candidates for the answer.
+    Tests functions of the model CheckboxQuestion, which holds data
+    about a single checkbox question, which has several choices the
+    user can pick from.
+
+    Tests the model's custom functions.
     """
 
     def test_get_answers(self):
         """
-        answers() should return a list of all the question's choices that are
-        marked as correct answers.
+        answers() should return a list of all the question's choices
+        that are marked as correct answers.
         """
+
         quiz = Quiz.objects.create(user_id='cassius')
         q = CheckboxQuestion.objects.create(quiz=quiz)
         c1 = Choice.objects.create(question=q)
@@ -114,10 +95,11 @@ class CheckboxQuestionTests(TransactionTestCase):
 
     def test_get_answers_no_answers(self):
         """
-        If there are no correct choices marked as correct answers, answers()
-        should throw an error, because every question should have at least
-        one right answer.
+        If there are no correct choices marked as correct answers,
+        answers() should throw an error, because every question should
+        have at least one right answer.
         """
+
         quiz = Quiz.objects.create(user_id='cassius')
         q = CheckboxQuestion.objects.create(quiz=quiz)
         c1 = Choice.objects.create(question=q)
@@ -129,9 +111,10 @@ class CheckboxQuestionTests(TransactionTestCase):
 
     def test_get_incorrect_answers(self):
         """
-        incorrect_answers() should return a list of all the question's choices that
-        are marked as incorrect answers.
+        incorrect_answers() should return a list of all the question's
+        choices that are marked as incorrect answers.
         """
+
         quiz = Quiz.objects.create(user_id='cassius')
         q = CheckboxQuestion.objects.create(quiz=quiz)
         c1 = Choice.objects.create(question=q, answer=True)
@@ -144,9 +127,10 @@ class CheckboxQuestionTests(TransactionTestCase):
 
     def test_get_incorrect_answers_none(self):
         """
-        incorrect_answers() should return an empty list if none of the question's choices
-        are marked as incorrect.
+        incorrect_answers() should return an empty list if none of the
+        question's choices are marked as incorrect.
         """
+
         quiz = Quiz.objects.create(user_id='cassius')
         q = CheckboxQuestion.objects.create(quiz=quiz)
         c1 = Choice.objects.create(question=q, answer=True)
@@ -205,10 +189,12 @@ class CheckboxQuestionTests(TransactionTestCase):
 
     def test_json_with_choices_single_answer(self):
         """
-        json() should return a json-formatted dictionary of everything the
-        client might need to display this question, such as id, text, choices,
-        and whether the question has multiple answers (is a checklist question)
+        CheckboxQuestion's function json() should return a
+        JSON-formatted dictionary of everything needed to display this
+        question, including primary key, text, choices, and whether the
+        question has multiple correct answers.
         """
+
         quiz = Quiz.objects.create(user_id='cassius')
         q = CheckboxQuestion.objects.create(quiz=quiz, text="question")
         c1 = Choice.objects.create(question=q, primary_text="choice1")
@@ -226,10 +212,12 @@ class CheckboxQuestionTests(TransactionTestCase):
 
     def test_json_with_choices_checklist(self):
         """
-        json() should return a json-formatted dictionary of everything the
-        client might need to display this question, such as id, text, choices,
-        and whether the question has multiple answers (is a checklist question)
+        CheckboxQuestion's function json() should return a
+        JSON-formatted dictionary of everything needed to display this
+        question, including primary key, text, choices, and whether the
+        question has multiple correct answers.
         """
+
         quiz = Quiz.objects.create(user_id='cassius')
         q = CheckboxQuestion.objects.create(quiz=quiz, text="question")
         c1 = Choice.objects.create(question=q, primary_text="choice1", answer=True)
@@ -249,14 +237,18 @@ class CheckboxQuestionTests(TransactionTestCase):
 
 class ChoiceTests(TransactionTestCase):
     """
-    A database model that holds one choice of a CheckboxResponse. The choice
-    itself is a string of text.
+    Tests functions of the model Choice, which holds one option of a
+    Checkbox Question.
+
+    Tests the model's custom functions.
     """
 
     def test_question_choice_json_is_not_answer(self):
         """
-        json() should return a json-formatted dictionary describing the choice.
+        The Choice's function json() should return a JSON-formatted
+        dictionary describing the choice.
         """
+
         quiz = Quiz.objects.create(user_id='cassius')
         q = CheckboxQuestion.objects.create(quiz=quiz)
         c = Choice.objects.create(question=q, primary_text="choice text", secondary_text="subtext", answer=False)
@@ -271,9 +263,10 @@ class ChoiceTests(TransactionTestCase):
 
     def test_question_choice_json_no_secondary_text(self):
         """
-        If secondary_text is not set, then json() should return a dictionary
+        If secondary_text is not set, then json() should return a dict
         without a secondary_text field.
         """
+
         quiz = Quiz.objects.create(user_id='cassius')
         q = CheckboxQuestion.objects.create(quiz=quiz)
         c = Choice.objects.create(question=q, primary_text="choice text", answer=False)
@@ -286,6 +279,11 @@ class ChoiceTests(TransactionTestCase):
 
 
     def test_question_choice_json_is_answer(self):
+        """
+        Choice's function json() should return a JSON-formatted
+        dictionary describing the choice.
+        """
+
         quiz = Quiz.objects.create(user_id='cassius')
         q = CheckboxQuestion.objects.create(quiz=quiz)
         c = Choice.objects.create(question=q, primary_text="choice text", secondary_text="subtext", answer=True)
@@ -298,18 +296,22 @@ class ChoiceTests(TransactionTestCase):
         self.assertEquals(c.json(), json)
 
 
+
 class ChoiceCreationFunctionTests(TransactionTestCase):
     """
-    The Choice object has several static function that make it easier to create specific Choice
-    objects from the data that Spotify API returns. These functions create Choices from
-    tracks, artists, and genres.
+    The Choice object has several static functions that make it easier
+    to create specific Choice objects from the data that Spotify API
+    returns. These functions create Choices from albums, tracks,
+    artists, playlists, and genres.
     """
 
     def test_create_album_choice_not_answer(self):
         """
-        create_album_choice() should create a Choice object from the given Album JSON, and
-        set the Choice's answer field to the argument 'answer'.
+        create_album_choice() should create a Choice object from the
+        given Album JSON, and set the Choice's answer field to the
+        argument 'answer'.
         """
+
         album = {
             'name': 'Album',
             'artists': [{'name': 'Cash'}]
@@ -334,9 +336,11 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
 
     def test_create_album_choice_is_answer(self):
         """
-        create_album_choice() should create a Choice object from the given Album JSON, and
-        set the Choice's answer field to the argument 'answer'.
+        create_album_choice() should create a Choice object from the
+        given Album JSON, and set the Choice's answer field to the
+        argument 'answer'.
         """
+
         album = {
             'name': 'Album',
             'artists': [{'name': 'Cash'}]
@@ -361,9 +365,11 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
 
     def test_create_album_choices_not_answers(self):
         """
-        create_album_choices() should create Choice objects for each Album JSON in the
-        given list, and set the Choices' answer fields to the argument 'answer'.
+        create_album_choices() should create Choice objects for each
+        Album JSON in the given list, and set the Choices' answer
+        fields to the argument 'answer'.
         """
+
         albums = [
             {
                 'name': 'Album',
@@ -399,9 +405,11 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
 
     def test_create_album_choices_are_answers(self):
         """
-        create_album_choices() should create Choice objects for each Album JSON in the
-        given list, and set the Choices' answer fields to the argument 'answer'.
+        create_album_choices() should create Choice objects for each
+        Album JSON in the given list, and set the Choices' answer 
+        fields to the argument 'answer'.
         """
+
         albums = [
             {
                 'name': 'Album',
@@ -437,9 +445,11 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
 
     def test_create_artist_choice_not_answer(self):
         """
-        create_artist_choice() should create a Choice object from the given Artist JSON, and
-        set the Choice's answer field to the argument 'answer'.
+        create_artist_choice() should create a Choice object from the
+        given Artist JSON, and set the Choice's answer field to the
+        argument 'answer'.
         """
+
         artist = {
             'name': 'Bon Jovi'
         }
@@ -463,9 +473,11 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
 
     def test_create_artist_choice_is_answer(self):
         """
-        create_artist_choice() should create a Choice object from the given Artist JSON, and
-        set the Choice's answer field to the argument 'answer'.
+        create_artist_choice() should create a Choice object from the
+        given Artist JSON, and set the Choice's answer field to the
+        argument 'answer'.
         """
+
         artist = {
             'name': 'Bon Jovi'
         }
@@ -489,9 +501,11 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
 
     def test_create_artist_choices_not_answers(self):
         """
-        create_artist_choices() should create Choice objects for each Artist JSON in the
-        given list, and set the Choices' answer fields to the argument 'answer'.
+        create_artist_choices() should create Choice objects for each
+        Artist JSON in the given list, and set the Choices' answer
+        fields to the argument 'answer'.
         """
+
         artists = [
         { 'name': 'Bon Jovi' },
         { 'name': 'Cassius' },
@@ -522,9 +536,11 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
 
     def test_create_artist_choices_are_answers(self):
         """
-        create_artist_choices() should create Choice objects for each Artist JSON in the
-        given list, and set the Choices' answer fields to the argument 'answer'.
+        create_artist_choices() should create Choice objects for each
+        Artist JSON in the given list, and set the Choices' answer
+        fields to the argument 'answer'.
         """
+
         artists = [
         { 'name': 'Bon Jovi' },
         { 'name': 'Cassius' },
@@ -555,9 +571,11 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
 
     def test_create_track_choice_not_answer(self):
         """
-        create_track_choice() should create a Choice object from the given Track JSON, and
-        set the Choice's answer field to the argument 'answer'.
+        create_track_choice() should create a Choice object from the
+        given Track JSON, and set the Choice's answer field to the
+        argument 'answer'.
         """
+
         track = {
             'name': 'YGLABN',
             'artists': [{'name': 'Bon Jovi'}, {'name': 'Unknown'}]
@@ -582,9 +600,11 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
 
     def test_create_track_choice_is_answer(self):
         """
-        create_track_choice() should create a Choice object from the given Track JSON, and
-        set the Choice's answer field to the argument 'answer'.
+        create_track_choice() should create a Choice object from the
+        given Track JSON, and set the Choice's answer field to the
+        argument 'answer'.
         """
+
         track = {
             'name': 'YGLABN',
             'artists': [{'name': 'Bon Jovi'}, {'name': 'Unknown'}]
@@ -609,9 +629,11 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
 
     def test_create_track_choices_not_answers(self):
         """
-        create_track_choices() should create Choice objects for each Track JSON in the
-        given list, and set the Choices' answer fields to the argument 'answer'.
+        create_track_choices() should create Choice objects for each
+        Track JSON in the given list, and set the Choices' answer
+        fields to the argument 'answer'.
         """
+
         tracks = [
         {
             'name': 'YGLABN',
@@ -646,9 +668,11 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
 
     def test_create_track_choices_are_answers(self):
         """
-        create_track_choices() should create Choice objects for each Track JSON in the
-        given list, and set the Choices' answer fields to the argument 'answer'.
+        create_track_choices() should create Choice objects for each
+        Track JSON in the given list, and set the Choices' answer
+        fields to the argument 'answer'.
         """
+
         tracks = [
         {
             'name': 'YGLABN',
@@ -683,9 +707,11 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
 
     def test_create_genre_choice_not_answer(self):
         """
-        create_genre_choice() should create a Choice object from the given Genre string, and
-        set the Choice's answer field to the argument 'answer'.
+        create_genre_choice() should create a Choice object from the
+        given Genre string, and set the Choice's answer field to the
+        argument 'answer'.
         """
+
         genre = "Pop"
         quiz = Quiz.objects.create(user_id="cash")
         question = CheckboxQuestion.objects.create(quiz=quiz)
@@ -707,9 +733,11 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
 
     def test_create_genre_choice_is_answer(self):
         """
-        create_genre_choice() should create a Choice object from the given Genre string, and
-        set the Choice's answer field to the argument 'answer'.
+        create_genre_choice() should create a Choice object from the
+        given Genre string, and set the Choice's answer field to the
+        argument 'answer'.
         """
+
         genre = "Pop"
         quiz = Quiz.objects.create(user_id="cash")
         question = CheckboxQuestion.objects.create(quiz=quiz)
@@ -731,9 +759,11 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
 
     def test_create_genre_choices_not_answers(self):
         """
-        create_genre_choices() should create Choice objects for each Genre string in the
-        given list, and set the Choices' answer fields to the argument 'answer'.
+        create_genre_choices() should create Choice objects for each
+        Genre string in the given list, and set the Choices' answer
+        fields to the argument 'answer'.
         """
+
         genres = ["Pop", "Rock"]
 
         quiz = Quiz.objects.create(user_id="cash")
@@ -760,9 +790,11 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
 
     def test_create_genre_choices_are_answers(self):
         """
-        create_genre_choices() should create Choice objects for each Genre string in the
-        given list, and set the Choices' answer fields to the argument 'answer'.
+        create_genre_choices() should create Choice objects for each
+        Genre string in the given list, and set the Choices' answer
+        fields to the argument 'answer'.
         """
+
         genres = ["Pop", "Rock"]
 
         quiz = Quiz.objects.create(user_id="cash")
@@ -789,10 +821,11 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
 
     def test_create_playlist_choice_not_answer(self):
         """
-        create_playlist_choice() should create a Choice object from the given
-        Playlist JSON, and set the Choice's answer field to the argument
-        'answer'.
+        create_playlist_choice() should create a Choice object from the
+        given Playlist JSON, and set the Choice's answer field to the
+        argument 'answer'.
         """
+
         playlist = {
             'name': 'Bon Jovi'
         }
@@ -816,10 +849,11 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
 
     def test_create_playlist_choice_is_answer(self):
         """
-        create_playlist_choice() should create a Choice object from the given
-        Playlist JSON, and set the Choice's answer field to the argument
-        'answer'.
+        create_playlist_choice() should create a Choice object from the
+        given Playlist JSON, and set the Choice's answer field to the
+        argument 'answer'.
         """
+
         playlist = {
             'name': 'Bon Jovi'
         }
@@ -843,10 +877,11 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
 
     def test_create_playlist_choices_not_answers(self):
         """
-        create_playlist_choices() should create Choice objects from the given
-        list of Playlist JSONs, and set the Choices' answer fields to the argument
-        'answer'.
+        create_playlist_choices() should create Choice objects from the
+        given list of Playlist JSONs, and set the Choices' answer
+        fields to the argument 'answer'.
         """
+
         playlists = [
         { 'name': 'Bon Jovi' },
         { 'name': 'Cassius' },
@@ -877,10 +912,11 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
 
     def test_create_playlist_choices_are_answers(self):
         """
-        create_playlist_choices() should create Choice objects from the given
-        list of Playlist JSONs, and set the Choices' answer fields to the argument
-        'answer'.
+        create_playlist_choices() should create Choice objects from the
+        given list of Playlist JSONs, and set the Choices' answer
+        fields to the argument 'answer'.
         """
+
         playlists = [
         { 'name': 'Bon Jovi' },
         { 'name': 'Cassius' },
@@ -909,35 +945,45 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         self.assertTrue(objects[2].answer)
 
 
+
 class SliderQuestionTests(TransactionTestCase):
     """
-    Tests functions for the database model quiz.models.SliderQuestion,
-    which holds question used in the Spotify Quizzes where the answer is an integer
-    in a certain range.
+    Tests functions of the model SliderQuestion, which holds one
+    question of a quiz where the user chooses a value in a certain
+    numeric range.
+
+    Tests the model's field validation and custom functions.
     """
 
     def test_create_slider_question_with_valid_values(self):
         """
-        A SliderQuestion should be created without errors if the values for min, max, and
-        answer are in the right range.
+        A SliderQuestion should be created without errors if the values
+        for min, max, and answer are valid.
         """
+
         quiz = Quiz.objects.create(user_id='cassius')
         try: 
             q = SliderQuestion.objects.create(quiz=quiz)
-            q = SliderQuestion.objects.create(quiz=quiz, slider_min = 3, slider_max=6, answer=5)
-            q = SliderQuestion.objects.create(quiz=quiz, slider_min = 3, slider_max=6, answer=6)
-            q = SliderQuestion.objects.create(quiz=quiz, slider_min = 3, slider_max=6, answer=3)
-            q = SliderQuestion.objects.create(quiz=quiz, slider_min = -10, slider_max=3, answer=0)
-            q = SliderQuestion.objects.create(quiz=quiz, slider_min = 50, slider_max=90, answer=60)
+            q = SliderQuestion.objects.create(quiz=quiz, slider_min = 3,
+                    slider_max=6, answer=5)
+            q = SliderQuestion.objects.create(quiz=quiz, slider_min = 3,
+                    slider_max=6, answer=6)
+            q = SliderQuestion.objects.create(quiz=quiz, slider_min = 3,
+                    slider_max=6, answer=3)
+            q = SliderQuestion.objects.create(quiz=quiz, slider_min = -10,
+                    slider_max=3, answer=0)
+            q = SliderQuestion.objects.create(quiz=quiz, slider_min = 50,
+                    slider_max=90, answer=60)
         except ValidationError:
             self.fail("Validation error raised when creating Slider Question")
 
 
     def test_create_slider_question_with_wrong_range(self):
         """
-        If a slider's question minimum value is not less than its max
+        If a SliderQuestion's minimum value is not less than its max
         value, then creating it should raise an error.
         """
+
         quiz = Quiz.objects.create(user_id='cassius')
         c1 = SliderQuestion(quiz=quiz, slider_min = 0, slider_max=0, answer=0)
         self.assertRaises(ValidationError, c1.save)
@@ -947,20 +993,23 @@ class SliderQuestionTests(TransactionTestCase):
 
     def test_create_slider_question_with_invalid_answer(self):
         """
-        If a slider's correct answer value is not in the range created by
-        min and max, then creating it should raise an error.
+        If a slider's correct answer value is not in the range created
+        by its min and max, then creating it should raise an error.
         """
+
         quiz = Quiz.objects.create(user_id='cassius')
         c1 = SliderQuestion(quiz=quiz, slider_min = 3, slider_max=8, answer=9)
         self.assertRaises(ValidationError, c1.save)
         c2 = SliderQuestion(quiz=quiz, slider_min = 3, slider_max=8, answer=2)
         self.assertRaises(ValidationError, c2.save)
 
+
     def test_slider_question_json(self):
         """
-        json() should return a json-formatted dictionary of everything the
-        client would need to display the question.
+        json() should return a JSON-formatted dictionary of the
+        question's data.
         """
+
         quiz = Quiz.objects.create(user_id='cassius')
         q = SliderQuestion(quiz=quiz, text=" This is a question. ",
                 slider_min=3, slider_max=17, answer=5)
@@ -983,36 +1032,38 @@ class ResponseTests(TransactionTestCase):
     A database model that holds one user's response to a particluar Quiz.
     It holds a QuestionResponse object for each Question in the Quiz.
     """
+
     pass
 
 
 class QuestionResponseTests(TransactionTestCase):
     """
-    A database model that holds a user's response to one Question in a
-    Quiz. This is a general model: the two specific QuestionResponses
-    are CheckboxResponse and SliderResponse, for the two types
-    of questions, CheckboxQuestion and SliderQuestion.
+    Tests functions of the model QuestionResponse, which holds a user's
+    response to one quiz question. 
+
+    Tests the model's field validation and custom functions.
     """
 
     def test_answer_has_question_in_quiz(self):
         """
-        When you add a QuestionResponse to a certain Response, and it links
-        to a Question in the associated Quiz, everything should work fine.
+        Creating a QuestionResponse under proper conditions should
+        not raise any errors.
         """
+
         quiz = Quiz.objects.create(user_id='cassius')
         q1 = Question.objects.create(quiz=quiz)
         response = Response.objects.create(quiz=quiz)
-        try:
-            answer = QuestionResponse.objects.create(response=response, question=q1)
-        except ValidationError:
-            self.fail("Adding a QuestionResponse failed when it shouldn't have.")
+        answer = QuestionResponse.objects.create(response=response,
+                question=q1)
 
 
     def test_answer_has_question_not_in_quiz(self):
         """
-        When you add an Answer to a certain Response, the Question that the
-        it answers needs to be in the Quiz that the Response is responding to.
+        Creating a QuestionResponse, but giving it a Question that
+        does not belong to the Quiz the Response is associated with,
+        should raise a ValidationError.
         """
+
         quiz = Quiz.objects.create(user_id='cassius')
         quiz1 = Quiz.objects.create(user_id='cass')
         q1 = Question.objects.create(quiz=quiz1)
@@ -1024,14 +1075,15 @@ class QuestionResponseTests(TransactionTestCase):
 
 class CheckboxResponseTests(TransactionTestCase):
     """
-    A database model that represents a user's response to one
-    CheckboxQuestion. A user can have selected multiple
-    of the question's choices.
+    Tests functions of the model CheckboxResponse, which holds a user's
+    response to one CheckboxQuestion. 
+
+    Tests the model's field validation and custom functions.
     """
 
     def test_add_choice(self):
         """
-        After the CheckboxResponse object is saved to the database,
+        After a CheckboxResponse object is saved to the database,
         you should be able to add Choices from the associated question
         to the response's list of selected choices.
         """
@@ -1048,8 +1100,9 @@ class CheckboxResponseTests(TransactionTestCase):
 
     def test_add_invalid_choice(self):
         """
-        Adding a Choice from a different question to a CheckboxResponse
-        should raise a ValidationError.
+        Adding a Choice from a different question than the one
+        associated with a CheckboxResponse should raise a
+        ValidationError.
         """
 
         quiz = Quiz.objects.create(user_id='cassius')
@@ -1079,8 +1132,10 @@ class CheckboxResponseTests(TransactionTestCase):
 
 class SliderResponseTests(TransactionTestCase):
     """
-    A database model that represents a user's answer to a SliderQuestion,
-    which is just the user's choice of integer in the question's range.
+    Tests functions of the model SliderResponse, which holds a user's
+    response to one SliderQuestion. 
+
+    Tests the model's field validation and custom functions.
     """
 
     def test_wrong_question_type(self):
@@ -1097,9 +1152,9 @@ class SliderResponseTests(TransactionTestCase):
 
 
 
-class DeleteModelsTests(TransactionTestCase):
-    """Tests that deleting models delete the proper associated objects.
 
+class DeleteModelsTests(TransactionTestCase):
+    """
     These tests ensure that when model objects are deleted, the proper
     associated models are deleted or preserved. For example, deleting
     a user's response to a quiz should not delete the quiz itself.
@@ -1263,6 +1318,7 @@ class DeleteModelsTests(TransactionTestCase):
         Deleting a SliderResponse should not delete the Response it
         belongs to nor the SliderQuestion it responds to.
         """
+
         response_count = Response.objects.count()
         question_count = Question.objects.count()
 
@@ -1274,16 +1330,82 @@ class DeleteModelsTests(TransactionTestCase):
 
 
 
+class ParentFieldsAreRequiredTests(TransactionTestCase):
+    """
+    Tests that the important ForeignKey relationships are not null.
+
+    In the quiz models, often ForeignKey relationships are required.
+    It makes no sense, for example, that a Question can exist without
+    being connected with a Quiz, or a Choice to exist without a
+    CheckboxQuestion to belong to. These tests make sure that these
+    objects cannot be saved to the database without having the models
+    on the other end of these relationships.
+
+    These tests aren't strictly necessary, as they're just testing
+    Django functionality. They're more so to ensure that these 
+    relationships are not made nullable in the future by accident.
+    """
+
+    def test_question_has_no_quiz(self):
+        """
+        Trying to create a Question without giving it a Quiz to be
+        associated with should raise an error.
+        """
+        self.assertRaises(ValidationError, Question.objects.create)
+        self.assertRaises(ValidationError, CheckboxQuestion.objects.create)
+        self.assertRaises(ValidationError, SliderQuestion.objects.create)
+
+
+    def test_choice_has_no_mc_question(self):
+        """
+        Trying to create a Choice without no associated
+        CheckboxQuestion should raise an error.
+        """
+        self.assertRaises(ValidationError, Choice.objects.create)
+
+
+    def test_response_has_no_quiz(self):
+        """
+        Trying to create a Response with no associated Quiz should raise
+        an error.
+        """
+        self.assertRaises(ValidationError, Response.objects.create)
+
+
+    def test_question_response_has_no_response(self):
+        """
+        Trying to create a QuestionResponse with no associated Response
+        should raise an error.
+        """
+
+        quiz = Quiz.objects.create(user_id='cassius')
+        q = Question.objects.create(quiz=quiz)
+        self.assertRaises(ObjectDoesNotExist,
+                QuestionResponse.objects.create, question=q)
+
+
+    def test_question_response_has_no_question(self):
+        """
+        Trying to create a QuestionResponse with no associated Question
+        should raise an error.
+        """
+
+        quiz = Quiz.objects.create(user_id='cassius')
+        r = Response.objects.create(quiz=quiz)
+        self.assertRaises(ObjectDoesNotExist,
+                QuestionResponse.objects.create, response=r)
+
+
 
 class ModelTextTests(TransactionTestCase):
     """
-    These test the models that contain text-based fields.
+    Tests the models that contain text-based fields.
     """
 
     def test_supplementary_unicode_test(self):
         """
-        Tests that models' text fields can support supplementary unicode
-        characters (utf8mb4 encoding)
+        Tests that models' text fields can support supplementary
+        unicode characters (utf8mb4 encoding)
         """
 
         # Bon Iver causing trouble with his song names..
@@ -1299,4 +1421,3 @@ class ModelTextTests(TransactionTestCase):
         self.assertIsNotNone(c)
         self.assertIsNotNone(r)
 
-        
