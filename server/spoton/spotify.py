@@ -60,6 +60,7 @@ SCOPES = 'user-read-private user-top-read user-library-read playlist-read-collab
 
 f = open(os.path.dirname(__file__) + "/../credentials/spotclient.txt", "r")
 client_authorization = base64.b64encode(f.readline()[:-1].encode("utf-8"))
+f.close()
 
 
 def cleanup_timers():
