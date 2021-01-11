@@ -1,37 +1,64 @@
 import React from "react";
 import Glide from "@glidejs/glide";
 import Choice from "../Choice/Choice";
+import Range from "../Range/Range";
+
 
 import "./Question.scss";
 
-let questions = ["Fitz and the Tantrums", "THE DRIVER ERA", "I DONT KNOW HOW BUT THEY FOUND ME", "Maty Noyes" ]
-
-
-const Question = ({ plan, handleOffer }) => {
+const Question = ({ question, handleOffer }) => {
   return (
     <div>
-      <div onClick={() => handleOffer(plan.id)} className="question-wrapper">
+      <div
+        onClick={() => handleOffer(question.id)}
+        className="question-wrapper"
+      >
         <div className="question-card shadow-5">
-          <div class="grid-container">
-            <div class="questionCard-top">
-             <div>
-            <h3 id="questionCard-header">question {plan.id + 1}</h3>
-            <hr id="questionCard-underline-top" />
-          </div>
+          <div className="grid-container">
+            <div className="questionCard-top">
+              <div>
+                <h3 id="questionCard-header">question {question.id + 1}</h3>
+                <hr id="questionCard-underline-top" />
+              </div>
 
-          <h2 id="questionCard-question">
-            {(plan.id % 2 === 0) ? "Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa, officia ullam ab hic ratione? Nemo, saepe." : "Lorem ipsum dolor sit amet consectetur adipisicing elit."}
-          </h2>
-
+              <h2 id="questionCard-question">
+                {question.text}
+              </h2>
             </div>
-            <div class="questionCard-bottom">
-            <hr id="questionCard-underline-mid" />
-              <Choice questions={questions}/>
+            <div className="questionCard-bottom">
+              <hr id="questionCard-underline-mid" />
+              <div className="ResponseContainer"> 
 
+                
+{ question.type == "mc" &&
+                <div className="card-container">
+                  <ul className="list">
+                    {question.choices.map((choice) => (
+                      <Choice key={choice.id} choice={choice} />
+                    ))}
+                  </ul>
+                </div> 
+}
+
+{ question.type == "slider" &&
+                
+                <div className="range-container">
+                      <Range key={question.id} range={question} />
+            </div>
+}
+
+{ question.type == "select" &&
+                <div className="card-container">
+                  <ul classNamee="list">
+                    {question.choices.map((choice) => (
+                      <Choice key={choice.id} choice={choice} />
+                    ))}
+                  </ul>
+                </div> 
+}
+              </div>  
             </div>
           </div>
-
-    
         </div>
       </div>
     </div>

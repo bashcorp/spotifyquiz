@@ -42,7 +42,7 @@ export default class QuestionSlider extends Component {
           {this.props.children.map((slide, index) => {
             return React.cloneElement(slide, {
               key: index,
-              className: `${slide.props.className} your_cutom_classname`
+              className: `${slide.props.className}`
             });
           })}
         </div>

@@ -1,11 +1,11 @@
-.choice-container {
+.card-container {
 	width: 100%;
 	height: calc(100% - 30px);
   display: flex;
   flex-wrap: wrap;
 }
 
-.Choice {
+.ResponseContainer {
 	height: 100%;
 }
 
@@ -14,6 +14,7 @@
 	   display: flex;
 	   list-style-type: none;
 	   flex-wrap: wrap;
+     width: 100%;
 }
 
 .list-item {
