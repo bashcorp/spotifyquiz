@@ -9,7 +9,7 @@ import json
 
 from . import spotify
 from spoton.models.quiz import Quiz
-from spoton.quiz import create_quiz
+from spoton.quiz import create_quiz, SCOPES
 
 logger = logging.getLogger(__name__)
 
@@ -58,7 +58,7 @@ def login(request):
         'response_type': 'code',
         'show_dialog': 'true',
         'redirect_uri': 'http://localhost:8000/logged_in?redirect='+redirect_view,
-        'scope': spotify.SCOPES
+        'scope': SCOPES
     }
     query_string = urllib.parse.urlencode(query_args)
 
@@ -91,7 +91,8 @@ def logged_in(request):
         return redirect('index')
 
     # Log into Spotify (get access codes and etc.)
-    if not spotify.login(request.session, code, redirect_uri):
+    if not spotify.login(request.session, code,
+            'http://localhost:8000/logged_in?redirect='+redirect_uri):
         # TODO
         # Error handling, login failed
         logger.error("Logging into session failed")

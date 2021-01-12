@@ -40,7 +40,7 @@ class RefreshTokenTests(TestCase):
         REFRESH_TOKEN in the given session to the given code.
         """
         session = self.client.session
-        spotify.set_refresh_token(session, 'this_is_a_code')
+        spotify._set_refresh_token(session, 'this_is_a_code')
         self.assertIs(session.get(spotify.REFRESH_TOKEN), 'this_is_a_code')
 
 
@@ -65,7 +65,7 @@ class AuthAccessTokenTests():
         session under AUTH_ACCESS_TOKEN.
         """
         session = self.client.session
-        spotify.set_auth_access_token(session, 'token123', 1)
+        spotify._set_auth_access_token(session, 'token123', 1)
         self.assertEquals(session.get(spotify.AUTH_ACCESS_TOKEN), 'token123')
 
 
@@ -75,7 +75,7 @@ class AuthAccessTokenTests():
         session's AUTH_ACCESS_TOKEN.
         """
         session = self.client.session
-        spotify.set_auth_access_token(session, 'token123', 1)
+        spotify._set_auth_access_token(session, 'token123', 1)
         spotify._clear_auth_access_token(session)
         self.assertIsNone(session.get(spotify.AUTH_ACCESS_TOKEN))
 
@@ -97,7 +97,7 @@ class AuthAccessTokenTests():
         given timeout (in seconds).
         """
         session = self.client.session
-        spotify.set_auth_access_token(session, 'token123', 1)
+        spotify._set_auth_access_token(session, 'token123', 1)
         time.sleep(1)
         self.assertIsNone(session.get(spotify.AUTH_ACCESS_TOKEN))
 
@@ -108,8 +108,8 @@ class AuthAccessTokenTests():
         get_auth_access_token() should return that token.
         """
         session = self.client.session
-        spotify.set_auth_access_token(session, 'token123', 1)
-        self.assertEquals(spotify.get_auth_access_token(session),'token123')
+        spotify._set_auth_access_token(session, 'token123', 1)
+        self.assertEquals(spotify._get_auth_access_token(session),'token123')
 
 
     def test_get_auth_access_token_doesnt_exist_no_login(self):
@@ -124,7 +124,7 @@ class AuthAccessTokenTests():
         """
         session = self.client.session
         self.assertRaises(spotify.SpotifyException,
-                spotify.get_auth_access_token, session)
+                spotify._get_auth_access_token, session)
 
     """
     def _test_get_auth_access_token_doesnt_exist(self):
@@ -161,7 +161,7 @@ class UserIdTests(TestCase):
         USER_ID to the given uri.
         """
         session = self.client.session
-        spotify.set_user_id(session, 'user_id_1')
+        spotify._set_user_id(session, 'user_id_1')
         self.assertEqual(session.get(spotify.USER_ID), 'user_id_1')
 
 
@@ -199,7 +199,7 @@ class NoauthAccessTokenTests(TestCase):
         # Erase in case other tests left over values
         spotify._clear_noauth_access_token()
         
-        spotify.set_noauth_access_token('token123', 1)
+        spotify._set_noauth_access_token('token123', 1)
         self.assertEquals(spotify.noauth_access_token, 'token123')
 
 
@@ -211,7 +211,7 @@ class NoauthAccessTokenTests(TestCase):
         # Erase in case other tests left over values
         spotify._clear_noauth_access_token()
         
-        spotify.set_noauth_access_token('token123', 1)
+        spotify._set_noauth_access_token('token123', 1)
         spotify._clear_noauth_access_token()
         self.assertIsNone(spotify.noauth_access_token)
 
@@ -224,7 +224,7 @@ class NoauthAccessTokenTests(TestCase):
         # Erase in case other tests left over values
         spotify._clear_noauth_access_token()
         
-        spotify.set_noauth_access_token('token123', 1)
+        spotify._set_noauth_access_token('token123', 1)
         time.sleep(1)
         self.assertIsNone(spotify.noauth_access_token)
 
@@ -237,8 +237,8 @@ class NoauthAccessTokenTests(TestCase):
         # Erase in case other tests left over values
         spotify._clear_noauth_access_token()
         
-        spotify.set_noauth_access_token('token123', 1)
-        self.assertEquals(spotify.get_noauth_access_token(),'token123')
+        spotify._set_noauth_access_token('token123', 1)
+        self.assertEquals(spotify._get_noauth_access_token(),'token123')
 
 
     def test_get_noauth_access_token_doesnt_exist(self):
@@ -249,7 +249,7 @@ class NoauthAccessTokenTests(TestCase):
         Because it doesn't depend on the user logging in, this should always
         work.
         """
-        token = spotify.get_noauth_access_token()
+        token = spotify._get_noauth_access_token()
         self.assertIsNotNone(token)
 
 
@@ -274,8 +274,8 @@ class IsUserLoggedInTests(TestCase):
         return False.
         """
         session = self.client.session
-        spotify.set_refresh_token(session, 'code1')
-        spotify.set_user_id(session, 'user')
+        spotify._set_refresh_token(session, 'code1')
+        spotify._set_user_id(session, 'user')
         self.assertFalse(spotify.is_user_logged_in(session))
 
 
@@ -286,7 +286,7 @@ class IsUserLoggedInTests(TestCase):
         REFRESH_TOKEN is not, it should return False.
         """
         session = self.client.session
-        spotify.set_user_id(session, 'user')
+        spotify._set_user_id(session, 'user')
         self.assertFalse(spotify.is_user_logged_in(session))
 
 
@@ -297,7 +297,7 @@ class IsUserLoggedInTests(TestCase):
         USER_ID is not, it should return False.
         """
         session = self.client.session
-        spotify.set_refresh_token(session, 'code1')
+        spotify._set_refresh_token(session, 'code1')
         self.assertFalse(spotify.is_user_logged_in(session))
 
 
@@ -335,9 +335,9 @@ class LogoutTests(TestCase):
         logout() should set all the user's session variables to None.
         """
         session = self.client.session
-        spotify.set_refresh_token(session, 'this_is_a_code')
-        spotify.set_user_id(session, 'user_id')
-        spotify.set_auth_access_token(session, 'token123', 3)
+        spotify._set_refresh_token(session, 'this_is_a_code')
+        spotify._set_user_id(session, 'user_id')
+        spotify._set_auth_access_token(session, 'token123', 3)
         spotify.logout(session)
         self.assertIsNone(session.get(spotify.REFRESH_TOKEN))
         self.assertIsNone(session.get(spotify.USER_ID))
@@ -469,7 +469,7 @@ class RequestAuthorizedTokenTests(TestCase):
         """
         session = self.client.session
         self.assertRaises(spotify.SpotifyException,
-                spotify.request_authorized_token, session)
+                spotify._request_authorized_token, session)
 
 
     def test_request_authorized_token_bad_refresh_token(self):
@@ -480,10 +480,10 @@ class RequestAuthorizedTokenTests(TestCase):
         and the access token should still be None.
         """
         session = self.client.session
-        spotify.set_refresh_token(session, 'bad_code')
-        spotify.set_user_id(session, 'user_id')
+        spotify._set_refresh_token(session, 'bad_code')
+        spotify._set_user_id(session, 'user_id')
 
-        spotify.request_authorized_token(session)
+        spotify._request_authorized_token(session)
 
         self.assertIsNone(session.get(spotify.AUTH_ACCESS_TOKEN))
         self.assertIs(session.get(spotify.REFRESH_TOKEN), 'bad_code')
@@ -511,7 +511,7 @@ class RequestNoauthAccessTokenTests(TestCase):
         request_noauth_access_token() should set a valid access token
         that can be used to request public data from Spotify.
         """
-        spotify.request_noauth_access_token()
+        spotify._request_noauth_access_token()
         self.assertIsNotNone(spotify.noauth_access_token)
 
         headers = {
@@ -565,9 +565,9 @@ class AuthorizedSessionTests(StaticLiveServerTestCase):
         setUpClass().
         """
         self.session = create_session_store()
-        spotify.set_refresh_token(self.session, self.refresh_token)
-        spotify.set_user_id(self.session, self.user_id)
-        spotify.set_auth_access_token(self.session, self.auth_access_token, 10)
+        spotify._set_refresh_token(self.session, self.refresh_token)
+        spotify._set_user_id(self.session, self.user_id)
+        spotify._set_auth_access_token(self.session, self.auth_access_token, 10)
 
 
 
@@ -578,7 +578,7 @@ class AuthorizedSessionTests(StaticLiveServerTestCase):
         and if the user is logged in, this should work successfully.
         """
 
-        token = spotify.get_auth_access_token(self.session)
+        token = spotify._get_auth_access_token(self.session)
         self.assertIsNotNone(token)
 
 
@@ -702,7 +702,7 @@ class AuthorizedSessionTests(StaticLiveServerTestCase):
         request_authorized_token() should return an Authorized
         Access Token if a user is logged in.
         """
-        spotify.request_authorized_token(self.session)
+        spotify._request_authorized_token(self.session)
         self.assertIsNotNone(self.session[spotify.AUTH_ACCESS_TOKEN])
         self.assertIsNotNone(self.session[spotify.REFRESH_TOKEN])
 

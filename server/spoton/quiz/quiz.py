@@ -15,6 +15,12 @@ import uuid
 logger = logging.getLogger(__name__)
 
 
+"""
+A scope is a permission to access data that a Spotify user can grant.
+These are all the scopes we need to create the quiz.
+"""
+SCOPES = 'user-read-private user-top-read user-library-read playlist-read-collaborative playlist-read-private user-follow-read user-read-recently-played'
+
 
 def pick_questions(quiz, user_data):
     sections = [
