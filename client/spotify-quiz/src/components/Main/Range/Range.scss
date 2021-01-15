@@ -44,7 +44,8 @@
   display: block;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
 }
-.rangeslider .rangeslider__handle {
+.rangeslider .rangeslider__handle, .rangeslider__handle:focus {
+  outline: none;
   background: #fff;
   border: 1px solid #ccc;
   cursor: pointer;

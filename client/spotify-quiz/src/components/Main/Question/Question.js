@@ -13,8 +13,8 @@ const Question = ({ question, handleOffer }) => {
         onClick={() => handleOffer(question.id)}
         className="question-wrapper"
       >
-        <div className="question-card shadow-5">
-          <div className="grid-container">
+        <div className="question-card">
+          <div className="question__grid-container">
             <div className="questionCard-top">
               <div>
                 <h3 id="questionCard-header">question {question.id + 1}</h3>
@@ -26,18 +26,19 @@ const Question = ({ question, handleOffer }) => {
               </h2>
             </div>
             <div className="questionCard-bottom">
-              <hr id="questionCard-underline-mid" />
               <div className="ResponseContainer"> 
 
                 
 { question.type == "mc" &&
-                <div className="card-container">
-                  <ul className="list">
-                    {question.choices.map((choice) => (
-                      <Choice key={choice.id} choice={choice} />
+                
+
+                  <div class="square-container">
+
+                    {question.choices.map((choice, index) => (
+                      <Choice key={choice.id} choice={choice} index={index} />
                     ))}
-                  </ul>
-                </div> 
+                  </div>
+               
 }
 
 { question.type == "slider" &&

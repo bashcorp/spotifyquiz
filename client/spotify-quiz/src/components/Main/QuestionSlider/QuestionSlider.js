@@ -37,7 +37,7 @@ export default class QuestionSlider extends Component {
         </button>
       </div>
       {/* track  */}
-      <div data-glide-el="track">
+      <div className="slider__track" data-glide-el="track">
         <div style={{ display: "flex" }}>
           {this.props.children.map((slide, index) => {
             return React.cloneElement(slide, {
