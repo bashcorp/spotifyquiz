@@ -139,8 +139,10 @@ const Quiz = () => {
             </QuestionSlider>
           </div>
         </div>
-        <div class="quiz__nav"></div>
-        <div class="quiz__right-nav"></div>
+        <div class="quiz__nav">
+          <i onClick={e => document.getElementById("right-butt").click()} class="fas fa-chevron-circle-right"></i>
+        </div>
+        <div class="quiz__right-nav shadow-5"></div>
       </div>
     </div>
   );

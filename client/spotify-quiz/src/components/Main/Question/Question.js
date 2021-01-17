@@ -25,7 +25,7 @@ function handleChoice(newValue) {
           <div className="question__grid-container">
             <div className="questionCard-top">
               <div>
-                <h3 id="questionCard-header">question {question.id + 1}</h3>
+                <h3 id="questionCard-header">question {questionNumber + 1}</h3>
                 <hr id="questionCard-underline-top" />
               </div>
 
