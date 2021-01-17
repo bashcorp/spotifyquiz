@@ -1,12 +1,11 @@
 .ResponseContainer {
-	height: 100%;
+  height: 100%;
 }
-
 
 .square-container {
   display: flex;
   flex-wrap: wrap;
-  width: 500px;
+  width: 385px;
   margin-left: auto;
   margin-right: auto;
   justify-content: space-around;
@@ -14,99 +13,160 @@
 
 .square {
   position: relative;
-  flex-basis: calc(50% - 72px);
-  margin: 12px;
+  flex-basis: calc(50% - 16px);
+  margin: 8px;
   box-sizing: border-box;
   border-radius: 8px;
-  transition: .3s;
-
-}
-
-
-
-.square:hover {
-  transform: scale(115%);
-  box-shadow: 0 1px 1px rgba(0,0,0,0.11), 
-              0 2px 2px rgba(0,0,0,0.11), 
-              0 4px 4px rgba(0,0,0,0.11), 
-              0 8px 8px rgba(0,0,0,0.11), 
-              
-              
+  transition: 0.3s;
 }
 
 .square:active {
-    transform: scale(120%);
+  transform: scale(102%);
 }
 
 .square::before {
-  content: '';
+  content: "";
   display: block;
   padding-top: 100%;
 }
 
 .square .content {
   position: absolute;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
   height: 100%;
   width: 100%;
 }
 
 .list-item {
-    padding: 12px;
-   
-  }
+  padding: 12px;
+}
 
-  .list-content {
-
+.list-content {
   position: absolute;
   padding: 6px;
   bottom: 0;
   right: 0;
   text-align: right;
-  }
+}
 
-
-#choice__bgImg{
- position: absolute;
- height: 100%;
-  display:inline-block;
-  top: 0; left: 0;
+#choice__bgImg {
+  position: absolute;
+  height: 100%;
+  display: inline-block;
+  top: 0;
+  left: 0;
   height: 100%;
   width: 100%;
 }
 #choice__bgImg:after {
-  content:'';
-  position:absolute;
-  left:0; top:0;
-  width:100%; height:100%;
-  display:inline-block;
-  background: -moz-linear-gradient(top, rgba(0,0,0,0) 30%, rgba(136, 96, 208,0.8) 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(30%,rgba(136, 96, 208,0.8)), color-stop(100%,rgba(0,0,0,0))); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top, rgba(0,0,0,0) 30%,rgba(136, 96, 208,0.8) 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top, rgba(0,0,0,0) 30%,rgba(136, 96, 208,0.8) 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top, rgba(0,0,0,0) 30%,rgba(136, 96, 208,0.8) 100%); /* IE10+ */
-  background: linear-gradient(to bottom, rgba(0,0,0,0) 30%,rgba(136, 96, 208,0.9) 100%); /* W3C */
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: inline-block;
+  background: -moz-linear-gradient(
+    top,
+    rgba(0, 0, 0, 0) 30%,
+    rgba(0, 0, 0, 0.8) 100%
+  ); /* FF3.6+ */
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(30%, rgba(0, 0, 0, 0.8)),
+    color-stop(100%, rgba(0, 0, 0, 0))
+  ); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(
+    top,
+    rgba(0, 0, 0, 0) 30%,
+    rgba(0, 0, 0, 0.8) 100%
+  ); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(
+    top,
+    rgba(0, 0, 0, 0) 30%,
+    rgba(0, 0, 0, 0.8) 100%
+  ); /* Opera 11.10+ */
+  background: -ms-linear-gradient(
+    top,
+    rgba(0, 0, 0, 0) 30%,
+    rgba(0, 0, 0, 0.8) 100%
+  ); /* IE10+ */
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 30%,
+    rgba(0, 0, 0, 0.9) 100%
+  ); /* W3C */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#00000000',GradientType=0 ); /* IE6-9 */
 }
 
+#choice-header {
+  font-size: 16px;
+  color: #fff;
+}
 
-
-
-
-
-  #choice-header {
-  	font-size: 16px;
-        color: #fff;
-  }
-
-   #choice-subheader {
-  	font-size: 13px;
-  	color: #dbdbdb;
-  }
+#choice-subheader {
+  font-size: 13px;
+  color: #dbdbdb;
+}
 
 #choice-underline-mid {
   width: 10%;
   margin: 2px 0px 6px 0px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 7px 7px 7px 7px;
+}
+
+/* selection animation */
+
+
+.content {
+  border: 4px solid #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 0;
+  transition: .3s;
+    box-sizing: border-box;
+
+}
+
+.content::before, .content::after {
+  position: absolute;
+  background: #8860d0;
+  z-index: -1;
+  transition: .3s;
+  content: '';
+}
+
+.content::before {
+  height: calc(100% + 14px);
+  width: 100px;
+}
+
+.content::after {
+  width: calc(100% + 14px);
+  height: 100px;
+
+}
+
+.content:hover::before {
+  width: 0px;
+  background: #8860d0;
+}
+
+.content:hover::after {
+  height: 0px;
+  background: #8860d0;
+}
+
+.content:hover {
+  background: #8860d0;
+  border: 4px solid #fff;
 }

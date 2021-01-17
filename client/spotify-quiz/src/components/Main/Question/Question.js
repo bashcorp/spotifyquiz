@@ -6,7 +6,15 @@ import Range from "../Range/Range";
 
 import "./Question.scss";
 
-const Question = ({ question, handleOffer }) => {
+const Question = ({ key, question, handleOffer, questionNumber }) => {
+
+const [choiceResponse, setChoiceResponse] = React.useState("");
+
+function handleChoice(newValue) {
+      setChoiceResponse(newValue);
+      console.log("Here: " + newValue);
+  }
+
   return (
     <div>
       <div
@@ -33,9 +41,8 @@ const Question = ({ question, handleOffer }) => {
                 
 
                   <div class="square-container">
-
                     {question.choices.map((choice, index) => (
-                      <Choice key={choice.id} choice={choice} index={index} />
+                      <Choice isSelected={(choice.id === choiceResponse) ? true : false} onChange={handleChoice} key={choice.id} choice={choice} index={index} />
                     ))}
                   </div>
                
@@ -49,13 +56,12 @@ const Question = ({ question, handleOffer }) => {
 }
 
 { question.type == "select" &&
-                <div className="card-container">
-                  <ul classNamee="list">
-                    {question.choices.map((choice) => (
-                      <Choice key={choice.id} choice={choice} />
+               <div class="square-container">
+
+                    {question.choices.map((choice, index) => (
+                      <Choice key={choice.id} choice={choice} index={index} />
                     ))}
-                  </ul>
-                </div> 
+                  </div>
 }
               </div>  
             </div>

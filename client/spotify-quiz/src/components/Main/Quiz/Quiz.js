@@ -49,8 +49,8 @@ const Quiz = () => {
       {
         id: 34,
         text: "This is a slider question?",
-        min: 3,
-        max: 17,
+        min: 0,
+        max: 100,
         type: "slider",
       },
 
@@ -128,11 +128,12 @@ const Quiz = () => {
         <div class="quiz__question">
           <div className="home-section test">
             <QuestionSlider options={carouselOptions}>
-              {quiz.questions.map((question) => (
+              {quiz.questions.map((question, index) => (
                 <Question
                   key={question.id}
                   question={question}
                   handleOffer={handleSelection}
+                  questionNumber={index}
                 />
               ))}
             </QuestionSlider>
