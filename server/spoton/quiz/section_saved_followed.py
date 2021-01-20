@@ -1,12 +1,34 @@
-import random
 from collections import Counter
+import random
 
 from spoton import spotify
 from spoton.models.quiz import *
+
 from .utils import *
 
 
 def pick_questions_saved_followed(quiz, user_data):
+    """Randomly creates a number of the section's questions for a quiz.
+
+    Uses the given UserData object to randomly pick and create several
+    questions for the Saved & Followed section of the quiz. The
+    questions will belong to the given Quiz.
+
+    Parameters
+    ----------
+    quiz : spoton.models.quiz.Quiz
+        The Spotify Quiz to add these questions to.
+    user_data : user_data.UserData
+        The UserData object that the function should use to create the
+        questions.
+
+    Returns
+    -------
+    list
+        The created questions, or None if not enough questions could be
+        created.
+    """
+
     questions = [
         question_saved_albums,
         question_saved_tracks,
@@ -15,12 +37,31 @@ def pick_questions_saved_followed(quiz, user_data):
 
     args = [quiz, user_data]
 
+    # Returns None if can't create enough successful questions
     return call_rand_functions(questions, args, 2)
 
 
 
 
 def question_saved_albums(quiz, user_data):
+    """Creates a question about the user's saved albums.
+
+    Creates and returns a question about the user's saved albums.
+    Returns None if the data is invalid somehow.
+
+    Parameters
+    ----------
+    quiz : spoton.models.quiz.Quiz
+        The Spotify Quiz to this question to.
+    user_data : user_data.UserData
+        The UserData object that should be used to create the question.
+
+    Returns
+    -------
+    spoton.models.quiz.CheckboxQuestion
+        The created question, or None if the data is invalid somehow.
+    """
+
     # Get the user's top artists from the last 6 months
     saved_albums = user_data.saved_albums()
 
@@ -41,7 +82,7 @@ def question_saved_albums(quiz, user_data):
     incorrect_choices = []
     if num_of_incorrect > 0:
         top_track_albums = [t['album'] for t in user_data.music_taste()]
-        incorrect_choices = choose_items_not_in_list(top_track_albums, saved_albums, num_of_incorrect)
+        incorrect_choices = random_from_list_blacklist(top_track_albums, saved_albums, num_of_incorrect)
 
         if not incorrect_choices:
             return None
@@ -59,6 +100,24 @@ def question_saved_albums(quiz, user_data):
 
 
 def question_saved_tracks(quiz, user_data):
+    """Creates a question about the user's saved tracks.
+
+    Creates and returns a question about the user's saved tracks.
+    Returns None if the data is invalid somehow.
+
+    Parameters
+    ----------
+    quiz : spoton.models.quiz.Quiz
+        The Spotify Quiz to this question to.
+    user_data : user_data.UserData
+        The UserData object that should be used to create the question.
+
+    Returns
+    -------
+    spoton.models.quiz.CheckboxQuestion
+        The created question, or None if the data is invalid somehow.
+    """
+
     # Get the user's top artists from the last 6 months
     saved_tracks = user_data.saved_tracks()
 
@@ -79,7 +138,7 @@ def question_saved_tracks(quiz, user_data):
     incorrect_choices = []
     
     if num_of_incorrect > 0:
-        incorrect_choices = choose_items_not_in_list(user_data.music_taste(), saved_tracks, num_of_incorrect)
+        incorrect_choices = random_from_list_blacklist(user_data.music_taste(), saved_tracks, num_of_incorrect)
         if not incorrect_choices:
             return None
 
@@ -98,6 +157,24 @@ def question_saved_tracks(quiz, user_data):
 
 
 def question_followed_artists(quiz, user_data):
+    """Creates a question about the user's followed artists.
+
+    Creates and returns a question about the user's followed artists.
+    Returns None if the data is invalid somehow.
+
+    Parameters
+    ----------
+    quiz : spoton.models.quiz.Quiz
+        The Spotify Quiz to this question to.
+    user_data : user_data.UserData
+        The UserData object that should be used to create the question.
+
+    Returns
+    -------
+    spoton.models.quiz.CheckboxQuestion
+        The created question, or None if the data is invalid somehow.
+    """
+
     # Get the user's top artists from the last 6 months
     followed_artists = user_data.followed_artists()
 
@@ -116,7 +193,7 @@ def question_followed_artists(quiz, user_data):
     incorrect_choices = []
 
     if num_of_incorrect > 0:
-        incorrect_choices = choose_items_not_in_list(user_data.top_artists('long_term'), followed_artists, num_of_incorrect)
+        incorrect_choices = random_from_list_blacklist(user_data.top_artists('long_term'), followed_artists, num_of_incorrect)
 
         if not incorrect_choices:
             return None

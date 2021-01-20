@@ -1,11 +1,33 @@
 import random
 
-from spoton.models.quiz import *
 from spoton import spotify
+from spoton.models.quiz import *
+
 from .utils import *
 
 
 def pick_questions_popularity_playlists(quiz, user_data):
+    """Randomly creates a number of the section's questions for a quiz.
+
+    Uses the given UserData object to randomly pick and create several
+    questions for the Popularity & Playlists section of the quiz. The
+    questions will belong to the given Quiz.
+
+    Parameters
+    ----------
+    quiz : spoton.models.quiz.Quiz
+        The Spotify Quiz to add these questions to.
+    user_data : user_data.UserData
+        The UserData object that the function should use to create the
+        questions.
+
+    Returns
+    -------
+    list
+        The created questions, or None if not enough questions could be
+        created.
+    """
+
     questions = [
         question_user_followers,
         question_popular_playlist,
@@ -14,16 +36,30 @@ def pick_questions_popularity_playlists(quiz, user_data):
 
     args = [quiz, user_data]
 
+    # Returns None if can't create enough successful questions
     return call_rand_functions(questions, args, 2)
 
 
 
 def question_user_followers(quiz, user_data):
-    """
-    Returns a question asking about the number of followers a user has.
+    """Creates a question about the number of a user's followers.
 
-    Returns None if the user has no followers.
+    Creates and returns a question about the number of the user's
+    followers. Returns None if the data is invalid somehow.
+
+    Parameters
+    ----------
+    quiz : spoton.models.quiz.Quiz
+        The Spotify Quiz to this question to.
+    user_data : user_data.UserData
+        The UserData object that should be used to create the question.
+
+    Returns
+    -------
+    spoton.models.quiz.SliderQuestion
+        The created question, or None if the data is invalid somehow.
     """
+
     # Get the number of followers of the user
     follower_object = user_data.personal_data()['followers']
     followers = follower_object['total']
@@ -58,11 +94,24 @@ def question_user_followers(quiz, user_data):
 
 
 def question_popular_playlist(quiz, user_data):
+    """Creates a question about the user's most popular playlist.
+
+    Creates and returns a question about the user's most popular
+    playlist. Returns None if the data is invalid somehow.
+
+    Parameters
+    ----------
+    quiz : spoton.models.quiz.Quiz
+        The Spotify Quiz to this question to.
+    user_data : user_data.UserData
+        The UserData object that should be used to create the question.
+
+    Returns
+    -------
+    spoton.models.quiz.CheckboxQuestion
+        The created question, or None if the data is invalid somehow.
     """
-    Creates and returns a question asking what the user's most popular
-    playlist is, by number of followers. Returns None if data is invalid
-    or if there is not enough of it.
-    """
+    
     playlists = user_data.playlists_detailed()
 
     if not playlists:
@@ -120,10 +169,24 @@ def question_popular_playlist(quiz, user_data):
 
 
 def question_playlist_tracks(quiz, user_data):
+    """Creates a question about the tracks in a user's playlist.
+
+    Creates and returns a question about the tracks in one of the
+    user's playlist. Returns None if the data is invalid somehow.
+
+    Parameters
+    ----------
+    quiz : spoton.models.quiz.Quiz
+        The Spotify Quiz to this question to.
+    user_data : user_data.UserData
+        The UserData object that should be used to create the question.
+
+    Returns
+    -------
+    spoton.models.quiz.CheckboxQuestion
+        The created question, or None if the data is invalid somehow.
     """
-    Creates and returns a question asking which tracks are in one of the
-    user's playlists. Returns None if the data is invalid.
-    """
+    
     all_playlists = user_data.playlists().copy()
 
     if not all_playlists:
@@ -161,7 +224,7 @@ def question_playlist_tracks(quiz, user_data):
 
     # Choose tracks from the user's music taste to be incorrect answers
     music_taste = user_data.music_taste()
-    incorrect_choices = choose_items_not_in_list(music_taste, tracks, num_incorrect)
+    incorrect_choices = random_from_list_blacklist(music_taste, tracks, num_incorrect)
 
     # If there aren't enough tracks to make incorrect answers, creation fails
     # Use "is None", because if incorrect_choices is an empty list because num_incorrect=0,

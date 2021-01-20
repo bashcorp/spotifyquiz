@@ -210,71 +210,21 @@ class CombineTrackJsonTests(TestCase):
 
     
 
-
-class NonDestructiveUpdateTests(TestCase):
-    """
-    non_destructive_update() merges two dictionaries (i1 and i2) into i1. If the dicts have
-    the same key, the value of i1 will be the one preserved.
-    """
-
-    def test_non_destructive_update(self):
-        """
-        non_destructive_update() merges two dictionaries (i1 and i2) into i1. If the dicts have
-        the same key, the value of i1 will be the one preserved.
-        """
-        i1 = {'id': 4, 'attr1': 'testing', 'attr2': 'test2'}
-        i2 = {'id': 5, 'attr3': 'hello', 'attr2': 'test4'}
-
-        combined = {'id': 4, 'attr1': 'testing', 'attr2': 'test2', 'attr3': 'hello'}
-        results = non_destructive_update(i1, i2)
-
-        self.assertEquals(results, combined)
-        self.assertEquals(i1, combined)
-
-
-    def test_non_destructive_update_no_i1(self):
-        """
-        non_destructive_update() merges two dictionaries (i1 and i2) into i1. If the dicts have
-        the same key, the value of i1 will be the one preserved.
-        """
-        i2 = {'id': 4, 'attr1': 'testing', 'attr2': 'test2'}
-        i2_orig = i2.copy()
-
-        results = non_destructive_update({}, i2)
-
-        self.assertEquals(results, i2_orig)
-        self.assertEquals(i2, i2_orig)
-
-
-    def test_non_destructive_update_no_i2(self):
-        """
-        non_destructive_update() merges two dictionaries (i1 and i2) into i1. If the dicts have
-        the same key, the value of i1 will be the one preserved.
-        """
-        i1 = {'id': 4, 'attr1': 'testing', 'attr2': 'test2'}
-        i1_orig = i1.copy()
-
-        results = non_destructive_update(i1, {})
-
-        self.assertEquals(results, i1_orig)
-        self.assertEquals(i1, i1_orig)
-
-
 class ChooseItemsNotInListTests(TestCase):
     """
-    Tests choose_items_not_in_list(), which chooses a given number of items from the given list,
+    Tests random_from_list_blacklist(), which chooses a given number of items from the given list,
     with the condition that the chosen items are not in a given exclusion list.
     """
 
-    def test_choose_items_not_in_list(self):
+    def test_random_from_list_blacklist(self):
         """
-        choose_items_not_in_list() should choose a given number of items from a given list,
+        random_from_list_blacklist() should choose a given number of items from a given list,
         such that the items are not in a given exclusion list.
         """
         item_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         excluded_items = [1, 3, 5, 7, 9]
 
-        results = choose_items_not_in_list(item_list, excluded_items, 3)
+        results = random_from_list_blacklist(item_list, excluded_items, 3)
 
         for i in results:
             self.assertIn(i, item_list)
@@ -284,15 +234,15 @@ class ChooseItemsNotInListTests(TestCase):
         self.assertEquals(len(non_dupes), len(results))
 
 
-    def test_choose_items_not_in_list_just_enough(self):
+    def test_random_from_list_blacklist_just_enough(self):
         """
-        choose_items_not_in_list() should choose a given number of items from a given list,
+        random_from_list_blacklist() should choose a given number of items from a given list,
         such that the items are not in a given exclusion list.
         """
         item_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         excluded_items = [1, 3, 5, 7, 9]
 
-        results = choose_items_not_in_list(item_list, excluded_items, 5)
+        results = random_from_list_blacklist(item_list, excluded_items, 5)
 
         for i in results:
             self.assertIn(i, item_list)
@@ -302,15 +252,15 @@ class ChooseItemsNotInListTests(TestCase):
         self.assertEquals(len(non_dupes), len(results))
 
 
-    def test_choose_items_not_in_list_not_enough_items(self):
+    def test_random_from_list_blacklist_not_enough_items(self):
         """
-        If there are not enough items to form a list, choose_items_not_in_list() should
+        If there are not enough items to form a list, random_from_list_blacklist() should
         return None.
         """
         item_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         excluded_items = [1, 3, 5, 7, 9]
 
-        results = choose_items_not_in_list(item_list, excluded_items, 6)
+        results = random_from_list_blacklist(item_list, excluded_items, 6)
 
         self.assertIsNone(results)
 

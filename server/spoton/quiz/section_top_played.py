@@ -1,12 +1,34 @@
-import random
 from collections import Counter
+import random
 
 from spoton import spotify
 from spoton.models.quiz import *
+
 from .utils import *
     
 
 def pick_questions_top_played(quiz, user_data):
+    """Randomly creates a number of the section's questions for a quiz.
+
+    Uses the given UserData object to randomly pick and create several
+    questions for the Top Played section of the quiz. The questions
+    will belong to the given Quiz.
+
+    Parameters
+    ----------
+    quiz : spoton.models.quiz.Quiz
+        The Spotify Quiz to add these questions to.
+    user_data : user_data.UserData
+        The UserData object that the function should use to create the
+        questions.
+
+    Returns
+    -------
+    list
+        The created questions, or None if not enough questions could be
+        created.
+    """
+
     questions = [
         question_top_track,
         question_top_track,
@@ -34,6 +56,7 @@ def pick_questions_top_played(quiz, user_data):
             [quiz, user_data, 'short_term'],
     ]
 
+    # Returns None if can't create enough successful questions
     return call_rand_functions_arg_sets(questions, args, 3)
 
 
@@ -41,6 +64,27 @@ def pick_questions_top_played(quiz, user_data):
 
 
 def question_top_track(quiz, user_data, time_range):
+    """Creates a question about the user's top track of the time range.
+
+    Creates and returns a question about the user's top track of the
+    given time range. Returns None if the data is invalid somehow.
+
+    Parameters
+    ----------
+    quiz : spoton.models.quiz.Quiz
+        The Spotify Quiz to this question to.
+    user_data : user_data.UserData
+        The UserData object that should be used to create the question.
+    time_range : str
+        The time range of the data over which to base the question. Can
+        be one of 'short_term', 'medium_term', or 'long_term'.
+
+    Returns
+    -------
+    spoton.models.quiz.CheckboxQuestion
+        The created question, or None if the data is invalid somehow.
+    """
+
     # Get the user's top artists from the last 6 months
     top_tracks = user_data.top_tracks(time_range)
 
@@ -69,10 +113,27 @@ def question_top_track(quiz, user_data, time_range):
 
      
 def question_top_artist(quiz, user_data, time_range):
+    """Creates a question about the user's top artist of the time range
+
+    Creates and returns a question about the user's top artist of the
+    given time range. Returns None if the data is invalid somehow.
+
+    Parameters
+    ----------
+    quiz : spoton.models.quiz.Quiz
+        The Spotify Quiz to this question to.
+    user_data : user_data.UserData
+        The UserData object that should be used to create the question.
+    time_range : str
+        The time range of the data over which to base the question. Can
+        be one of 'short_term', 'medium_term', or 'long_term'.
+
+    Returns
+    -------
+    spoton.models.quiz.CheckboxQuestion
+        The created question, or None if the data is invalid somehow.
     """
-    A CheckboxQuestion: what is the user's most listened to artist
-    of the past 6 months.
-    """
+
     top_artists = user_data.top_artists(time_range)
 
     if not top_artists:
@@ -97,7 +158,29 @@ def question_top_artist(quiz, user_data, time_range):
     return question
 
 
+
 def question_top_genre(quiz, user_data, time_range):
+    """Creates a question about the user's top genre of the time range.
+
+    Creates and returns a question about the user's top genre of the
+    given time range. Returns None if the data is invalid somehow.
+
+    Parameters
+    ----------
+    quiz : spoton.models.quiz.Quiz
+        The Spotify Quiz to this question to.
+    user_data : user_data.UserData
+        The UserData object that should be used to create the question.
+    time_range : str
+        The time range of the data over which to base the question. Can
+        be one of 'short_term', 'medium_term', or 'long_term'.
+
+    Returns
+    -------
+    spoton.models.quiz.CheckboxQuestion
+        The created question, or None if the data is invalid somehow.
+    """
+
     top_genres = user_data.top_genres(time_range)
 
     # Remove any empty genre lists (some songs might not have genres associated with them)

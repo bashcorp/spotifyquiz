@@ -1,14 +1,35 @@
+from collections import Counter
 import datetime
 import random
-from collections import Counter
 
 from spoton import spotify
 from spoton.models.quiz import *
+
 from .utils import *
     
 
-
 def pick_questions_music_taste(quiz, user_data):
+    """Randomly creates a number of the section's questions for a quiz.
+
+    Uses the given UserData object to randomly pick and create several
+    questions for the Music Taste section of the quiz. The questions
+    will belong to the given Quiz.
+
+    Parameters
+    ----------
+    quiz : spoton.models.quiz.Quiz
+        The Spotify Quiz to add these questions to.
+    user_data : user_data.UserData
+        The UserData object that the function should use to create the
+        questions.
+
+    Returns
+    -------
+    list
+        The created questions, or None if not enough questions could be
+        created.
+    """
+
     questions = [
         question_explicitness,
         question_energy,
@@ -22,15 +43,30 @@ def pick_questions_music_taste(quiz, user_data):
 
     args = [quiz, user_data]
 
+    # Returns None if can't create enough successful questions
     return call_rand_functions(questions, args, 3)
 
 
 
 def question_explicitness(quiz, user_data):
+    """Creates a explicitness question about a user's music taste.
+
+    Creates and returns a question about the explicitness of the user's
+    music taste. Returns None if the data is invalid somehow.
+
+    Parameters
+    ----------
+    quiz : spoton.models.quiz.Quiz
+        The Spotify Quiz to this question to.
+    user_data : user_data.UserData
+        The UserData object that should be used to create the question.
+
+    Returns
+    -------
+    spoton.models.quiz.SliderQuestion
+        The created question, or None if the data is invalid somehow.
     """
-    Creates and returns a question asking what percentage of the user's music taste
-    is explicit. Returns None if data is invalid.
-    """
+
     # Get the user's top artists from the last 6 months
     music_taste = user_data.music_taste()
 
@@ -45,7 +81,8 @@ def question_explicitness(quiz, user_data):
     percentage_explicit = int(100*count_explicit/len(music_taste))
 
     # Create the actual question
-    question = SliderQuestion.objects.create(quiz=quiz, text="What percentage of the user's music is explicit?",
+    question = SliderQuestion.objects.create(quiz=quiz, 
+            text="What percentage of the user's music is explicit?",
             slider_min = 0, slider_max = 100, answer = percentage_explicit)
 
     return question
@@ -53,10 +90,24 @@ def question_explicitness(quiz, user_data):
 
 
 def question_energy(quiz, user_data):
+    """Creates a question about the energy of the user's music taste.
+
+    Creates and returns a question about the energy of the user's music
+    taste. Returns None if the data is invalid somehow.
+
+    Parameters
+    ----------
+    quiz : spoton.models.quiz.Quiz
+        The Spotify Quiz to this question to.
+    user_data : user_data.UserData
+        The UserData object that should be used to create the question.
+
+    Returns
+    -------
+    spoton.models.quiz.SliderQuestion
+        The created question, or None if the data is invalid somehow.
     """
-    Creates and returns a question asking how energetic the user's music taste
-    is, on a scale of 0-100. Returns None if data is invalid.
-    """
+
     music_taste = user_data.music_taste_with_audio_features()
 
     if not music_taste:
@@ -77,10 +128,24 @@ def question_energy(quiz, user_data):
 
 
 def question_acousticness(quiz, user_data):
+    """Creates an acousticness question about the user's music taste.
+
+    Creates and returns a question about the acousticness of the user's
+    music taste. Returns None if the data is invalid somehow.
+
+    Parameters
+    ----------
+    quiz : spoton.models.quiz.Quiz
+        The Spotify Quiz to this question to.
+    user_data : user_data.UserData
+        The UserData object that should be used to create the question.
+
+    Returns
+    -------
+    spoton.models.quiz.SliderQuestion
+        The created question, or None if the data is invalid somehow.
     """
-    Creates and returns a question asking what percentage of the user's
-    music taste is acoustic. Returns None if data is invalid.
-    """
+
     music_taste = user_data.music_taste_with_audio_features()
 
     if not music_taste:
@@ -102,10 +167,24 @@ def question_acousticness(quiz, user_data):
 
 
 def question_happiness(quiz, user_data):
+    """Creates a happiness question about the user's music taste.
+
+    Creates and returns a question about the happiness of the user's
+    music taste. Returns None if the data is invalid somehow.
+
+    Parameters
+    ----------
+    quiz : spoton.models.quiz.Quiz
+        The Spotify Quiz to this question to.
+    user_data : user_data.UserData
+        The UserData object that should be used to create the question.
+
+    Returns
+    -------
+    spoton.models.quiz.SliderQuestion
+        The created question, or None if the data is invalid somehow.
     """
-    Creates and returns a question asking how danceable the user's
-    music taste is, on a scale from 0-100. Returns None if data is invalid.
-    """
+    
     music_taste = user_data.music_taste_with_audio_features()
 
     if not music_taste:
@@ -126,10 +205,24 @@ def question_happiness(quiz, user_data):
 
 
 def question_danceability(quiz, user_data):
+    """Creates a danceability question about the user's music taste.
+
+    Creates and returns a question about the danceability of the user's
+    music taste. Returns None if the data is invalid somehow.
+
+    Parameters
+    ----------
+    quiz : spoton.models.quiz.Quiz
+        The Spotify Quiz to this question to.
+    user_data : user_data.UserData
+        The UserData object that should be used to create the question.
+
+    Returns
+    -------
+    spoton.models.quiz.SliderQuestion
+        The created question, or None if the data is invalid somehow.
     """
-    Creates and returns a question asking how danceable the user's music
-    taste is, on a scale from 0-100. Returns None if data is invalid.
-    """
+
     music_taste = user_data.music_taste_with_audio_features()
 
     if not music_taste:
@@ -150,10 +243,24 @@ def question_danceability(quiz, user_data):
 
 
 def question_duration(quiz, user_data):
+    """Creates a question about the length of the user's music taste.
+
+    Creates and returns a question about the average length of the
+    user's music taste. Returns None if the data is invalid somehow.
+
+    Parameters
+    ----------
+    quiz : spoton.models.quiz.Quiz
+        The Spotify Quiz to this question to.
+    user_data : user_data.UserData
+        The UserData object that should be used to create the question.
+
+    Returns
+    -------
+    spoton.models.quiz.SliderQuestion
+        The created question, or None if the data is invalid somehow.
     """
-    Creates and returns a question asking the average length of a song
-    in the user's music taste. Returns None if data is invalid.
-    """
+    
     music_taste = user_data.music_taste()
 
     if not music_taste:
@@ -179,11 +286,27 @@ def question_duration(quiz, user_data):
     return question
 
 
+
 def question_average_release_date(quiz, user_data):
+    """Creates a release date question about the user's music taste.
+
+    Creates and returns a question about the average release date of
+    the user's music taste. Returns None if the data is invalid
+    somehow.
+
+    Parameters
+    ----------
+    quiz : spoton.models.quiz.Quiz
+        The Spotify Quiz to this question to.
+    user_data : user_data.UserData
+        The UserData object that should be used to create the question.
+
+    Returns
+    -------
+    spoton.models.quiz.SliderQuestion
+        The created question, or None if the data is invalid somehow.
     """
-    Creates and returns a question asking about the average release
-    year of the user's music taste. Returns None if data is invalid.
-    """
+    
     music_taste = user_data.music_taste()
 
     if not music_taste:
@@ -223,11 +346,26 @@ def question_average_release_date(quiz, user_data):
     return question
         
 
+
 def question_music_popularity(quiz, user_data):
+    """Creates a popularity question about the user's music taste.
+
+    Creates and returns a question about the popularity of the user's
+    music taste. Returns None if the data is invalid somehow.
+
+    Parameters
+    ----------
+    quiz : spoton.models.quiz.Quiz
+        The Spotify Quiz to this question to.
+    user_data : user_data.UserData
+        The UserData object that should be used to create the question.
+
+    Returns
+    -------
+    spoton.models.quiz.SliderQuestion
+        The created question, or None if the data is invalid somehow.
     """
-    Creates and returns a question asking how popular or mainstream the user's
-    music taste is. Returns None if data is invalid.
-    """
+
     music_taste = user_data.music_taste()
 
     if not music_taste:

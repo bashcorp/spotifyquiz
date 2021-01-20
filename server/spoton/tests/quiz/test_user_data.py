@@ -477,6 +477,10 @@ class UserDataCompilationTests(StaticLiveServerTestCase):
 
 
     def test_get_playlist_with_tracks(self):
+        """
+        get_playlist_with_tracks() should request one playlist's tracks
+        """
+
         u = UserData(self.session)
         playlists = u.playlists()
 
@@ -484,6 +488,9 @@ class UserDataCompilationTests(StaticLiveServerTestCase):
 
         self.assertEquals(data['type'], 'playlist')
         self.assertIsNotNone(data['tracks']['items'])
+
+        # Assures the data is saved in the class
+        self.assertIsNotNone(u.playlists()[0]['tracks']['items'])
 
 
 
