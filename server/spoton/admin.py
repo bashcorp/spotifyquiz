@@ -5,15 +5,13 @@ from django.utils.html import format_html
 from spoton.models.quiz import *
 from spoton.models.response import *
 
-class QuestionInline(admin.TabularInline):
-    model = Question
 
 @admin.register(Quiz)
 class QuizAdmin(admin.ModelAdmin):
+    # Display list of all questions
     readonly_fields = ('user_id', 'uuid', '_admin_get_quiz_questions',)
-    list_display = ('user_id',)
 
-#class Checkbox
+    list_display = ('user_id',)
 
 
 

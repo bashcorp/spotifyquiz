@@ -2,7 +2,13 @@ import os
 from cryptography.fernet import Fernet
 
 def decryptFile(data_file, key_file):
+    """
+    Decrypts the username & password for the Spotify test account so
+    they're not stored in plaintext.
+    """
+
     dir_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'credentials')
+
     data_path = os.path.join(dir_path, data_file)
     key_path = os.path.join(dir_path, key_file)
 
@@ -22,6 +28,7 @@ def decryptFile(data_file, key_file):
     f = open(data_path, "rb")
     encrypted_data = f.read()
     f.close()
+
     data = cipher.decrypt(encrypted_data)
     return data.decode()
 

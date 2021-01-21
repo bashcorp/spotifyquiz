@@ -72,9 +72,11 @@ TEMPLATES = [
     },
 ]
 
+# HTML pages are found in the client folder, separate from the server
 TEMPLATE_DIRS = [
     os.path.join(BASE_DIR, '../client/')
 ]
+
 
 WSGI_APPLICATION = 'wsgi.application'
 
@@ -136,12 +138,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 STATIC_URL = '/static/'
 
+# Static file paths, in the client folder, separate from the server
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, '../client/spotify-quiz/build/'),
     os.path.join(BASE_DIR, '../client/spotify-quiz/build/static/')
 ]
 
 
+# Set server's log level output
 if DEBUG:
     log_level = 'DEBUG'
     formatter = 'concise'
@@ -149,6 +153,7 @@ else:
     log_level = 'WARNING'
     formatter = 'verbose'
 
+# Nicer looking logger output
 log_colors = {
     'DEBUG':    'bold_black',
     'INFO':     'white',
