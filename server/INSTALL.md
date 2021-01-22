@@ -1,43 +1,63 @@
-# spotifyquiz
-Spotify Quiz!
+# SpotOn Server-Side
 
 # Setting up the Server
-## Virtual Environments
+This guide fully describes how to set up the server on your local machine.
+It's meant for someone who doesn't have experience with server-side technologies.
+
+## Server Dependencies & Virtual Environments
 
 ### Installing
-A virtual environment is a way to install software into a folder in your project, so it doesn't install for the whole computer. So if you have a bunch of different projects with different software version requirements, this is an easy way of managing it.
-Django hasn't supported python 2 for a while, so you should probably install python 3.
-Once you do, go to the root folder of your project and run `python3 -m venv venv_folder`
-*(Note: You may need to install other python libraries, I can't remember. Follow the any instructions given to you)*
+A virtual environment is a way to install software for only your project,
+instead of your entire computer. This way, if you have several different
+projects that use different versions of the same software, you can manage that
+easily. 
+
+Make sure you have python3 installed. Then go to the server/ folder of the
+project and run `python3 -m venv venv_folder` (you can use any name for the
+venv_folder. I just use 'venv').
 
 ### Using
-To use commands with the software installed in the virtual environment, run `source venv_folder/bin/activate` You can use the terminal like usual, but commands from programs in the virtual environment will use that software.
+In the terminal, to use commands from software in the virtual environment, you
+must run `source venv_folder/bin/activate`. Now, normal commands will still
+work, but any commands associated with virtual environment programs will use
+those programs.
 
-### Installing software with pip
-Pip is python's package manager. To install a program, you'd run `pip install program`. (To install into the virtual environment, make sure you've run the activate script)
-If you have a bunch of programs installed, you can save the list of programs to a text file by running `pip freeze > requirements.txt`. You can then install all the programs in such a list by running `pip install -r requirements.txt`.
+You'll need to activate your virtual environment to install server-side
+dependencies, run the server, and run the tests.
 
-I've included a `requirements.txt` in the github repository, so you should install from that.
+### Installing Server Dependencies
+pip3 is python's package manager. To install all the server dependencies, go
+to the server/ folder, activate the virtual environment, and run
+`pip3 install -r requirements.txt`.
+
+
+## Database
+
+### Installing
+The server uses MySQL as its database. You'll need to install that however you
+do on your system.
+
+### Setup
+You'll need to create the server's database and grant the proper priveleges.
+
+To create the database, from inside of MySQL, run `CREATE DATABASE spoton;`
+
+You'll need to give the server's user permissions to access this database.
+Run `GRANT ALL PRIVILEGES ON spoton.* TO 'spoton'@'localhost';`
+
+### Migrating the Server's Changes
+To create the proper tables in the database, from the server/ folder and with
+the virtual environment activated, run `python3 manage.py migrate`.
+
+
+# Testing the Server
+The best way to make sure that everything is working properly is to run the 
+server's tests. To do this, from the server/, with the virtual environment
+activated, run `python3 manage.py test -v2` (the `-v2` is not necessary, but it
+makes the tests look cooler).
 
 
 # Starting the Server
-`source` into your virtual environment and then run `python3 manage.py runserver`. This will start the server, which will be on localhost:8000
-
-
-# Adding Front-End Resources
-
-## HTML/PHP Pages
-(See https://docs.djangoproject.com/en/3.0/intro/tutorial06/)
-Django has what it calls an overall project, which is the main directory of the repo. There is one 'app' inside of the project, which is the folder called `quiz`. Inside that, there's a `templates` folder, which is where you put your html and php files.
-
-## Static Files (css, javascript, images)
-(See https://docs.djangoproject.com/en/3.0/howto/static-files/)
-Inside the quiz app, there's a folder called `static`. There you can put all your static files.
-
-### Loading static files
-Django has a fancy system to refer to static files. To use it, you'll need to load them first. Put `{% load static %}` in your `<head>`.
-
-### Referring to static files (can you tell I'm enjoying these headers)
-In place of a url, put `{% static path %}`, where `path` is the path of the file relative to the `static` folder.
-So for a css file, you would write `<link ... href="{% static 'css/styles.css' %}">`
-
+If the tests all pass, then you're good to run the server! From the same place,
+run `python3 manage.py runserver`. This will start the server locally on port
+8000.
