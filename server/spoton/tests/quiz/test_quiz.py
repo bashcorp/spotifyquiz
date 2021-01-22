@@ -13,7 +13,7 @@ from spoton.quiz.section_music_taste_features import pick_questions_music_taste
 from spoton.quiz.section_popularity_playlists import pick_questions_popularity_playlists
 from spoton.quiz.section_saved_followed import pick_questions_saved_followed
 from spoton.quiz.section_top_played import pick_questions_top_played
-from spoton.tests.setup_tests import create_authorized_session
+from spoton.tests.setup_tests import create_authorized_session, create_session_store
 
 
 class CreateQuizTests(StaticLiveServerTestCase):
@@ -26,7 +26,7 @@ class CreateQuizTests(StaticLiveServerTestCase):
 
     @classmethod 
     def setUpClass(cls):
-        super(PickQuestionsRealRequestsTests, cls).setUpClass()
+        super(CreateQuizTests, cls).setUpClass()
         cls.session = create_authorized_session(cls.live_server_url)
 
 
@@ -37,7 +37,7 @@ class CreateQuizTests(StaticLiveServerTestCase):
         auth_access_tokens, so that they don't hang up the testing
         program.
         """
-        super(PickQuestionsRealRequestsTests, cls).tearDownClass()
+        super(CreateQuizTests, cls).tearDownClass()
         spotify.cleanup_timers()
 
 
@@ -63,7 +63,7 @@ class CreateQuizTests(StaticLiveServerTestCase):
         session = create_session_store()
         quiz = create_quiz(session)
 
-        self.assertNone(quiz)
+        self.assertIsNone(quiz)
 
 
 
@@ -95,10 +95,9 @@ class PickQuestionsTests(TransactionTestCase):
         ]
 
         quiz = Quiz.objects.create(user_id='cassius')
-        questions = pick_questions_popular_playlists(quiz, u)
+        questions = pick_questions_popularity_playlists(quiz, u)
 
-        self.assertNone(questions)
-        self.assertEqual(quiz.questions.count(), 0)
+        self.assertIsNone(questions)
 
 
 
@@ -130,12 +129,22 @@ class PickQuestionsTests(TransactionTestCase):
                 'album':
                 {'name': 'Country Album 3', 'id': 3, 'artists': [{'name': 'James'}]},},
         ]
+        u._followed_artists = [
+            {'name': 'Cassius'},
+            {'name': 'Benjamin'},
+            {'name': 'James'},
+        ]
+
+        u._top_artists['long_term'] = [
+            {'name': 'Cassius'},
+            {'name': 'Benjamin'},
+            {'name': 'James'},
+        ]
 
         quiz = Quiz.objects.create(user_id='cassius')
         questions = pick_questions_saved_followed(quiz, u)
 
-        self.assertNone(questions)
-        self.assertEqual(quiz.questions.count(), 0)
+        self.assertIsNone(questions)
 
 
 
@@ -169,8 +178,7 @@ class PickQuestionsTests(TransactionTestCase):
         quiz = Quiz.objects.create(user_id='cassius')
         questions = pick_questions_top_played(quiz, u)
 
-        self.assertNone(questions)
-        self.assertEqual(quiz.questions.count(), 0)
+        self.assertIsNone(questions)
 
 
 
@@ -197,23 +205,33 @@ class PickQuestionsTests(TransactionTestCase):
             {'id': 'Track1', 'explicit': 'true', 'energy': 0.52,
                 'acousticness': 0.52, 'valence': 0.52,
                 'danceability': 0.52, 'duration_ms': 2.5*60000,
-                'release_date': '1954-10-02', 'popularity': 99},
+                'popularity': 99, 'name': 'Track1', 'artists': [{'name': 'Cash'}],
+                'album':
+                {'name': 'a1', 'id': 1, 'release_date': '1954-10-02', 'artists': [{'name': 'Cash'}]}},
             {'id': 'Track2', 'explicit': 'false', 'energy': 0.12,
                 'acousticness': 0.12, 'valence': 0.12,
                 'danceability': 0.12, 'duration_ms': 2.3*60000,
-                'release_date': '1998-04-04', 'popularity': 0},
+                'popularity': 0, 'name': 'Track2', 'artists': [{'name': 'Cash'}],
+                'album':
+                {'name': 'a2', 'id': 2, 'release_date': '1998-04-04', 'artists': [{'name': 'Cash'}]}},
             {'id': 'Track3', 'explicit': 'true', 'energy': 0.25,
                 'acousticness': 0.25, 'valence': 0.25,
                 'danceability': 0.25, 'duration_ms': 3.4*60000,
-                'release_date': '2020-01-10', 'popularity': 14},
+                'popularity': 14, 'name': 'Track3', 'artists': [{'name': 'Cash'}],
+                'album':
+                {'name': 'a3', 'id': 3, 'release_date': '2020-01-10', 'artists': [{'name': 'Cash'}]}},
             {'id': 'Track4', 'explicit': 'false', 'energy': 0.983,
                 'acousticness': 0.983, 'valence': 0.983,
                 'danceability': 0.983, 'duration_ms': 8.3*60000,
-                'release_date': '2005-12-25', 'popularity': 25},
+                'popularity': 25, 'name': 'Track4', 'artists': [{'name': 'Cash'}],
+                'album':
+                {'name': 'a4', 'id': 4, 'release_date': '2005-12-25', 'artists': [{'name': 'Cash'}]}},
             {'id': 'Track5', 'explicit': 'true', 'energy': 0.253,
                 'acousticness': 0.253, 'valence': 0.253,
                 'danceability': 0.253, 'duration_ms': 5.6*60000,
-                'release_date': '1977-07-17', 'popularity': 73},
+                'popularity': 73, 'name': 'Track5', 'artists': [{'name': 'Cash'}],
+                'album':
+                {'name': 'a5', 'id': 5, 'release_date': '1977-07-17', 'artists': [{'name': 'Cash'}]}},
         ]
         u._saved_albums = [
             {'name': 'Country Album 1', 'id': 1, 'artists': [{'name': 'Cash'}]},
@@ -269,8 +287,7 @@ class PickQuestionsTests(TransactionTestCase):
         quiz = Quiz.objects.create(user_id='cassius')
         questions = pick_questions(quiz, u)
 
-        self.assertNone(questions)
-        self.assertEqual(quiz.questions.count(), 0)
+        self.assertIsNone(questions)
 
 
 

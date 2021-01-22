@@ -546,8 +546,8 @@ class UserDataCompilationTests(StaticLiveServerTestCase):
         playlists = u.playlists().copy()
 
         data = u.get_playlist_with_tracks('0')
-        self.assertNone(data)
-        self.assertCountEquals(playlists, u.playlists())
+        self.assertIsNone(data)
+        self.assertCountEqual(playlists, u.playlists())
 
 
 class UserDataErrorTests(StaticLiveServerTestCase):

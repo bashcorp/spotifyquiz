@@ -53,7 +53,7 @@ class RefreshTokenTests(TestCase):
 
 
 
-class AuthAccessTokenTests():
+class AuthAccessTokenTests(StaticLiveServerTestCase):
     """
     The Spotify module stores Authorized Access Tokens (used access a
     user's personal data) in that user's session. Test the functions
@@ -68,7 +68,7 @@ class AuthAccessTokenTests():
         Saves the user's session data outside of a session object so
         that each test can have a fresh session with that data.
         """
-        super(AuthorizedSessionTests, cls).setUpClass()
+        super(AuthAccessTokenTests, cls).setUpClass()
          
         session = create_authorized_session(cls.live_server_url)
         cls.refresh_token = session.get(spotify.REFRESH_TOKEN)
@@ -83,7 +83,7 @@ class AuthAccessTokenTests():
         auth_access_tokens, so that they don't hang up the testing
         program.
         """
-        super(AuthorizedSessionTests, cls).tearDownClass()
+        super(AuthAccessTokenTests, cls).tearDownClass()
         spotify.cleanup_timers()
 
 
@@ -312,7 +312,7 @@ class IsUserLoggedInTests(StaticLiveServerTestCase):
         Saves the user's session data outside of a session object so
         that each test can have a fresh session with that data.
         """
-        super(AuthorizedSessionTests, cls).setUpClass()
+        super(IsUserLoggedInTests, cls).setUpClass()
          
         session = create_authorized_session(cls.live_server_url)
         cls.refresh_token = session.get(spotify.REFRESH_TOKEN)
@@ -327,7 +327,7 @@ class IsUserLoggedInTests(StaticLiveServerTestCase):
         auth_access_tokens, so that they don't hang up the testing
         program.
         """
-        super(AuthorizedSessionTests, cls).tearDownClass()
+        super(IsUserLoggedInTests, cls).tearDownClass()
         spotify.cleanup_timers()
 
 
@@ -488,7 +488,7 @@ class MakeAuthorizedRequestTests(StaticLiveServerTestCase):
         Saves the user's session data outside of a session object so
         that each test can have a fresh session with that data.
         """
-        super(AuthorizedSessionTests, cls).setUpClass()
+        super(MakeAuthorizedRequestTests, cls).setUpClass()
          
         session = create_authorized_session(cls.live_server_url)
         cls.refresh_token = session.get(spotify.REFRESH_TOKEN)
@@ -503,7 +503,7 @@ class MakeAuthorizedRequestTests(StaticLiveServerTestCase):
         auth_access_tokens, so that they don't hang up the testing
         program.
         """
-        super(AuthorizedSessionTests, cls).tearDownClass()
+        super(MakeAuthorizedRequestTests, cls).tearDownClass()
         spotify.cleanup_timers()
 
 
@@ -639,7 +639,7 @@ class MakeAuthorizedRequestTests(StaticLiveServerTestCase):
 
 
 
-class RequestAuthorizedTokenTests(TestCase):
+class RequestAuthorizedTokenTests(StaticLiveServerTestCase):
     """
     Tests _request_authorized_token(), which returns an access token
     that can be used to request personal data about a user. It uses the
@@ -654,7 +654,7 @@ class RequestAuthorizedTokenTests(TestCase):
         Saves the user's session data outside of a session object so
         that each test can have a fresh session with that data.
         """
-        super(AuthorizedSessionTests, cls).setUpClass()
+        super(RequestAuthorizedTokenTests, cls).setUpClass()
          
         session = create_authorized_session(cls.live_server_url)
         cls.refresh_token = session.get(spotify.REFRESH_TOKEN)
@@ -669,7 +669,7 @@ class RequestAuthorizedTokenTests(TestCase):
         auth_access_tokens, so that they don't hang up the testing
         program.
         """
-        super(AuthorizedSessionTests, cls).tearDownClass()
+        super(RequestAuthorizedTokenTests, cls).tearDownClass()
         spotify.cleanup_timers()
 
 

@@ -132,8 +132,13 @@ def pick_questions(quiz, user_data):
     # results is a list of each function's returns, but since each
     # function returns a list of questions, need to compile the
     # contents of each list into one big list.
+    if not results:
+        return None
+
     ret = []
     for r in results:
+        if not r:
+            return None
         ret.extend(r)
 
     return ret
