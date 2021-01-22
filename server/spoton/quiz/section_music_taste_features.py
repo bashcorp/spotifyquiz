@@ -231,7 +231,7 @@ def question_danceability(quiz, user_data):
     # Calculate the average song danceability, from 0 to 100
     sum_danceability = 0
     for t in music_taste:
-        sum_danceability += t['valence']
+        sum_danceability += t['danceability']
     avg_danceability = int(100*sum_danceability/len(music_taste))
 
     # Create the actual question
