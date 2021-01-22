@@ -1,3 +1,8 @@
+"""Tests the SQL database models used by this server.
+
+Tests the folder spoton/models/.
+"""
+
 import uuid
 
 from django.test import TestCase, TransactionTestCase

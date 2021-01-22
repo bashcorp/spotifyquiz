@@ -1,22 +1,28 @@
-from django.test import TransactionTestCase, TestCase
+"""Tests question creation for the Saved & Followed section of the quiz
+
+Tests the file spoton/quiz/section_saved_followed.py.
+"""
+
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from django.test import TransactionTestCase, TestCase
 
 from spoton import spotify
-from spoton.quiz.user_data import UserData
-from spoton.tests.setup_tests import create_authorized_session
 from spoton.models.quiz import *
+from spoton.quiz.user_data import UserData
 from spoton.quiz.section_saved_followed import *
+from spoton.tests.setup_tests import create_authorized_session
+
+
 
 class QuestionSavedAlbumsTests(StaticLiveServerTestCase):
+    """
+    Tests question_saved_albums(), which should create a question about
+    the user's saved albums.
+    """
     port = 8000 
 
     @classmethod 
     def setUpClass(cls):
-        """
-        These tests only need a user to be logged into a session, so
-        this does it once at class creation. Saves the session data by itself
-        so that each test can have a fresh session with that data.
-        """
         super(QuestionSavedAlbumsTests, cls).setUpClass()
         cls.session = create_authorized_session(cls.live_server_url)
 
@@ -25,7 +31,8 @@ class QuestionSavedAlbumsTests(StaticLiveServerTestCase):
     def tearDownClass(cls):
         """
         At the end of this class, complete any timers that would delete
-        auth_access_tokens, so that they don't hang up the testing program.
+        auth_access_tokens, so that they don't hang up the testing
+        program.
         """
         super(QuestionSavedAlbumsTests, cls).tearDownClass()
         spotify.cleanup_timers()
@@ -33,8 +40,8 @@ class QuestionSavedAlbumsTests(StaticLiveServerTestCase):
 
     def test_question_saved_albums(self):
         """
-        When the user has valid data, question_saved_albums() should return a proper Question
-        about the user's saved albums.
+        question_saved_albums() should return a question about the
+        user's saved albums.
         """
         u = UserData(self.session)
         u._saved_albums = [
@@ -86,9 +93,9 @@ class QuestionSavedAlbumsTests(StaticLiveServerTestCase):
 
     def test_question_saved_albums_real_request(self):
         """
-        When the user has valid data, question_saved_albums() should return a proper Question 
-        about the user's saved albums. This tests that the question works with real Spotify
-        data.
+        question_saved_albums() should return a question about the
+        user's saved albums. This tests that the question works with
+        real Spotify data.
         """
         u = UserData(self.session)
 
@@ -103,9 +110,10 @@ class QuestionSavedAlbumsTests(StaticLiveServerTestCase):
 
     def test_question_saved_albums_only_one_correct_answer(self):
         """
-        question_saved_albums() should create a question, even if there is only one available
-        album that can be correct, as long as there are enough albums in "top_tracks" to fill
-        the incorrect choices.
+        question_saved_albums() should create a question, even if there
+        is only one available album that can be correct, as long as
+        there are enough albums in "top_tracks" to fill the incorrect
+        choices.
         """
         u = UserData(self.session)
         u._saved_albums = [
@@ -141,9 +149,8 @@ class QuestionSavedAlbumsTests(StaticLiveServerTestCase):
 
     def test_question_saved_albums_no_valid_incorrect_choices(self):
         """
-        question_saved_albums() should return None if there are not enough albums to fill
-        correct choices, and if there are not enough albums from "top_tracks" to fill
-        incorrect choices.
+        question_saved_albums() should return None if there are not
+        enough albums from "top_tracks" to fill incorrect choices.
         """
         u = UserData(self.session)
         u._saved_albums = [
@@ -164,30 +171,28 @@ class QuestionSavedAlbumsTests(StaticLiveServerTestCase):
         self.assertIsNone(q)
 
 
+
 class QuestionSavedTracksTests(StaticLiveServerTestCase):
+    """
+    Tests question_saved_tracks(), which should create a question about
+    the user's saved tracks.
+    """
 
     port = 8000 
 
     @classmethod 
     def setUpClass(cls):
-        """
-        These tests only need a user to be logged into a session, so
-        this does it once at class creation. Saves the session data by itself
-        so that each test can have a fresh session with that data.
-        """
         super(QuestionSavedTracksTests, cls).setUpClass()
          
         cls.session = create_authorized_session(cls.live_server_url)
-        #cls.refresh_token = session.get(spotify.REFRESH_TOKEN)
-        #cls.auth_access_token = session.get(spotify.AUTH_ACCESS_TOKEN)
-        #cls.user_id = session.get(spotify.USER_ID)
 
 
     @classmethod
     def tearDownClass(cls):
         """
         At the end of this class, complete any timers that would delete
-        auth_access_tokens, so that they don't hang up the testing program.
+        auth_access_tokens, so that they don't hang up the testing
+        program.
         """
         super(QuestionSavedTracksTests, cls).tearDownClass()
         spotify.cleanup_timers()
@@ -195,8 +200,8 @@ class QuestionSavedTracksTests(StaticLiveServerTestCase):
 
     def test_question_saved_tracks(self):
         """
-        When the user has valid data, question_saved_tracks() should return a proper Question
-        about the user's saved tracks.
+        question_saved_tracks() should return a question about the
+        user's saved tracks.
         """
         u = UserData(self.session)
         u._saved_tracks = [
@@ -247,8 +252,9 @@ class QuestionSavedTracksTests(StaticLiveServerTestCase):
 
     def test_question_saved_tracks_real_request(self):
         """
-        When the user has valid data, question_saved_tracks() should return a proper Question
-        about the user's saved tracks. This tests the question with real Spotify data.
+        question_saved_tracks() should return a question about the
+        user's saved tracks. This tests the question with real Spotify
+        data.
         """
         u = UserData(self.session)
 
@@ -263,9 +269,10 @@ class QuestionSavedTracksTests(StaticLiveServerTestCase):
 
     def test_question_saved_tracks_only_one_correct_answer(self):
         """
-        question_saved_tracks() should create a question, even if there is only one available
-        track that can be correct, as long as there are enough tracks in "top_tracks" to fill
-        the incorrect choices.
+        question_saved_tracks() should create a question, even if there
+        is only one available track that can be correct, as long as
+        there are enough tracks in "top_tracks" to fill the incorrect
+        choices.
         """
         u = UserData(self.session)
         u._saved_tracks = [
@@ -301,9 +308,8 @@ class QuestionSavedTracksTests(StaticLiveServerTestCase):
 
     def test_question_saved_tracks_no_valid_incorrect_choices(self):
         """
-        question_saved_tracks() should return None if there are not enough tracks to fill
-        correct choices, and if there are not enough tracks from "top_tracks" to fill
-        incorrect choices.
+        question_saved_tracks() should return None if there are not
+        enough tracks from "top_tracks" to fill incorrect choices.
         """
         u = UserData(self.session)
         u._saved_tracks = [
@@ -324,17 +330,17 @@ class QuestionSavedTracksTests(StaticLiveServerTestCase):
         self.assertIsNone(q)
 
 
+
 class QuestionFollowedArtistsTests(StaticLiveServerTestCase):
+    """
+    Tests question_followed_artists(), which should return a question
+    about the user's followed artists.
+    """
 
     port = 8000 
 
     @classmethod 
     def setUpClass(cls):
-        """
-        These tests only need a user to be logged into a session, so
-        this does it once at class creation. Saves the session data by itself
-        so that each test can have a fresh session with that data.
-        """
         super(QuestionFollowedArtistsTests, cls).setUpClass()
          
         cls.session = create_authorized_session(cls.live_server_url)
@@ -344,7 +350,8 @@ class QuestionFollowedArtistsTests(StaticLiveServerTestCase):
     def tearDownClass(cls):
         """
         At the end of this class, complete any timers that would delete
-        auth_access_tokens, so that they don't hang up the testing program.
+        auth_access_tokens, so that they don't hang up the testing
+        program.
         """
         super(QuestionFollowedArtistsTests, cls).tearDownClass()
         spotify.cleanup_timers()
@@ -352,8 +359,8 @@ class QuestionFollowedArtistsTests(StaticLiveServerTestCase):
 
     def test_question_followed_artists(self):
         """
-        When the user has valid data, question_followed_artists() should return a proper Question
-        about the user's followed artists.
+        question_followed_artists() should return a question about the
+        user's followed artists.
         """
         u = UserData(self.session)
         u._followed_artists = [
@@ -402,8 +409,9 @@ class QuestionFollowedArtistsTests(StaticLiveServerTestCase):
 
     def test_question_followed_artists_real_request(self):
         """
-        When the user has valid data, question_followed_artists() should return a proper Question
-        about the user's followed artists. This tests the question with real Spotify data.
+        question_followed_artists() should return a question about the
+        user's followed artists. This tests the question with real
+        Spotify data.
         """
         u = UserData(self.session)
 
@@ -418,9 +426,10 @@ class QuestionFollowedArtistsTests(StaticLiveServerTestCase):
 
     def test_question_followed_artists_only_one_correct_answer(self):
         """
-        question_followed_artists() should create a question, even if there is only one available
-        artist that can be correct, as long as there are enough artists in "top_artists" to fill
-        the incorrect choices.
+        question_followed_artists() should create a question, even if
+        there is only one available artist that can be correct, as long
+        as there are enough artists in "top_artists" to fill the
+        incorrect choices.
         """
         u = UserData(self.session)
         u._followed_artists = [
@@ -454,9 +463,8 @@ class QuestionFollowedArtistsTests(StaticLiveServerTestCase):
 
     def test_question_followed_artists_no_valid_incorrect_choices(self):
         """
-        question_followed_artists() should return None if there are not enough artists to fill
-        correct choices, and if there are not enough artists from "top_artists" to fill
-        incorrect choices.
+        question_followed_artists() should return None if there are not
+        enough artists from "top_artists" to fill incorrect choices.
         """
         u = UserData(self.session)
         u._followed_artists = [

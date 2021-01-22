@@ -1,25 +1,27 @@
-from django.test import TestCase
+"""Tests question creation for the Saved & Followed section of the quiz
+
+Tests the file spoton/quiz/section_saved_followed.py.
+"""
+
+
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from django.test import TestCase
 
 from spoton.quiz import UserData
-from spoton.tests.setup_tests import create_authorized_session
 from spoton.quiz.section_popularity_playlists import *
+from spoton.tests.setup_tests import create_authorized_session
 
 
 class QuestionUserFollowersTests(StaticLiveServerTestCase):
     """
-    question_user_followers() creates a slider question asking how many followers
-    the user has.
+    Tests question_user_followers(), which creates a slider question
+    asking how many followers the user has.
     """
+
     port = 8000 
 
     @classmethod 
     def setUpClass(cls):
-        """
-        These tests only need a user to be logged into a session, so
-        this does it once at class creation. Saves the session data by itself
-        so that each test can have a fresh session with that data.
-        """
         super(QuestionUserFollowersTests, cls).setUpClass()
         cls.session = create_authorized_session(cls.live_server_url)
 
@@ -28,7 +30,8 @@ class QuestionUserFollowersTests(StaticLiveServerTestCase):
     def tearDownClass(cls):
         """
         At the end of this class, complete any timers that would delete
-        auth_access_tokens, so that they don't hang up the testing program.
+        auth_access_tokens, so that they don't hang up the testing
+        program.
         """
         super(QuestionUserFollowersTests, cls).tearDownClass()
         spotify.cleanup_timers()
@@ -36,8 +39,8 @@ class QuestionUserFollowersTests(StaticLiveServerTestCase):
 
     def test_question_user_followers(self):
         """
-        question_user_followers() creates a slider question asking how many followers
-        the user has.
+        question_user_followers() creates a slider question asking how
+        many followers the user has.
         """
         u = UserData(None)
         u._personal_data = {
@@ -53,8 +56,9 @@ class QuestionUserFollowersTests(StaticLiveServerTestCase):
 
     def test_question_user_followers_real_request(self):
         """
-        question_user_followers() creates a slider question asking how many followers
-        the user has. This tests the question with real Spotify data.
+        question_user_followers() creates a slider question asking how
+        many followers the user has. This tests the question with real
+        Spotify data.
         """
         u = UserData(self.session)
 
@@ -69,7 +73,8 @@ class QuestionUserFollowersTests(StaticLiveServerTestCase):
 
     def test_question_user_followers_no_followers(self):
         """
-        question_user_followers() should return None if the user has no followers.
+        question_user_followers() should return None if the user has no
+        followers.
         """
         u = UserData(None)
         u._personal_data = {
@@ -84,8 +89,8 @@ class QuestionUserFollowersTests(StaticLiveServerTestCase):
 
     def test_question_user_followers_no_negative_options(self):
         """
-        question_user_followers() should return a question with a non-negative minimum range
-        value.
+        question_user_followers() should return a question with a
+        non-negative minimum range value.
         """
         u = UserData(None)
         u._personal_data = {
@@ -104,19 +109,15 @@ class QuestionUserFollowersTests(StaticLiveServerTestCase):
 
 class QuestionPopularPlaylistTests(StaticLiveServerTestCase):
     """
-    question_popular_playlist() should return a question asking
-    which playlist is the user's most popular one, by number of
+    Tests question_popular_playlist(), which should return a question
+    asking which playlist is the user's most popular one, by number of
     followers.
     """
+
     port = 8000 
 
     @classmethod 
     def setUpClass(cls):
-        """
-        These tests only need a user to be logged into a session, so
-        this does it once at class creation. Saves the session data by itself
-        so that each test can have a fresh session with that data.
-        """
         super(QuestionPopularPlaylistTests, cls).setUpClass()
         cls.session = create_authorized_session(cls.live_server_url)
 
@@ -125,7 +126,8 @@ class QuestionPopularPlaylistTests(StaticLiveServerTestCase):
     def tearDownClass(cls):
         """
         At the end of this class, complete any timers that would delete
-        auth_access_tokens, so that they don't hang up the testing program.
+        auth_access_tokens, so that they don't hang up the testing 
+        program.
         """
         super(QuestionPopularPlaylistTests, cls).tearDownClass()
         spotify.cleanup_timers()
@@ -210,8 +212,8 @@ class QuestionPopularPlaylistTests(StaticLiveServerTestCase):
 
     def test_question_popular_playlist_0_followers(self):
         """
-        question_popular_playlists() should return None when the maximum
-        follower count is 0.
+        question_popular_playlists() should return None when the
+        maximum follower count is 0.
         """
         u = UserData(None)
         u._playlists = []
@@ -229,10 +231,11 @@ class QuestionPopularPlaylistTests(StaticLiveServerTestCase):
 
         self.assertIsNone(question)
 
+
     def test_question_popular_playlist_none_followers(self):
         """
-        question_popular_playlists() should return None when there aren't
-        enough playlists with non-None follower counts.
+        question_popular_playlists() should return None when there
+        aren't enough playlists with non-None follower counts.
         """
         u = UserData(None)
         u._playlists = []
@@ -253,9 +256,9 @@ class QuestionPopularPlaylistTests(StaticLiveServerTestCase):
 
     def test_question_popular_playlist_not_enough_less_than_max(self):
         """
-        question_popular_playlists() should return None when there are fewer
-        than 3 playlists that have a follower count less than the max number
-        of followers.
+        question_popular_playlists() should return None when there are
+        fewer than 3 playlists that have a follower count less than the
+        max number of followers.
         """
         u = UserData(None)
         u._playlists = []
@@ -278,18 +281,14 @@ class QuestionPopularPlaylistTests(StaticLiveServerTestCase):
 
 class QuestionPlaylistTracksTests(StaticLiveServerTestCase):
     """
-    question_playlist_tracks() should return a question asking which tracks
-    are in one of the user's playlists.
+    Tests question_playlist_tracks(), which should return a question
+    asking which tracks are in one of the user's playlists.
     """
+
     port = 8000 
 
     @classmethod 
     def setUpClass(cls):
-        """
-        These tests only need a user to be logged into a session, so
-        this does it once at class creation. Saves the session data by itself
-        so that each test can have a fresh session with that data.
-        """
         super(QuestionPlaylistTracksTests, cls).setUpClass()
         cls.session = create_authorized_session(cls.live_server_url)
 
@@ -298,7 +297,8 @@ class QuestionPlaylistTracksTests(StaticLiveServerTestCase):
     def tearDownClass(cls):
         """
         At the end of this class, complete any timers that would delete
-        auth_access_tokens, so that they don't hang up the testing program.
+        auth_access_tokens, so that they don't hang up the testing
+        program.
         """
         super(QuestionPlaylistTracksTests, cls).tearDownClass()
         spotify.cleanup_timers()
@@ -306,8 +306,8 @@ class QuestionPlaylistTracksTests(StaticLiveServerTestCase):
 
     def test_question_playlist_tracks(self):
         """
-        question_playlist_tracks() should return a question asking which tracks
-        are in one of the user's playlists.
+        question_playlist_tracks() should return a question asking
+        which tracks are in one of the user's playlists.
         """
         u = UserData(None)
         u._playlists = [
@@ -368,9 +368,9 @@ class QuestionPlaylistTracksTests(StaticLiveServerTestCase):
 
     def test_question_playlist_tracks_real_request(self):
         """
-        question_playlist_tracks() should return a question asking which tracks
-        are in one of the user's playlists. This tests the question with
-        real Spotify data.
+        question_playlist_tracks() should return a question asking
+        which tracks are in one of the user's playlists. This tests the
+        question with real Spotify data.
         """
         u = UserData(self.session)
 

@@ -1,17 +1,30 @@
-from django.test import TransactionTestCase, TestCase
+"""Tests the methods of the UserData class.
+
+Tests the file spoton/quiz/user_data.py
+"""
+
+
+
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from django.test import TransactionTestCase, TestCase
 
 from spoton import spotify
-from spoton.quiz.user_data import UserData
 from spoton.tests.setup_tests import create_authorized_session
+from spoton.quiz.user_data import UserData
+
 
 class UserDataExistsTests(TransactionTestCase):
     """
-    Tests the get functions from the UserData class when the data already exists. All the
-    functions have to do is return the data.
+    Tests the getter functions in the UserData class when the data
+    already exists. All the functions have to do is return the data.
     """
 
     def test_fields_initiated(self):
+        """
+        The fields of UserData should be initialized to None (or empty
+        dictionary, in the case of the fields that have different
+        entries for different time periods).
+        """
         u = UserData(None)
         self.assertIsNone(u._music_taste)
         self.assertIsNone(u._playlists)
@@ -28,7 +41,8 @@ class UserDataExistsTests(TransactionTestCase):
     
     def test_get_personal_data_exists(self):
         """
-        If _personal_data is not None, personal_data() should return it.
+        If _personal_data is not None, personal_data() should return
+        it.
         """
         u = UserData(None)
         test_data = { 'test': 'hello' }
@@ -48,7 +62,8 @@ class UserDataExistsTests(TransactionTestCase):
 
     def test_get_music_taste_with_audio_features_exists(self):
         """
-        If _music_taste is data with audio features in it, personal_data() should return it.
+        If _music_taste has audio features in its data,
+        music_taste_with_audio_features() should return it.
         """
         u = UserData(None)
         test_data = [{'id': 5, 'energy': 0}, {'id': 2, 'energy': 5}]
@@ -68,7 +83,8 @@ class UserDataExistsTests(TransactionTestCase):
 
     def test_get_playlists_detailed_exists(self):
         """
-        If _playlists has detailed playlist data, playlists() should return it.
+        If _playlists has detailed playlist data, playlists_detailed()
+        should return it.
         """
         u = UserData(None)
         test_data = [{'followers': 0}, {'followers': 5}]
@@ -78,7 +94,8 @@ class UserDataExistsTests(TransactionTestCase):
 
     def test_get_recently_played_exists(self):
         """
-        If _recently_played is not None, recently_played() should return it.
+        If _recently_played is not None, recently_played() should
+        return it.
         """
         u = UserData(None)
         test_data = ['test', 'hello']
@@ -88,7 +105,8 @@ class UserDataExistsTests(TransactionTestCase):
     
     def test_get_top_artists_longterm_exists(self):
         """
-        If _top_artists['long_term'] is not None, top_artists('long_term') should return it.
+        If _top_artists['long_term'] is not None,
+        top_artists('long_term') should return it.
         """
         u = UserData(None)
         test_data = ['hello', 'goodbye']
@@ -98,7 +116,8 @@ class UserDataExistsTests(TransactionTestCase):
 
     def test_get_top_artists_mediumterm_exists(self):
         """
-        If _top_artists['medium_term'] is not None, top_artists('medium_term') should return it.
+        If _top_artists['medium_term'] is not None,
+        top_artists('medium_term') should return it.
         """
         u = UserData(None)
         test_data = ['hello', 'goodbye']
@@ -108,7 +127,8 @@ class UserDataExistsTests(TransactionTestCase):
 
     def test_get_top_artists_shortterm_exists(self):
         """
-        If _top_artists['short_term'] is not None, top_artists('short_term') should return it.
+        If _top_artists['short_term'] is not None,
+        top_artists('short_term') should return it.
         """
         u = UserData(None)
         test_data = ['hello', 'goodbye']
@@ -118,7 +138,8 @@ class UserDataExistsTests(TransactionTestCase):
 
     def test_get_top_tracks_longterm_exists(self):
         """
-        If _top_tracks['long_term'] is not None, top_tracks('long_term') should return it.
+        If _top_tracks['long_term'] is not None, 
+        top_tracks('long_term') should return it.
         """
         u = UserData(None)
         test_data = ['hello', 'goodbye']
@@ -128,7 +149,8 @@ class UserDataExistsTests(TransactionTestCase):
 
     def test_get_top_tracks_mediumterm_exists(self):
         """
-        If _top_tracks['medium_term'] is not None, top_tracks('medium_term') should return it.
+        If _top_tracks['medium_term'] is not None,
+        top_tracks('medium_term') should return it.
         """
         u = UserData(None)
         test_data = ['hello', 'goodbye']
@@ -138,7 +160,8 @@ class UserDataExistsTests(TransactionTestCase):
 
     def test_get_top_tracks_shortterm_exists(self):
         """
-        If _top_tracks['short_term'] is not None, top_tracks('short_term') should return it.
+        If _top_tracks['short_term'] is not None, 
+        top_tracks('short_term') should return it.
         """
         u = UserData(None)
         test_data = ['hello', 'goodbye']
@@ -148,7 +171,8 @@ class UserDataExistsTests(TransactionTestCase):
 
     def test_get_top_genres_longterm_exists(self):
         """
-        If _top_genres['long_term'] is not None, top_genres('long_term') should return it.
+        If _top_genres['long_term'] is not None,
+        top_genres('long_term') should return it.
         """
         u = UserData(None)
         test_data = [['hello', 'there'], ['goodbye', 'now']]
@@ -158,7 +182,8 @@ class UserDataExistsTests(TransactionTestCase):
 
     def test_get_top_genres_mediumterm_exists(self):
         """
-        If _top_genres['medium_term'] is not None, top_genres('medium_term') should return it.
+        If _top_genres['medium_term'] is not None,
+        top_genres('medium_term') should return it.
         """
         u = UserData(None)
         test_data = [['hello', 'there'], ['goodbye', 'now']]
@@ -168,7 +193,8 @@ class UserDataExistsTests(TransactionTestCase):
 
     def test_get_top_genres_shortterm_exists(self):
         """
-        If _top_genres['short_term'] is not None, top_genres('short_term') should return it.
+        If _top_genres['short_term'] is not None, 
+        top_genres('short_term') should return it.
         """
         u = UserData(None)
         test_data = [['hello', 'there'], ['goodbye', 'now']]
@@ -198,7 +224,8 @@ class UserDataExistsTests(TransactionTestCase):
 
     def test_get_followed_artists_exists(self):
         """
-        If _followed_artists is not None, followed_artists() should return it.
+        If _followed_artists is not None, followed_artists() should
+        return it.
         """
         u = UserData(None)
         test_data = ['hello', 'goodbye']
@@ -208,8 +235,9 @@ class UserDataExistsTests(TransactionTestCase):
 
     def test_get_playlist_with_tracks_exists(self):
         """
-        If the playlist with the given ID exists in _playlists and it already has a list of
-        tracks, return that playlist data.
+        If the playlist with the given ID exists in _playlists and it
+        already has a list of tracks, get_playlist_with_tracks() should
+        return that playlist data.
         """
         u = UserData(None)
         test_data = [{'id': '0', 'tracks': {'items': []}}]
@@ -220,33 +248,26 @@ class UserDataExistsTests(TransactionTestCase):
      
 class UserDataCompilationTests(StaticLiveServerTestCase):
     """
-    Tests the methods that request and compile data using the Spotify API. This is achieved
-    by calling the get methods when there is no data in the corresponding variables. Those
-    methods will trigger these compilation functions.
+    Tests the methods that request and compile data from the Spotify
+    API. When the variables that store this data are None, the getter
+    functions will compile the data and then return it. 
     """
 
     port = 8000 
 
     @classmethod 
     def setUpClass(cls):
-        """
-        These tests only need a user to be logged into a session, so
-        this does it once at class creation. Saves the session data by itself
-        so that each test can have a fresh session with that data.
-        """
         super(UserDataCompilationTests, cls).setUpClass()
          
         cls.session = create_authorized_session(cls.live_server_url)
-        #cls.refresh_token = session.get(spotify.REFRESH_TOKEN)
-        #cls.auth_access_token = session.get(spotify.AUTH_ACCESS_TOKEN)
-        #cls.user_id = session.get(spotify.USER_ID)
 
 
     @classmethod
     def tearDownClass(cls):
         """
         At the end of this class, complete any timers that would delete
-        auth_access_tokens, so that they don't hang up the testing program.
+        auth_access_tokens, so that they don't hang up the testing
+        program.
         """
         super(UserDataCompilationTests, cls).tearDownClass()
         spotify.cleanup_timers()
@@ -254,8 +275,9 @@ class UserDataCompilationTests(StaticLiveServerTestCase):
 
     def test_compile_music_taste(self):
         """
-        _compile_music_taste() should request compile data about the user's music taste from
-        Spotify and store it in the _music_taste variable.
+        _compile_music_taste() should request compile data about the
+        user's music taste from Spotify and store it in the
+        _music_taste variable.
         """
         u = UserData(self.session)
         data = u.music_taste()
@@ -266,8 +288,9 @@ class UserDataCompilationTests(StaticLiveServerTestCase):
 
     def test_compile_playlists(self):
         """
-        compile_playlists() should request compile data about the user's playlists from Spotify
-        and store it in the _playlists variable.
+        _compile_playlists() should request compile data about the
+        user's playlists from Spotify and store it in the _playlists
+        variable.
         """
         u = UserData(self.session)
         data = u.playlists()
@@ -278,8 +301,9 @@ class UserDataCompilationTests(StaticLiveServerTestCase):
     
     def test_compile_saved_tracks(self):
         """
-        compile_saved_tracks() should request data about the user's saved tracks from Spotify
-        and store it in the _saved_tracks variable.
+        _compile_saved_tracks() should request data about the user's
+        saved tracks from Spotify and store it in the _saved_tracks
+        variable.
         """
         u = UserData(self.session)
         data = u.saved_tracks()
@@ -290,8 +314,9 @@ class UserDataCompilationTests(StaticLiveServerTestCase):
 
     def test_compile_saved_albums(self):
         """
-        compile_saved_albums() should request data about the user's saved albums from Spotify
-        and store it in the _saved_albums variable.
+        _compile_saved_albums() should request data about the user's
+        saved albums from Spotify and store it in the _saved_albums
+        variable.
         """
         u = UserData(self.session)
         data = u.saved_albums()
@@ -302,8 +327,9 @@ class UserDataCompilationTests(StaticLiveServerTestCase):
 
     def test_compile_followed_artists(self):
         """
-        compile_followed_artists() should request data about the user's saved albums from
-        Spotify and store it in the _saved_albums variable.
+        _compile_followed_artists() should request data about the
+        user's followed artists from Spotify and store it in the
+        _followed_artists variable.
         """
         u = UserData(self.session)
         data = u.followed_artists()
@@ -314,8 +340,9 @@ class UserDataCompilationTests(StaticLiveServerTestCase):
     
     def test_compile_recently_played(self):
         """
-        compile_followed_artists() should request data about the user's saved albums from
-        Spotify and store it in the _saved_albums variable.
+        _compile_recently_played() should request data about the user's
+        recently played tracks from Spotify and store it in the
+        _saved_albums variable.
         """
         u = UserData(self.session)
         data = u.recently_played()
@@ -326,8 +353,9 @@ class UserDataCompilationTests(StaticLiveServerTestCase):
 
     def test_compile_top_tracks_longterm(self):
         """
-        compile_top_tracks('long_term') should request data about the user's top tracks from
-        Spotify and store it in the _top_tracks['long_term'] variable.
+        _compile_top_tracks('long_term') should request data about the
+        user's top tracks from Spotify and store it in the
+        _top_tracks['long_term'] variable.
         """
         u = UserData(self.session)
         data = u.top_tracks('long_term')
@@ -338,8 +366,9 @@ class UserDataCompilationTests(StaticLiveServerTestCase):
 
     def test_compile_top_tracks_mediumterm(self):
         """
-        compile_top_tracks('medium_term') should request data about the user's top tracks from
-        Spotify and store it in the _top_tracks['medium_term'] variable.
+        _compile_top_tracks('medium_term') should request data about
+        the user's top tracks from Spotify and store it in the
+        _top_tracks['medium_term'] variable.
         """
         u = UserData(self.session)
         data = u.top_tracks('medium_term')
@@ -350,8 +379,9 @@ class UserDataCompilationTests(StaticLiveServerTestCase):
 
     def test_compile_top_tracks_shortterm(self):
         """
-        compile_top_tracks('short_term') should request data about the user's top tracks from
-        Spotify and store it in the _top_tracks['short_term'] variable.
+        _compile_top_tracks('short_term') should request data about the
+        user's top tracks from Spotify and store it in the
+        _top_tracks['short_term'] variable.
         """
         u = UserData(self.session)
         data = u.top_tracks('short_term')
@@ -362,8 +392,9 @@ class UserDataCompilationTests(StaticLiveServerTestCase):
 
     def test_compile_top_artists_longterm(self):
         """
-        compile_top_artists('long_term') should request data about the user's top artists from
-        Spotify and store it in the _top_artists['long_term'] variable.
+        _compile_top_artists('long_term') should request data about the
+        user's top artists from Spotify and store it in the 
+        _top_artists['long_term'] variable.
         """
         u = UserData(self.session)
         data = u.top_artists('long_term')
@@ -374,8 +405,9 @@ class UserDataCompilationTests(StaticLiveServerTestCase):
 
     def test_compile_top_artists_mediumterm(self):
         """
-        compile_top_tracks('medium_term') should request data about the user's top tracks from
-        Spotify and store it in the _top_tracks['medium_term'] variable.
+        _compile_top_tracks('medium_term') should request data about
+        the user's top tracks from Spotify and store it in the
+        _top_tracks['medium_term'] variable.
         """
         u = UserData(self.session)
         data = u.top_artists('medium_term')
@@ -386,8 +418,9 @@ class UserDataCompilationTests(StaticLiveServerTestCase):
 
     def test_compile_top_artists_shortterm(self):
         """
-        compile_top_tracks('short_term') should request data about the user's top tracks from
-        Spotify and store it in the _top_tracks['short_term'] variable.
+        _compile_top_tracks('short_term') should request data about the
+        user's top tracks from Spotify and store it in the
+        _top_tracks['short_term'] variable.
         """
         u = UserData(self.session)
         data = u.top_artists('short_term')
@@ -398,8 +431,9 @@ class UserDataCompilationTests(StaticLiveServerTestCase):
 
     def test_compile_top_genres_longterm(self):
         """
-        compile_top_genres('long_term') should request data about the user's top genres from
-        Spotify and store it in the _top_genres['long_term'] variable.
+        _compile_top_genres('long_term') should request data about the
+        user's top genres from Spotify and store it in the
+        _top_genres['long_term'] variable.
         """
         u = UserData(self.session)
         data = u.top_genres('long_term')
@@ -412,8 +446,9 @@ class UserDataCompilationTests(StaticLiveServerTestCase):
 
     def test_compile_top_genres_mediumterm(self):
         """
-        compile_top_genres('medium_term') should request data about the user's top genres from
-        Spotify and store it in the _top_genres['medium_term'] variable.
+        _compile_top_genres('medium_term') should request data about 
+        the user's top genres from Spotify and store it in the
+        _top_genres['medium_term'] variable.
         """
         u = UserData(self.session)
         data = u.top_genres('medium_term')
@@ -426,8 +461,9 @@ class UserDataCompilationTests(StaticLiveServerTestCase):
 
     def test_compile_top_genres_shortterm(self):
         """
-        compile_top_genres('short_term') should request data about the user's top genres from
-        Spotify and store it in the _top_genres['short_term'] variable.
+        _compile_top_genres('short_term') should request data about the
+        user's top genres from Spotify and store it in the
+        _top_genres['short_term'] variable.
         """
         u = UserData(self.session)
         data = u.top_genres('short_term')
@@ -440,8 +476,9 @@ class UserDataCompilationTests(StaticLiveServerTestCase):
 
     def test_compile_personal_data(self):
         """
-        compile_personal_data() should request data about the user's personal data from
-        Spotify and store it in the _personal_data variable.
+        _compile_personal_data() should request data about the user's
+        personal data from Spotify and store it in the _personal_data
+        variable.
         """
         u = UserData(self.session)
         data = u.personal_data()
@@ -451,8 +488,9 @@ class UserDataCompilationTests(StaticLiveServerTestCase):
     
     def test_compile_audio_features(self):
         """
-        compile_audio_features() should request data about audio features of the user's
-        music taste from Spotify and store it in the _personal_data variable.
+        _compile_audio_features() should request data about audio
+        features of the user's music taste from Spotify and store it in
+        the _music_taste variable.
         """
         u = UserData(self.session)
         data = u.music_taste_with_audio_features()
@@ -466,7 +504,9 @@ class UserDataCompilationTests(StaticLiveServerTestCase):
     
     def test_compile_playlist_details(self):
         """
-        compile_playlist_details() should request detailed data 
+        compile_playlist_details() should request detailed data about
+        the user's playlists from Spotify and store it in the 
+        _playlists variable.
         """
         u = UserData(self.session)
         data = u.playlists_detailed()
@@ -479,6 +519,8 @@ class UserDataCompilationTests(StaticLiveServerTestCase):
     def test_get_playlist_with_tracks(self):
         """
         get_playlist_with_tracks() should request one playlist's tracks
+        from Spotify and save them in that playlist's entry in the
+        _playlist variable.
         """
 
         u = UserData(self.session)
@@ -493,20 +535,31 @@ class UserDataCompilationTests(StaticLiveServerTestCase):
         self.assertIsNotNone(u.playlists()[0]['tracks']['items'])
 
 
+    def test_get_playlist_with_tracks_no_playlist(self):
+        """
+        get_playlist_with_tracks() must be passed the ID of one of the
+        user's playlists. If it isnt', it should return None and not
+        change the _playlist variable.
+        """
+
+        u = UserData(self.session)
+        playlists = u.playlists().copy()
+
+        data = u.get_playlist_with_tracks('0')
+        self.assertNone(data)
+        self.assertCountEquals(playlists, u.playlists())
+
 
 class UserDataErrorTests(StaticLiveServerTestCase):
     """
-    Tests that certain cases of improper data cause the proper errors in the UserData class.
+    Tests that certain cases of improper data cause the proper errors
+    in the UserData class.
     """
+
     port = 8000 
 
     @classmethod 
     def setUpClass(cls):
-        """
-        These tests only need a user to be logged into a session, so
-        this does it once at class creation. Saves the session data by itself
-        so that each test can have a fresh session with that data.
-        """
         super(UserDataErrorTests, cls).setUpClass()
          
         cls.session = create_authorized_session(cls.live_server_url)
@@ -515,16 +568,19 @@ class UserDataErrorTests(StaticLiveServerTestCase):
     def tearDownClass(cls):
         """
         At the end of this class, complete any timers that would delete
-        auth_access_tokens, so that they don't hang up the testing program.
+        auth_access_tokens, so that they don't hang up the testing
+        program.
         """
         super(UserDataErrorTests, cls).tearDownClass()
         spotify.cleanup_timers()
 
 
+
     def test_bad_session_errors(self):
         """
-        Any get function for user data should raise an exception if the session variable
-        is not a valid Spotify-authorized Django session.
+        Any getter function for user data should raise an exception if
+        the class' session variable is not a valid Spotify-authorized
+        Django session.
         """
         u = UserData(None)
 
@@ -545,10 +601,11 @@ class UserDataErrorTests(StaticLiveServerTestCase):
 
     def test_bad_time_range(self):
         """
-        top_artists, top_tracks, top_genres are dictionaries where the keys are the three
-        different time ranges that Spotify uses: long_term, medium_term, short_term. This
-        ensures that the get functions raise an exception if the dictionary key is not 
-        one of these three ranges.
+        _top_artists, _top_tracks, _top_genres are dictionaries where
+        the keys are the three different time ranges that Spotify uses:
+        long_term, medium_term, short_term. This ensures that the get
+        functions raise an exception if the dictionary key is not one
+        of these three ranges.
         """
         u = UserData(self.session)
 

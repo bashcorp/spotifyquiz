@@ -1,27 +1,28 @@
-from django.test import TestCase
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+"""Tests question creation for the Music Taste section of the quiz
 
-from spoton.quiz import UserData
-from spoton.tests.setup_tests import create_authorized_session
-from spoton.quiz.section_music_taste_features import *
+Tests the file spoton/quiz/section_music_taste.py.
+"""
 
 import datetime
+
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from django.test import TestCase
+
+from spoton.quiz import UserData
+from spoton.quiz.section_music_taste_features import *
+from spoton.tests.setup_tests import create_authorized_session
 
 
 class QuestionExplicitnessTests(StaticLiveServerTestCase):
     """
-    question_explicitness() creates a question that asks what percentage of the
-    user's music taste is explicit.
+    Tests question_explicitness(), which creates a question that asks
+    what percentage of the user's music taste is explicit.
     """
+
     port = 8000 
 
     @classmethod 
     def setUpClass(cls):
-        """
-        These tests only need a user to be logged into a session, so
-        this does it once at class creation. Saves the session data by itself
-        so that each test can have a fresh session with that data.
-        """
         super(QuestionExplicitnessTests, cls).setUpClass()
         cls.session = create_authorized_session(cls.live_server_url)
 
@@ -30,7 +31,8 @@ class QuestionExplicitnessTests(StaticLiveServerTestCase):
     def tearDownClass(cls):
         """
         At the end of this class, complete any timers that would delete
-        auth_access_tokens, so that they don't hang up the testing program.
+        auth_access_tokens, so that they don't hang up the testing
+        program.
         """
         super(QuestionExplicitnessTests, cls).tearDownClass()
         spotify.cleanup_timers()
@@ -38,8 +40,8 @@ class QuestionExplicitnessTests(StaticLiveServerTestCase):
 
     def test_question_explicitness(self):
         """
-        question_explicitness() should create a question that asks what percentage of the
-        user's music taste is explicit.
+        question_explicitness() should create a question that asks what
+        percentage of the user's music taste is explicit.
         """
         u = UserData(None)
         u._music_taste = [
@@ -70,8 +72,9 @@ class QuestionExplicitnessTests(StaticLiveServerTestCase):
 
     def test_question_explicitness_real_request(self):
         """
-        question_explicitness() should create a question that asks what percentage of the
-        user's music taste is explicit. Tests this question with real Spotify data.
+        question_explicitness() should create a question that asks what
+        percentage of the user's music taste is explicit. Tests this
+        question with real Spotify data.
         """
         u = UserData(self.session)
 
@@ -86,8 +89,9 @@ class QuestionExplicitnessTests(StaticLiveServerTestCase):
 
     def test_question_explicitness_all_explicit(self):
         """
-        question_explicitness() should create a question that asks what percentage of the
-        user's music taste is explicit. Tests when all the user's music taste is explicit.
+        question_explicitness() should create a question that asks what
+        percentage of the user's music taste is explicit. Tests when
+        all the user's music taste is explicit.
         """
         u = UserData(None)
         u._music_taste = [
@@ -107,8 +111,9 @@ class QuestionExplicitnessTests(StaticLiveServerTestCase):
 
     def test_question_explicitness_none_explicit(self):
         """
-        question_explicitness() should create a question that asks what percentage of the
-        user's music taste is explicit. Tests when none of the user's music taste is explicit.
+        question_explicitness() should create a question that asks what
+        percentage of the user's music taste is explicit. Tests when
+        none of the user's music taste is explicit.
         """
         u = UserData(None)
         u._music_taste = [
@@ -129,18 +134,14 @@ class QuestionExplicitnessTests(StaticLiveServerTestCase):
 
 class QuestionEnergyTests(StaticLiveServerTestCase):
     """
-    question_energy() should return a question that asks how energetic the user's music taste
-    is, on a scale of 0 to 100.
+    Tests question_energy(), which should return a question that asks
+    how energetic the user's music taste is, on a scale of 0 to 100.
     """
+
     port = 8000 
 
     @classmethod 
     def setUpClass(cls):
-        """
-        These tests only need a user to be logged into a session, so
-        this does it once at class creation. Saves the session data by itself
-        so that each test can have a fresh session with that data.
-        """
         super(QuestionEnergyTests, cls).setUpClass()
         cls.session = create_authorized_session(cls.live_server_url)
 
@@ -149,7 +150,8 @@ class QuestionEnergyTests(StaticLiveServerTestCase):
     def tearDownClass(cls):
         """
         At the end of this class, complete any timers that would delete
-        auth_access_tokens, so that they don't hang up the testing program.
+        auth_access_tokens, so that they don't hang up the testing
+        program.
         """
         super(QuestionEnergyTests, cls).tearDownClass()
         spotify.cleanup_timers()
@@ -157,8 +159,8 @@ class QuestionEnergyTests(StaticLiveServerTestCase):
 
     def test_question_energy(self):
         """
-        question_energy() should return a question that asks how energetic the user's music taste
-        is, on a scale of 0 to 100.
+        question_energy() should return a question that asks how
+        energetic the user's music taste is, on a scale of 0 to 100.
         """
         u = UserData(None)
         energies = [0.52, 0.12, 0.25, 0.983, 0.253, 0.534, 0.235]
@@ -177,8 +179,9 @@ class QuestionEnergyTests(StaticLiveServerTestCase):
 
     def test_question_energy_real_request(self):
         """
-        question_energy() should return a question that asks how energetic the user's music taste
-        is, on a scale of 0 to 100. This tests that the question works with real Spotify data.
+        question_energy() should return a question that asks how
+        energetic the user's music taste is, on a scale of 0 to 100.
+        This tests that the question works with real Spotify data.
         """
         u = UserData(self.session)
 
@@ -193,8 +196,9 @@ class QuestionEnergyTests(StaticLiveServerTestCase):
 
     def test_question_energy_avg_0(self):
         """
-        question_energy() should return a question that asks how energetic the user's music taste
-        is, on a scale of 0 to 100. This tests it when the energy average is 0.
+        question_energy() should return a question that asks how
+        energetic the user's music taste is, on a scale of 0 to 100.
+        This tests it when the energy average is 0.
         """
         u = UserData(None)
         u._music_taste = [
@@ -214,8 +218,9 @@ class QuestionEnergyTests(StaticLiveServerTestCase):
 
     def test_question_energy_avg_1(self):
         """
-        question_energy() should return a question that asks how energetic the user's music taste
-        is, on a scale of 0 to 100. This tests it when the energy average is 1.
+        question_energy() should return a question that asks how
+        energetic the user's music taste is, on a scale of 0 to 100.
+        This tests it when the energy average is 1.
         """
         u = UserData(None)
         u._music_taste = [
@@ -236,18 +241,14 @@ class QuestionEnergyTests(StaticLiveServerTestCase):
 
 class QuestionAcousticnessTests(StaticLiveServerTestCase):
     """
-    question_acousticness() should return a question that asks what percentage of the user's
-    music taste is acoustic.
+    Tests question_acousticness(), which should return a question that
+    asks what percentage of the user's music taste is acoustic.
     """
+
     port = 8000 
 
     @classmethod 
     def setUpClass(cls):
-        """
-        These tests only need a user to be logged into a session, so
-        this does it once at class creation. Saves the session data by itself
-        so that each test can have a fresh session with that data.
-        """
         super(QuestionAcousticnessTests, cls).setUpClass()
         cls.session = create_authorized_session(cls.live_server_url)
 
@@ -256,7 +257,8 @@ class QuestionAcousticnessTests(StaticLiveServerTestCase):
     def tearDownClass(cls):
         """
         At the end of this class, complete any timers that would delete
-        auth_access_tokens, so that they don't hang up the testing program.
+        auth_access_tokens, so that they don't hang up the testing
+        program.
         """
         super(QuestionAcousticnessTests, cls).tearDownClass()
         spotify.cleanup_timers()
@@ -264,8 +266,8 @@ class QuestionAcousticnessTests(StaticLiveServerTestCase):
 
     def test_question_acousticness(self):
         """
-        question_acousticness() should return a question that asks what percentage of the user's
-        music taste is acoustic.
+        question_acousticness() should return a question that asks what
+        percentage of the user's music taste is acoustic.
         """
         u = UserData(None)
         u._music_taste = []
@@ -287,8 +289,9 @@ class QuestionAcousticnessTests(StaticLiveServerTestCase):
 
     def test_question_acousticness_real_request(self):
         """
-        question_acousticness() should return a question that asks what percentage of the user's
-        music taste is acoustic. This tests the question with real Spotify data.
+        question_acousticness() should return a question that asks what
+        percentage of the user's music taste is acoustic. This tests
+        the question with real Spotify data.
         """
         u = UserData(self.session)
 
@@ -303,8 +306,8 @@ class QuestionAcousticnessTests(StaticLiveServerTestCase):
 
     def test_question_acousticness_all_acoustic(self):
         """
-        question_acousticness() should return a question that asks what percentage of the user's
-        music taste is acoustic.
+        question_acousticness() should return a question that asks what
+        percentage of the user's music taste is acoustic.
         """
         u = UserData(None)
         u._music_taste = [
@@ -324,8 +327,8 @@ class QuestionAcousticnessTests(StaticLiveServerTestCase):
 
     def test_question_acousticness_none_acoustic(self):
         """
-        question_acousticness() should return a question that asks what percentage of the user's
-        music taste is acoustic.
+        question_acousticness() should return a question that asks what
+        percentage of the user's music taste is acoustic.
         """
         u = UserData(None)
         u._music_taste = [
@@ -346,18 +349,14 @@ class QuestionAcousticnessTests(StaticLiveServerTestCase):
 
 class QuestionHappinessTests(StaticLiveServerTestCase):
     """
-    question_happiness() should return a question that asks how happy the user's music
-    taste is, from 0 to 100.
+    Tests question_happiness(), which should return a question that
+    asks how happy the user's music taste is, from 0 to 100.
     """
+
     port = 8000 
 
     @classmethod 
     def setUpClass(cls):
-        """
-        These tests only need a user to be logged into a session, so
-        this does it once at class creation. Saves the session data by itself
-        so that each test can have a fresh session with that data.
-        """
         super(QuestionHappinessTests, cls).setUpClass()
         cls.session = create_authorized_session(cls.live_server_url)
 
@@ -366,7 +365,8 @@ class QuestionHappinessTests(StaticLiveServerTestCase):
     def tearDownClass(cls):
         """
         At the end of this class, complete any timers that would delete
-        auth_access_tokens, so that they don't hang up the testing program.
+        auth_access_tokens, so that they don't hang up the testing
+        program.
         """
         super(QuestionHappinessTests, cls).tearDownClass()
         spotify.cleanup_timers()
@@ -374,8 +374,8 @@ class QuestionHappinessTests(StaticLiveServerTestCase):
 
     def test_question_happiness(self):
         """
-        question_happiness() should return a question that asks how happy the user's music
-        taste is, from 0 to 100.
+        question_happiness() should return a question that asks how
+        happy the user's music taste is, from 0 to 100.
         """
         u = UserData(None)
         u._music_taste = []
@@ -396,8 +396,9 @@ class QuestionHappinessTests(StaticLiveServerTestCase):
 
     def test_question_happiness_real_request(self):
         """
-        question_happiness() should return a question that asks how happy the user's music
-        taste is, from 0 to 100. This tests the question with real Spotify data.
+        question_happiness() should return a question that asks how
+        happy the user's music taste is, from 0 to 100. This tests the
+        question with real Spotify data.
         """
         u = UserData(self.session)
 
@@ -412,8 +413,8 @@ class QuestionHappinessTests(StaticLiveServerTestCase):
 
     def test_question_happiness_all_happy(self):
         """
-        question_happiness() should return a question that asks how happy the user's music
-        taste is, from 0 to 100.
+        question_happiness() should return a question that asks how
+        happy the user's music taste is, from 0 to 100.
         """
         u = UserData(None)
         u._music_taste = [
@@ -433,8 +434,8 @@ class QuestionHappinessTests(StaticLiveServerTestCase):
 
     def test_question_happiness_all_sad(self):
         """
-        question_happiness() should return a question that asks how happy the user's music
-        taste is, from 0 to 100.
+        question_happiness() should return a question that asks how
+        happy the user's music taste is, from 0 to 100.
         """
         u = UserData(None)
         u._music_taste = [
@@ -455,18 +456,14 @@ class QuestionHappinessTests(StaticLiveServerTestCase):
 
 class QuestionDanceabilityTests(StaticLiveServerTestCase):
     """
-    question_danceability() should return a question that asks how danceable the user's music
-    taste is, from 0 to 100.
+    Tests question_danceability(), which should return a question that
+    asks how danceable the user's music taste is, from 0 to 100.
     """
+
     port = 8000 
 
     @classmethod 
     def setUpClass(cls):
-        """
-        These tests only need a user to be logged into a session, so
-        this does it once at class creation. Saves the session data by itself
-        so that each test can have a fresh session with that data.
-        """
         super(QuestionDanceabilityTests, cls).setUpClass()
         cls.session = create_authorized_session(cls.live_server_url)
 
@@ -475,7 +472,8 @@ class QuestionDanceabilityTests(StaticLiveServerTestCase):
     def tearDownClass(cls):
         """
         At the end of this class, complete any timers that would delete
-        auth_access_tokens, so that they don't hang up the testing program.
+        auth_access_tokens, so that they don't hang up the testing
+        program.
         """
         super(QuestionDanceabilityTests, cls).tearDownClass()
         spotify.cleanup_timers()
@@ -483,15 +481,15 @@ class QuestionDanceabilityTests(StaticLiveServerTestCase):
 
     def test_question_danceability(self):
         """
-        question_danceability() should return a question that asks how danceable the user's music
-        taste is, from 0 to 100.
+        question_danceability() should return a question that asks how
+        danceable the user's music taste is, from 0 to 100.
         """
         u = UserData(None)
         u._music_taste = []
 
         danceabilities = [0.52, 0.12, 0.25, 0.983, 0.253, 0.534, 0.635]
         for i in range(len(danceabilities)):
-            u._music_taste.append({'id': i, 'energy': 0, 'valence': danceabilities[i]})
+            u._music_taste.append({'id': i, 'energy': 0, 'danceability': danceabilities[i]})
 
         avg = int(100*sum(danceabilities)/len(danceabilities))
 
@@ -505,8 +503,9 @@ class QuestionDanceabilityTests(StaticLiveServerTestCase):
 
     def test_question_danceability_real_request(self):
         """
-        question_danceability() should return a question that asks how danceable the user's music
-        taste is, from 0 to 100. This tests the question with real Spotify data.
+        question_danceability() should return a question that asks how
+        danceable the user's music taste is, from 0 to 100. This tests
+        the question with real Spotify data.
         """
         u = UserData(self.session)
 
@@ -521,15 +520,15 @@ class QuestionDanceabilityTests(StaticLiveServerTestCase):
 
     def test_question_danceability_all_0(self):
         """
-        question_danceability() should return a question that asks how danceable the user's music
-        taste is, from 0 to 100.
+        question_danceability() should return a question that asks how
+        danceable the user's music taste is, from 0 to 100.
         """
         u = UserData(None)
         u._music_taste = [
-            {'id': 'Track1', 'energy': 0, 'valence': 1},
-            {'id': 'Track2', 'energy': 0, 'valence': 1}, 
-            {'id': 'Track3', 'energy': 0, 'valence': 1},
-            {'id': 'Track4', 'energy': 0, 'valence': 1},
+            {'id': 'Track1', 'energy': 0, 'danceability': 1},
+            {'id': 'Track2', 'energy': 0, 'danceability': 1}, 
+            {'id': 'Track3', 'energy': 0, 'danceability': 1},
+            {'id': 'Track4', 'energy': 0, 'danceability': 1},
         ]
 
         quiz = Quiz.objects.create(user_id='Cassius')
@@ -542,15 +541,15 @@ class QuestionDanceabilityTests(StaticLiveServerTestCase):
 
     def test_question_danceability_all_1(self):
         """
-        question_danceability() should return a question that asks how danceable the user's music
-        taste is, from 0 to 100.
+        question_danceability() should return a question that asks how
+        danceable the user's music taste is, from 0 to 100.
         """
         u = UserData(None)
         u._music_taste = [
-            {'id': 'Track1', 'energy': 0, 'valence': 1},
-            {'id': 'Track2', 'energy': 0, 'valence': 1}, 
-            {'id': 'Track3', 'energy': 0, 'valence': 1},
-            {'id': 'Track4', 'energy': 0, 'valence': 1},
+            {'id': 'Track1', 'energy': 0, 'danceability': 1},
+            {'id': 'Track2', 'energy': 0, 'danceability': 1}, 
+            {'id': 'Track3', 'energy': 0, 'danceability': 1},
+            {'id': 'Track4', 'energy': 0, 'danceability': 1},
         ]
 
         quiz = Quiz.objects.create(user_id='Cassius')
@@ -564,18 +563,14 @@ class QuestionDanceabilityTests(StaticLiveServerTestCase):
 
 class QuestionDurationTests(StaticLiveServerTestCase):
     """
-    question_duration() should return a question that asks what the average
-    length of a song in the user's music taste is.
+    Tests question_duration(), which should return a question that asks
+    what the average length of a song in the user's music taste is.
     """
+
     port = 8000 
 
     @classmethod 
     def setUpClass(cls):
-        """
-        These tests only need a user to be logged into a session, so
-        this does it once at class creation. Saves the session data by itself
-        so that each test can have a fresh session with that data.
-        """
         super(QuestionDurationTests, cls).setUpClass()
         cls.session = create_authorized_session(cls.live_server_url)
 
@@ -584,7 +579,8 @@ class QuestionDurationTests(StaticLiveServerTestCase):
     def tearDownClass(cls):
         """
         At the end of this class, complete any timers that would delete
-        auth_access_tokens, so that they don't hang up the testing program.
+        auth_access_tokens, so that they don't hang up the testing
+        program.
         """
         super(QuestionDurationTests, cls).tearDownClass()
         spotify.cleanup_timers()
@@ -592,8 +588,8 @@ class QuestionDurationTests(StaticLiveServerTestCase):
 
     def test_question_duration(self):
         """
-        question_duration() should return a question that asks what the average
-        length of a song in the user's music taste is.
+        question_duration() should return a question that asks what the
+        average length of a song in the user's music taste is.
         """
         u = UserData(None)
         u._music_taste = []
@@ -614,9 +610,9 @@ class QuestionDurationTests(StaticLiveServerTestCase):
 
     def test_question_duration_real_request(self):
         """
-        question_duration() should return a question that asks what the average
-        length of a song in the user's music taste is. This tests the question with
-        real Spotify data.
+        question_duration() should return a question that asks what the
+        average length of a song in the user's music taste is. This
+        tests the question with real Spotify data.
         """
         u = UserData(self.session)
 
@@ -631,8 +627,8 @@ class QuestionDurationTests(StaticLiveServerTestCase):
 
     def test_question_duration_close_to_0(self):
         """
-        question_duration() should return a question that asks what the average
-        length of a song in the user's music taste is.
+        question_duration() should return a question that asks what the
+        average length of a song in the user's music taste is.
         """
         u = UserData(None)
         u._music_taste = []
@@ -654,18 +650,14 @@ class QuestionDurationTests(StaticLiveServerTestCase):
 
 class QuestionAverageReleaseDateTests(StaticLiveServerTestCase):
     """
-    question_average_release_date() should return a question that asks the
-    average release year of the user's music taste.
+    Tests question_average_release_date(), which should return a
+    question that asks the average release year of the user's music
+    taste.
     """
     port = 8000 
 
     @classmethod 
     def setUpClass(cls):
-        """
-        These tests only need a user to be logged into a session, so
-        this does it once at class creation. Saves the session data by itself
-        so that each test can have a fresh session with that data.
-        """
         super(QuestionAverageReleaseDateTests, cls).setUpClass()
         cls.session = create_authorized_session(cls.live_server_url)
 
@@ -674,7 +666,8 @@ class QuestionAverageReleaseDateTests(StaticLiveServerTestCase):
     def tearDownClass(cls):
         """
         At the end of this class, complete any timers that would delete
-        auth_access_tokens, so that they don't hang up the testing program.
+        auth_access_tokens, so that they don't hang up the testing
+        program.
         """
         super(QuestionAverageReleaseDateTests, cls).tearDownClass()
         spotify.cleanup_timers()
@@ -682,8 +675,8 @@ class QuestionAverageReleaseDateTests(StaticLiveServerTestCase):
 
     def test_question_average_release_date(self):
         """
-        question_average_release_date() should return a question that asks the
-        average release year of the user's music taste.
+        question_average_release_date() should return a question that
+        asks the average release year of the user's music taste.
         """
         u = UserData(None)
         u._music_taste = []
@@ -708,9 +701,9 @@ class QuestionAverageReleaseDateTests(StaticLiveServerTestCase):
 
     def test_question_average_release_date_real_request(self):
         """
-        question_average_release_date() should return a question that asks the
-        average release year of the user's music taste. This tests the
-        question with real Spotify data.
+        question_average_release_date() should return a question that
+        asks the average release year of the user's music taste. This
+        tests the question with real Spotify data.
         """
         u = UserData(self.session)
 
@@ -725,8 +718,8 @@ class QuestionAverageReleaseDateTests(StaticLiveServerTestCase):
 
     def test_question_average_release_date_min_max_too_close(self):
         """
-        question_average_release_date() should return a question that asks the
-        average release year of the user's music taste.
+        question_average_release_date() should return a question that
+        asks the average release year of the user's music taste.
         """
         u = UserData(None)
         u._music_taste = []
@@ -753,8 +746,8 @@ class QuestionAverageReleaseDateTests(StaticLiveServerTestCase):
 
     def test_question_average_release_date_min_max_too_close(self):
         """
-        question_average_release_date() should return a question that asks the
-        average release year of the user's music taste.
+        question_average_release_date() should return a question that
+        asks the average release year of the user's music taste.
         """
         u = UserData(None)
         u._music_taste = []
@@ -783,18 +776,13 @@ class QuestionAverageReleaseDateTests(StaticLiveServerTestCase):
 
 class QuestionMusicPopularityTests(StaticLiveServerTestCase):
     """
-    question_music_popularity() should return a question that asks the
-    average popularity of the user's music taste.
+    Tests question_music_popularity(), which should return a question
+    that asks the average popularity of the user's music taste.
     """
     port = 8000 
 
     @classmethod 
     def setUpClass(cls):
-        """
-        These tests only need a user to be logged into a session, so
-        this does it once at class creation. Saves the session data by itself
-        so that each test can have a fresh session with that data.
-        """
         super(QuestionMusicPopularityTests, cls).setUpClass()
         cls.session = create_authorized_session(cls.live_server_url)
 
@@ -803,7 +791,8 @@ class QuestionMusicPopularityTests(StaticLiveServerTestCase):
     def tearDownClass(cls):
         """
         At the end of this class, complete any timers that would delete
-        auth_access_tokens, so that they don't hang up the testing program.
+        auth_access_tokens, so that they don't hang up the testing
+        program.
         """
         super(QuestionMusicPopularityTests, cls).tearDownClass()
         spotify.cleanup_timers()
@@ -811,8 +800,8 @@ class QuestionMusicPopularityTests(StaticLiveServerTestCase):
 
     def test_question_music_popularity(self):
         """
-        question_music_popularity() should return a question that asks the
-        average popularity of the user's music taste.
+        question_music_popularity() should return a question that asks
+        the average popularity of the user's music taste.
         """
         u = UserData(None)
         u._music_taste = []
@@ -837,9 +826,9 @@ class QuestionMusicPopularityTests(StaticLiveServerTestCase):
 
     def test_question_music_popularity_real_request(self):
         """
-        question_music_popularity() should return a question that asks the
-        average popularity of the user's music taste. This tests the question
-        with real Spotify data.
+        question_music_popularity() should return a question that asks
+        the average popularity of the user's music taste. This tests
+        the question with real Spotify data.
         """
         u = UserData(self.session)
 
@@ -854,8 +843,8 @@ class QuestionMusicPopularityTests(StaticLiveServerTestCase):
 
     def test_question_music_popularity_avg_0(self):
         """
-        question_music_popularity() should return a question that asks the
-        average popularity of the user's music taste.
+        question_music_popularity() should return a question that asks
+        the average popularity of the user's music taste.
         """
         u = UserData(None)
         u._music_taste = []
@@ -880,8 +869,8 @@ class QuestionMusicPopularityTests(StaticLiveServerTestCase):
 
     def test_question_music_popularity_avg_100(self):
         """
-        question_music_popularity() should return a question that asks the
-        average popularity of the user's music taste.
+        question_music_popularity() should return a question that asks
+        the average popularity of the user's music taste.
         """
         u = UserData(None)
         u._music_taste = []
