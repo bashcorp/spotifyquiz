@@ -6,6 +6,7 @@ import urllib
 
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.views.decorators.https import require_POST
 
 from spoton.models.quiz import Quiz
 from spoton.quiz import create_quiz, SCOPES
@@ -56,6 +57,11 @@ def quiz(request, uuid):
     return render(request, react_mainpage, context={"quiz": json.dumps(context)})
 
 
+
+@require_POST()
+def response(request):
+    import pprint 
+    pprint.pprint(request.POST)
 
 
 def dashboard(request):

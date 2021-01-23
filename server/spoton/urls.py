@@ -10,5 +10,6 @@ urlpatterns = [
     path('quiz/<uuid:uuid>', views.quiz, name='quiz'),
     path('quiz/', views.index, name='quiz_test'),
     path('dashboard/', views.dashboard, name='dashboard'),
+    path('response/', views.handle_response, name='handle_response')
 ]
 
