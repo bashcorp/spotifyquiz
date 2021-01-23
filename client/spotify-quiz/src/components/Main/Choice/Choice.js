@@ -3,52 +3,41 @@ import "./Choice.scss";
 
 let value = "";
 
-
 function Choice(props) {
-
 	const [selected, setSelected] = React.useState();
-	
+
 	const button__select = {
-		 
-		  background: "url('https://jooinn.com/images1280_/square.jpg')",
-		  backgroundSize: "cover",
-		  backgroundRepeat: "no-repeat"
+		transform: "scale(104%)",
 	};
 
 	const button__unSelect = {
-		  
-		  background: "url('https://jooinn.com/images1280_/square.jpg')",
-		  backgroundSize: "cover",
-		  backgroundRepeat: "no-repeat"
+		filter: "brightness(60%)",
 	};
 
 	function handleChange(key) {
-		console.log("HEllo: " + key)
-        props.onChange(key);
-    }
-
-	/*const handleSelectionClick = (selection) => {
-		setSelected(selection);
-		updateFinalSubmission(selection.id);
+		props.onChange(key);
 	}
 
-	const updateFinalSubmission = (id) => {
-		sendData(id);
-	}*/
-
 	return (
-
-		<div class="square" onClick={e => handleChange(props.choice.id)}>
-    		<div className="content">
-    			<div style={props.isSelected ? button__select : button__unSelect} id="choice__bgImg" />
-				<div className="list-item" id={"question__choice_" + props.index}>
+		<div class="square" onClick={(e) => handleChange(props.choice.id)}>
+			<div
+				className="content"
+				style={props.isSelected ? button__select : button__unSelect}
+			>
+				<div id="choice__bgImg" />
+				<div
+					className="list-item"
+					id={"question__choice_" + props.index}
+				>
 					<div className="list-content">
 						<h2 id="choice-header">{props.choice.primary_text}</h2>
-						<p id="choice-subheader">{props.choice.secondary_text}</p>
+						<p id="choice-subheader">
+							{props.choice.secondary_text}
+						</p>
 					</div>
 				</div>
 			</div>
-		</div>					
+		</div>
 	);
-};
+}
 export default Choice;

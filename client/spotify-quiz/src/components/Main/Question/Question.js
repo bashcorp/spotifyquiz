@@ -11,8 +11,11 @@ const Question = ({ key, question, handleOffer, questionNumber }) => {
 const [choiceResponse, setChoiceResponse] = React.useState("");
 
 function handleChoice(newValue) {
+      if (choiceResponse === newValue){
+        setChoiceResponse("");
+      } else {
       setChoiceResponse(newValue);
-      console.log("Here: " + newValue);
+    }
   }
 
   return (

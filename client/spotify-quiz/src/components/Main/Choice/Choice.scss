@@ -5,7 +5,7 @@
 .square-container {
   display: flex;
   flex-wrap: wrap;
-  width: 385px;
+  width: 500px;
   margin-left: auto;
   margin-right: auto;
   justify-content: space-around;
@@ -13,15 +13,11 @@
 
 .square {
   position: relative;
-  flex-basis: calc(50% - 16px);
-  margin: 8px;
+  flex-basis: calc(50% - 72px);
+  margin: 12px;
   box-sizing: border-box;
   border-radius: 8px;
   transition: 0.3s;
-}
-
-.square:active {
-  transform: scale(102%);
 }
 
 .square::before {
@@ -58,7 +54,20 @@
   left: 0;
   height: 100%;
   width: 100%;
+  transition: 0.3s;
+  border: 2px solid #fff;
+
+  background: url('https://jooinn.com/images1280_/square.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
 }
+
+.content:hover {
+  transform: scale(102%);
+  transition: 0.3s;
+}
+
+
 #choice__bgImg:after {
   content: "";
   position: absolute;
@@ -121,9 +130,7 @@
 
 /* selection animation */
 
-
 .content {
-  border: 4px solid #fff;
   border-radius: 6px;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -132,41 +139,7 @@
   justify-content: center;
   position: relative;
   z-index: 0;
-  transition: .3s;
-    box-sizing: border-box;
-
-}
-
-.content::before, .content::after {
-  position: absolute;
-  background: #8860d0;
-  z-index: -1;
-  transition: .3s;
-  content: '';
-}
-
-.content::before {
-  height: calc(100% + 14px);
-  width: 100px;
-}
-
-.content::after {
-  width: calc(100% + 14px);
-  height: 100px;
-
-}
-
-.content:hover::before {
-  width: 0px;
-  background: #8860d0;
-}
-
-.content:hover::after {
-  height: 0px;
-  background: #8860d0;
-}
-
-.content:hover {
-  background: #8860d0;
-  border: 4px solid #fff;
+  height: 100%;
+  transition: 0.3s;
+  box-sizing: border-box;
 }

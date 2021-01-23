@@ -142,7 +142,7 @@ const Quiz = () => {
         <div class="quiz__nav">
           <i onClick={e => document.getElementById("right-butt").click()} class="fas fa-chevron-circle-right"></i>
         </div>
-        <div class="quiz__right-nav shadow-5"></div>
+        <div class="quiz__right-nav"></div>
       </div>
     </div>
   );
