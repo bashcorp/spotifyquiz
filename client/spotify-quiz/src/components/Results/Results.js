@@ -91,7 +91,7 @@ export default function Results() {
 		</div>
 			<Grid item container>
 				<Grid item xs={0} sm={1} md={3} /> {/*Left gutter*/}
-				<Grid item xs={12} sm={10} md={6} style={{margin:"16px"}} className="test">
+				<Grid item xs={12} sm={10} md={6} style={{margin:"16px"}}>
 					<Typography align="left" color="textSecondary" style={{fontSize:"24px"}}>
 						Your Results
 					</Typography>

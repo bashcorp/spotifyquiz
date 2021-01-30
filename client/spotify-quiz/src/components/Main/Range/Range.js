@@ -12,7 +12,7 @@ const Range = (props) => {
   var labels = [min, max];
 
   const [value, setValue] = React.useState(mid);
-  const [secondaryText, setSecondaryText] = React.useState("");
+  const [secondaryText, setSecondaryText] = React.useState("‏‏‎ ‎");
 
    const label = {
   [min]: "Low",
@@ -23,7 +23,6 @@ const Range = (props) => {
 
   const handleOnChange = (value) => {
     setValue(value);
-
     switch (true) {
       case (value <= min + max * 0.1):
         setSecondaryText("1");
@@ -38,9 +37,12 @@ const Range = (props) => {
         setSecondaryText("4");
         break;
       default:
-        setSecondaryText("");
+        setSecondaryText("‎‏‏‎ ‎");
         break;
     }
+
+    props.onChange(value,props.questionNumber);
+
   };
 
   return (
@@ -53,7 +55,7 @@ const Range = (props) => {
           max={max}
           min={min}
           tooltip={false}
-          labels={ label}
+          labels={label}
           onChange={handleOnChange}
         />
       </div>

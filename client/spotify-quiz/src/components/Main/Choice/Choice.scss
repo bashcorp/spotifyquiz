@@ -5,15 +5,15 @@
 .square-container {
   display: flex;
   flex-wrap: wrap;
-  width: 500px;
+  width: 550px;
   margin-left: auto;
   margin-right: auto;
-  justify-content: space-around;
+  justify-content: center;
 }
 
 .square {
   position: relative;
-  flex-basis: calc(50% - 72px);
+  flex-basis: calc(50% - 64px);
   margin: 12px;
   box-sizing: border-box;
   border-radius: 8px;
