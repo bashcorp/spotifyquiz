@@ -1,9 +1,9 @@
 import React from "react";
-import "./Choice.scss";
+import "./Select.scss";
 
 let value = "";
 
-function Choice(props) {
+function Select(props) {
 	const [selected, setSelected] = React.useState();
 
 	const button__select = {
@@ -14,12 +14,12 @@ function Choice(props) {
 		filter: "brightness(60%)",
 	};
 
-	function handleChange(key) {
-		props.onChange(key, props.questionNumber);
+	function handleChange(key, questionNumber) {
+		props.onChange(key,questionNumber);
 	}
 
 	return (
-		<div className="square" onClick={(e) => handleChange(props.choice.id)}>
+		<div className="square" onClick={(e) => handleChange(props.choice.id, props.questionNumber)}>
 			<div
 				className="content"
 				style={props.isSelected ? button__select : button__unSelect}
@@ -40,4 +40,4 @@ function Choice(props) {
 		</div>
 	);
 }
-export default Choice;
+export default Select;

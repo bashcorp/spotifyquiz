@@ -5,19 +5,17 @@ import QuestionSlider from "../QuestionSlider/QuestionSlider.js";
 import Glide from "@glidejs/glide";
 
 const Quiz = () => {
-  const [index, setIndex] = React.useState("1");
-
   //let quiz = window.context.quiz;
+
+  let answer = [];
 
   let quiz = {
     user_id: "21a452hnlj6ppe3gcvy3yx3di",
     questions: [
-
-
       {
         id: 32,
         text: "What is their most listened to track in the last 6 months?",
-        type: "mc",
+        type: "select",
         choices: [
           {
             id: 106,
@@ -100,10 +98,6 @@ const Quiz = () => {
       { id: 7, text: "plan 3", price: 7 },
     ],
   };
-  const handleSelection = (id) => {
-    console.log("handleOffer clicked, id: ", id);
-    setIndex(id + 1);
-  };
 
   const carouselOptions = {
     type: "track",
@@ -122,27 +116,33 @@ const Quiz = () => {
     },
   };
 
+
+  function handleAnswer(newValue, questionNumber) {
+    answer[questionNumber] = newValue;
+    console.log(answer);
+  }
+
   return (
     <div className="Quiz">
       <div className="quiz__grid-container">
-        <div class="quiz__question">
-          <div className="home-section test">
+        <div className="quiz__question">
+          <div className="home-section">
             <QuestionSlider options={carouselOptions}>
               {quiz.questions.map((question, index) => (
                 <Question
                   key={question.id}
                   question={question}
-                  handleOffer={handleSelection}
+                  passAnswer={handleAnswer}
                   questionNumber={index}
                 />
               ))}
             </QuestionSlider>
           </div>
         </div>
-        <div class="quiz__nav">
-          <i onClick={e => document.getElementById("right-butt").click()} class="fas fa-chevron-circle-right"></i>
+        <div className="quiz__nav left-shadow-nav">
+          <i onClick={e => document.getElementById("right-butt").click()} className="fas fa-chevron-circle-right"></i>
         </div>
-        <div class="quiz__right-nav"></div>
+        <div className="quiz__right-nav left-shadow-nav"></div>
       </div>
     </div>
   );

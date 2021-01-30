@@ -4,7 +4,6 @@ import "./MultiSelect.css";
 
 const MultiSelect = (props) => {
 	let { sendData, answers, questionIndex } = props;
-	console.log("Answers: " + answers);
 
 	const [first, setFirst] = React.useState(false);
 	const [second, setSecond] = React.useState(false);
@@ -18,12 +17,9 @@ const MultiSelect = (props) => {
 		if (selected.includes(option.id)){
 			tmpArr = selected.filter(e => e !== option.id);
 			setSelected(tmpArr);
-			console.log("Type of selected #1: " + typeof selected);
 		} else {
 			tmpArr = selected.concat(option.id);
 			setSelected(selected);
-			console.log("Type of selected #2: " + typeof selected);
-			console.log(selected)
 		}
 		updateFinalSubmission();
 	};

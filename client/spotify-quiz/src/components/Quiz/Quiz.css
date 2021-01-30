@@ -158,13 +158,6 @@ body {
   }
 }
 
-.test {
-  overflow: auto;
-  background-color: white;
-  padding: 16px;
-  border-radius: 16px;
-}
-
 .quiz-header {
   font-size: 200%;
   font-weight: 700;

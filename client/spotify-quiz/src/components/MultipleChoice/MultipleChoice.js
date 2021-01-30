@@ -6,10 +6,6 @@ let value = "";
 const MultipleChoice = (props) => {
 	let { sendData, answers, questionIndex } = props;
 
-	console.log(questionIndex)
-
-	console.log("Answers: " + answers);
-
 	const [selected, setSelected] = React.useState();
 
 
