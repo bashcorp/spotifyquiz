@@ -161,8 +161,8 @@ def question_popular_playlist(quiz, user_data):
     question = CheckboxQuestion.objects.create(quiz=quiz,
             text="Which of the user's playlists has the most number of followers?")
 
-    Choice.create_playlist_choice(question, most_pop_playlist, answer=True)
-    Choice.create_playlist_choices(question, incorrect_choices)
+    create_playlist_choice(question, most_pop_playlist, answer=True)
+    create_playlist_choices(question, incorrect_choices)
 
     return question
 
@@ -235,7 +235,7 @@ def question_playlist_tracks(quiz, user_data):
     # Create the actual question
     question = CheckboxQuestion.objects.create(quiz=quiz,
             text="Which of these tracks are in the user's playlist " + playlist['name'] + "?",)
-    Choice.create_track_choices(question, correct_choices, answer=True)
-    Choice.create_track_choices(question, incorrect_choices)
+    create_track_choices(question, correct_choices, answer=True)
+    create_track_choices(question, incorrect_choices)
 
     return question

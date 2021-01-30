@@ -105,8 +105,8 @@ def question_top_track(quiz, user_data, time_range):
     question = CheckboxQuestion.objects.create(quiz=quiz, text="What is their most listened to track in the last 6 months?")
 
     # Create correct choice and three other random choices 
-    Choice.create_track_choice(question, top_track, answer=True)
-    Choice.create_track_choices(question, random_choices)
+    create_track_choice(question, top_track, answer=True)
+    create_track_choices(question, random_choices)
 
     return question
 
@@ -152,8 +152,8 @@ def question_top_artist(quiz, user_data, time_range):
     question = CheckboxQuestion.objects.create(quiz=quiz, text="What is their most listened to artist in the last 6 months?")
 
     # Create correct choice and three random choices
-    Choice.create_artist_choice(question, top_artist, answer=True)
-    Choice.create_artist_choices(question, random_choices)
+    create_artist_choice(question, top_artist, answer=True)
+    create_artist_choices(question, random_choices)
 
     return question
 
@@ -210,7 +210,7 @@ def question_top_genre(quiz, user_data, time_range):
     # Create the models
     question = CheckboxQuestion.objects.create(quiz=quiz, text="What is their most listened to genre in the last 6 months?")
 
-    Choice.create_genre_choice(question, top_genre, answer=True)
-    Choice.create_genre_choices(question, random_choices)
+    create_genre_choice(question, top_genre, answer=True)
+    create_genre_choices(question, random_choices)
 
     return question
