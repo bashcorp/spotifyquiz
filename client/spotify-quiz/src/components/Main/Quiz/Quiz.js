@@ -84,8 +84,9 @@ let answers = [];
 
 const Quiz = () => {
 let quiz = window.context.quiz;
+console.log(quiz);
 let id_list = quiz.questions.map(question => question.id);  
-  const [questionNumber, setQuestionNumber] = React.useState(0);
+const [questionNumber, setQuestionNumber] = React.useState(0);
 
 
   //Store answers as the user completes quiz
