@@ -13,11 +13,7 @@ function Choice(props) {
 	const button__unSelect = {
 		filter: "brightness(60%)",
 	};
-
-	const bgImg__style = {
-		  background: "url(props.choice.image_url)",
-	};
-
+	
 	function handleChange(key) {
 		props.onChange(key, props.questionNumber);
 	}
@@ -28,7 +24,7 @@ function Choice(props) {
 				className="content"
 				style={props.isSelected ? button__select : button__unSelect}
 			>
-				<div className="bgImg__style" id="choice__bgImg" />
+				<div style={{background: url(props.choice.image_url)}} id="choice__bgImg" />
 				<div
 					className="list-item"
 					id={"question__choice_" + props.index}
