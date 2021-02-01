@@ -15,7 +15,7 @@ function Select(props) {
 	};
 
 	const bgImg__style = {
-		 background: url(props.choice.image_url);
+		 background: url(props.choice.image_url),
 	};
 
 	function handleChange(key, questionNumber) {
