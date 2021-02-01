@@ -1,0 +1,21 @@
+{
+    'quiz_id': str (uuid?)
+    'name': str
+    'emoji': str
+    'background_color': str,
+    'questions':
+    [
+        {
+            'question_id',
+            'answer':
+            (
+                [
+                    int, int, int
+                ]
+            )
+            (
+                int
+            )
+        }
+    ]
+}
