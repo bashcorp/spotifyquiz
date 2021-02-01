@@ -4,14 +4,14 @@ import CardContainer from "../CardContainer/CardContainer";
 import RespondentContainer from "../RespondentContainer/RespondentContainer";
 import RespondentItem from "../RespondentItem/RespondentItem";
 
-var emoji = ["😂", "😝", "😁", "😱", "🍆", "🥺"];
+var emoji = ["😂", "😝", "😁", "😱", "📚", "🥺"];
 var names = [
 	"Mary Jane",
 	"Tim Apple",
-	"John Snow",
-	"Joe Biden",
+	"John Green",
+	"Ethan Klein",
 	"Julianne Morrison",
-	"Michael Jackson",
+	"Captain Sparrow",
 ];
 var background = [
 	"#d5f5ff",

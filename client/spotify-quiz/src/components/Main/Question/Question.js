@@ -108,7 +108,7 @@ const Question = ({ key, question, passAnswer, questionNumber }) => {
                   </div>
                 )}
 
-                {question.type === "select" && (
+                {question.type === "check" && (
                   <div className="square-container">
                     {question.choices.map((choice, index) => (
                       <Select
