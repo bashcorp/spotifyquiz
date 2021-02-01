@@ -496,7 +496,7 @@ class UserDataCompilationTests(StaticLiveServerTestCase):
         data = u.music_taste_with_audio_features()
         self.assertGreaterEqual(len(data), 50)
         for t in data:
-            self.assertEquals(t['type'], 'track')
+            self.assertEqual(t['type'], 'track')
             self.assertIsNotNone(t.get('energy'))
             self.assertIsNotNone(t.get('danceability'))
             self.assertIsNotNone(t.get('valence'))
@@ -512,7 +512,7 @@ class UserDataCompilationTests(StaticLiveServerTestCase):
         data = u.playlists_detailed()
         self.assertGreaterEqual(len(data), 5)
         for p in data:
-            self.assertEquals(p['type'], 'playlist')
+            self.assertEqual(p['type'], 'playlist')
             self.assertIsNotNone(p.get('followers'))
 
 
@@ -528,7 +528,7 @@ class UserDataCompilationTests(StaticLiveServerTestCase):
 
         data = u.get_playlist_with_tracks(playlists[0]['id'])
 
-        self.assertEquals(data['type'], 'playlist')
+        self.assertEqual(data['type'], 'playlist')
         self.assertIsNotNone(data['tracks']['items'])
 
         # Assures the data is saved in the class

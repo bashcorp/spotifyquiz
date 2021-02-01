@@ -170,6 +170,7 @@ def create_track_choice(question, track, answer=False):
         question = question,
         primary_text = track['name'],
         secondary_text = track['artists'][0]['name'],
+        image_url = get_largest_image(track['album']),
         answer = answer
     )
 

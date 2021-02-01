@@ -246,7 +246,7 @@ class ChooseItemsNotInListTests(TestCase):
             self.assertNotIn(i, excluded_items)
 
         non_dupes = list(set(results))
-        self.assertEquals(len(non_dupes), len(results))
+        self.assertEqual(len(non_dupes), len(results))
 
 
     def test_random_from_list_blacklist_just_enough(self):
@@ -265,7 +265,7 @@ class ChooseItemsNotInListTests(TestCase):
             self.assertNotIn(i, excluded_items)
 
         non_dupes = list(set(results))
-        self.assertEquals(len(non_dupes), len(results))
+        self.assertEqual(len(non_dupes), len(results))
 
 
     def test_random_from_list_blacklist_not_enough_items(self):

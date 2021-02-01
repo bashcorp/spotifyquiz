@@ -38,7 +38,7 @@ class QuizTests(TransactionTestCase):
             'user_id': quiz.user_id,
             'questions': [q1.json(), q2.json()]
         }
-        self.assertEquals(quiz.json(), json)
+        self.assertEqual(quiz.json(), json)
 
 
     def test_quiz_json_no_questions(self):
@@ -53,7 +53,7 @@ class QuizTests(TransactionTestCase):
             'user_id': quiz.user_id,
             'questions': []
         }
-        self.assertEquals(quiz.json(), json)
+        self.assertEqual(quiz.json(), json)
 
 
 
@@ -209,7 +209,7 @@ class CheckboxQuestionTests(TransactionTestCase):
             'choices': [c1.json(), c2.json(), c3.json()],
             'type': 'mc'
         }
-        self.assertEquals(q.json(), json)
+        self.assertEqual(q.json(), json)
 
 
     def test_json_with_choices_checklist(self):
@@ -232,7 +232,7 @@ class CheckboxQuestionTests(TransactionTestCase):
             'choices': [c1.json(), c2.json(), c3.json()],
             'type': 'check'
         }
-        self.assertEquals(q.json(), json)
+        self.assertEqual(q.json(), json)
 
 
 
@@ -261,7 +261,7 @@ class ChoiceTests(TransactionTestCase):
             'secondary_text': 'subtext',
             'image_url': 'url',
         }
-        self.assertEquals(c.json(), json)
+        self.assertEqual(c.json(), json)
         
 
     def test_question_choice_json_no_secondary_text(self):
@@ -279,7 +279,7 @@ class ChoiceTests(TransactionTestCase):
             'primary_text': 'choice text',
             'image_url': 'url',
         }
-        self.assertEquals(c.json(), json)
+        self.assertEqual(c.json(), json)
 
 
     def test_question_choice_json_no_image_url(self):
@@ -297,7 +297,7 @@ class ChoiceTests(TransactionTestCase):
             'primary_text': 'choice text',
             'secondary_text': 'subtext',
         }
-        self.assertEquals(c.json(), json)
+        self.assertEqual(c.json(), json)
 
 
     def test_question_choice_json_is_answer(self):
@@ -316,7 +316,7 @@ class ChoiceTests(TransactionTestCase):
             'secondary_text': 'subtext',
             'image_url': 'url',
         }
-        self.assertEquals(c.json(), json)
+        self.assertEqual(c.json(), json)
 
 
 
@@ -396,5 +396,5 @@ class SliderQuestionTests(TransactionTestCase):
             'type': 'slider',
         }
 
-        self.assertEquals(json, q.json())
+        self.assertEqual(json, q.json())
 

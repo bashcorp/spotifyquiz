@@ -36,19 +36,19 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = create_album_choice(question=question, album=album)
 
-        self.assertEquals(ret.primary_text, 'Album')
-        self.assertEquals(ret.secondary_text, 'Cash')
+        self.assertEqual(ret.primary_text, 'Album')
+        self.assertEqual(ret.secondary_text, 'Cash')
         self.assertFalse(ret.answer)
-        self.assertEquals(ret.question, question)
+        self.assertEqual(ret.question, question)
         self.assertIsNotNone(ret.image_url, '300url')
 
-        self.assertEquals(Choice.objects.count(), 1)
+        self.assertEqual(Choice.objects.count(), 1)
 
         q = Choice.objects.all()[0]
-        self.assertEquals(q.primary_text, 'Album')
-        self.assertEquals(q.secondary_text, 'Cash')
+        self.assertEqual(q.primary_text, 'Album')
+        self.assertEqual(q.secondary_text, 'Cash')
         self.assertFalse(q.answer)
-        self.assertEquals(q.question, question)
+        self.assertEqual(q.question, question)
         self.assertIsNotNone(ret.image_url, '300url')
 
 
@@ -71,19 +71,19 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         question = CheckboxQuestion.objects.create(quiz=q)
         ret = create_album_choice(question=question, album=album, answer=True)
 
-        self.assertEquals(ret.primary_text, 'Album')
-        self.assertEquals(ret.secondary_text, 'Cash')
+        self.assertEqual(ret.primary_text, 'Album')
+        self.assertEqual(ret.secondary_text, 'Cash')
         self.assertTrue(ret.answer)
-        self.assertEquals(ret.question, question)
+        self.assertEqual(ret.question, question)
         self.assertIsNotNone(ret.image_url)
 
-        self.assertEquals(Choice.objects.count(), 1)
+        self.assertEqual(Choice.objects.count(), 1)
 
         q = Choice.objects.all()[0]
-        self.assertEquals(q.primary_text, 'Album')
-        self.assertEquals(q.secondary_text, 'Cash')
+        self.assertEqual(q.primary_text, 'Album')
+        self.assertEqual(q.secondary_text, 'Cash')
         self.assertTrue(q.answer)
-        self.assertEquals(q.question, question)
+        self.assertEqual(q.question, question)
         self.assertIsNotNone(q.image_url)
 
 
@@ -117,24 +117,24 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = create_album_choices(question=question, albums=albums)
 
-        self.assertEquals(ret[0].primary_text, 'Album')
-        self.assertEquals(ret[0].secondary_text, 'Cash')
+        self.assertEqual(ret[0].primary_text, 'Album')
+        self.assertEqual(ret[0].secondary_text, 'Cash')
         self.assertFalse(ret[0].answer)
         self.assertIsNotNone(ret[0].image_url)
-        self.assertEquals(ret[1].primary_text, 'Album2')
-        self.assertEquals(ret[1].secondary_text, 'Ben')
+        self.assertEqual(ret[1].primary_text, 'Album2')
+        self.assertEqual(ret[1].secondary_text, 'Ben')
         self.assertFalse(ret[1].answer)
         self.assertIsNotNone(ret[1].image_url)
 
-        self.assertEquals(Choice.objects.count(), 2)
+        self.assertEqual(Choice.objects.count(), 2)
 
         objects = Choice.objects.all()
-        self.assertEquals(objects[0].primary_text, 'Album')
-        self.assertEquals(objects[0].secondary_text, 'Cash')
+        self.assertEqual(objects[0].primary_text, 'Album')
+        self.assertEqual(objects[0].secondary_text, 'Cash')
         self.assertFalse(objects[0].answer)
         self.assertIsNotNone(objects[0].image_url)
-        self.assertEquals(objects[1].primary_text, 'Album2')
-        self.assertEquals(objects[1].secondary_text, 'Ben')
+        self.assertEqual(objects[1].primary_text, 'Album2')
+        self.assertEqual(objects[1].secondary_text, 'Ben')
         self.assertFalse(objects[1].answer)
         self.assertIsNotNone(objects[1].image_url)
 
@@ -169,24 +169,24 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = create_album_choices(question=question, albums=albums, answer=True)
 
-        self.assertEquals(ret[0].primary_text, 'Album')
-        self.assertEquals(ret[0].secondary_text, 'Cash')
+        self.assertEqual(ret[0].primary_text, 'Album')
+        self.assertEqual(ret[0].secondary_text, 'Cash')
         self.assertTrue(ret[0].answer)
         self.assertIsNotNone(ret[0].image_url)
-        self.assertEquals(ret[1].primary_text, 'Album2')
-        self.assertEquals(ret[1].secondary_text, 'Ben')
+        self.assertEqual(ret[1].primary_text, 'Album2')
+        self.assertEqual(ret[1].secondary_text, 'Ben')
         self.assertTrue(ret[1].answer)
         self.assertIsNotNone(ret[1].image_url)
 
-        self.assertEquals(Choice.objects.count(), 2)
+        self.assertEqual(Choice.objects.count(), 2)
 
         objects = Choice.objects.all()
-        self.assertEquals(objects[0].primary_text, 'Album')
-        self.assertEquals(objects[0].secondary_text, 'Cash')
+        self.assertEqual(objects[0].primary_text, 'Album')
+        self.assertEqual(objects[0].secondary_text, 'Cash')
         self.assertTrue(objects[0].answer)
         self.assertIsNotNone(objects[0].image_url)
-        self.assertEquals(objects[1].primary_text, 'Album2')
-        self.assertEquals(objects[1].secondary_text, 'Ben')
+        self.assertEqual(objects[1].primary_text, 'Album2')
+        self.assertEqual(objects[1].secondary_text, 'Ben')
         self.assertTrue(objects[1].answer)
         self.assertIsNotNone(objects[1].image_url)
 
@@ -209,19 +209,19 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = create_artist_choice(question=question, artist=artist)
 
-        self.assertEquals(ret.primary_text, 'Bon Jovi')
+        self.assertEqual(ret.primary_text, 'Bon Jovi')
         self.assertIsNone(ret.secondary_text)
         self.assertFalse(ret.answer)
-        self.assertEquals(ret.question, question)
+        self.assertEqual(ret.question, question)
         self.assertIsNotNone(ret.image_url)
 
-        self.assertEquals(Choice.objects.count(), 1)
+        self.assertEqual(Choice.objects.count(), 1)
 
         q = Choice.objects.all()[0]
-        self.assertEquals(q.primary_text, 'Bon Jovi')
+        self.assertEqual(q.primary_text, 'Bon Jovi')
         self.assertIsNone(q.secondary_text)
         self.assertFalse(q.answer)
-        self.assertEquals(q.question, question)
+        self.assertEqual(q.question, question)
         self.assertIsNotNone(q.image_url)
 
 
@@ -243,19 +243,19 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = create_artist_choice(question=question, artist=artist, answer=True)
 
-        self.assertEquals(ret.primary_text, 'Bon Jovi')
+        self.assertEqual(ret.primary_text, 'Bon Jovi')
         self.assertIsNone(ret.secondary_text)
         self.assertTrue(ret.answer)
-        self.assertEquals(ret.question, question)
+        self.assertEqual(ret.question, question)
         self.assertIsNotNone(ret.image_url)
 
-        self.assertEquals(Choice.objects.count(), 1)
+        self.assertEqual(Choice.objects.count(), 1)
 
         q = Choice.objects.all()[0]
-        self.assertEquals(q.primary_text, 'Bon Jovi')
+        self.assertEqual(q.primary_text, 'Bon Jovi')
         self.assertIsNone(q.secondary_text)
         self.assertTrue(q.answer)
-        self.assertEquals(q.question, question)
+        self.assertEqual(q.question, question)
         self.assertIsNotNone(q.image_url)
 
 
@@ -294,26 +294,26 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = create_artist_choices(question=question, artists=artists)
 
-        self.assertEquals(ret[0].primary_text, 'Bon Jovi')
+        self.assertEqual(ret[0].primary_text, 'Bon Jovi')
         self.assertFalse(ret[0].answer)
         self.assertIsNotNone(ret[0].image_url)
-        self.assertEquals(ret[1].primary_text, 'Cassius')
+        self.assertEqual(ret[1].primary_text, 'Cassius')
         self.assertFalse(ret[1].answer)
         self.assertIsNotNone(ret[1].image_url)
-        self.assertEquals(ret[2].primary_text, 'Bon Jamin')
+        self.assertEqual(ret[2].primary_text, 'Bon Jamin')
         self.assertFalse(ret[2].answer)
         self.assertIsNotNone(ret[2].image_url)
 
-        self.assertEquals(Choice.objects.count(), 3)
+        self.assertEqual(Choice.objects.count(), 3)
 
         objects = Choice.objects.all()
-        self.assertEquals(objects[0].primary_text, 'Bon Jovi')
+        self.assertEqual(objects[0].primary_text, 'Bon Jovi')
         self.assertFalse(objects[0].answer)
         self.assertIsNotNone(objects[0].image_url)
-        self.assertEquals(objects[1].primary_text, 'Cassius')
+        self.assertEqual(objects[1].primary_text, 'Cassius')
         self.assertFalse(objects[1].answer)
         self.assertIsNotNone(objects[1].image_url)
-        self.assertEquals(objects[2].primary_text, 'Bon Jamin')
+        self.assertEqual(objects[2].primary_text, 'Bon Jamin')
         self.assertFalse(objects[2].answer)
         self.assertIsNotNone(objects[2].image_url)
 
@@ -353,26 +353,26 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = create_artist_choices(question=question, artists=artists, answer=True)
         
-        self.assertEquals(ret[0].primary_text, 'Bon Jovi')
+        self.assertEqual(ret[0].primary_text, 'Bon Jovi')
         self.assertTrue(ret[0].answer)
         self.assertIsNotNone(ret[0].image_url)
-        self.assertEquals(ret[1].primary_text, 'Cassius')
+        self.assertEqual(ret[1].primary_text, 'Cassius')
         self.assertTrue(ret[1].answer)
         self.assertIsNotNone(ret[1].image_url)
-        self.assertEquals(ret[2].primary_text, 'Bon Jamin')
+        self.assertEqual(ret[2].primary_text, 'Bon Jamin')
         self.assertTrue(ret[2].answer)
         self.assertIsNotNone(ret[1].image_url)
 
-        self.assertEquals(Choice.objects.count(), 3)
+        self.assertEqual(Choice.objects.count(), 3)
 
         objects = Choice.objects.all()
-        self.assertEquals(objects[0].primary_text, 'Bon Jovi')
+        self.assertEqual(objects[0].primary_text, 'Bon Jovi')
         self.assertTrue(objects[0].answer)
         self.assertIsNotNone(objects[0].image_url)
-        self.assertEquals(objects[1].primary_text, 'Cassius')
+        self.assertEqual(objects[1].primary_text, 'Cassius')
         self.assertTrue(objects[1].answer)
         self.assertIsNotNone(objects[1].image_url)
-        self.assertEquals(objects[2].primary_text, 'Bon Jamin')
+        self.assertEqual(objects[2].primary_text, 'Bon Jamin')
         self.assertTrue(objects[2].answer)
         self.assertIsNotNone(objects[2].image_url)
 
@@ -390,29 +390,31 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
                 { 'name': 'Bon Jovi', },
                 { 'name': 'Unknown', }
             ],
-            'images': [
-                { 'height': 200, 'width': 200, 'url': 'B200url' },
-                { 'height': 300, 'width': 300, 'url': 'B300url' },
-            ]
+            'album': {
+                'images': [
+                    { 'height': 200, 'width': 200, 'url': 'B200url' },
+                    { 'height': 300, 'width': 300, 'url': 'B300url' },
+                ]
+            }
         }
         quiz = Quiz.objects.create(user_id="cash")
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = create_track_choice(question=question, track=track)
 
-        self.assertEquals(ret.primary_text, 'YGLABN')
-        self.assertEquals(ret.secondary_text, 'Bon Jovi')
+        self.assertEqual(ret.primary_text, 'YGLABN')
+        self.assertEqual(ret.secondary_text, 'Bon Jovi')
         self.assertFalse(ret.answer)
-        self.assertEquals(ret.question, question)
-        self.assertIsNone(ret.image_url)
+        self.assertEqual(ret.question, question)
+        self.assertEqual(ret.image_url, 'B300url')
 
-        self.assertEquals(Choice.objects.count(), 1)
+        self.assertEqual(Choice.objects.count(), 1)
 
         q = Choice.objects.all()[0]
-        self.assertEquals(q.primary_text, 'YGLABN')
-        self.assertEquals(q.secondary_text, 'Bon Jovi')
+        self.assertEqual(q.primary_text, 'YGLABN')
+        self.assertEqual(q.secondary_text, 'Bon Jovi')
         self.assertFalse(q.answer)
-        self.assertEquals(q.question, question)
-        self.assertIsNone(q.image_url)
+        self.assertEqual(q.question, question)
+        self.assertEqual(q.image_url, 'B300url')
 
 
     def test_create_track_choice_is_answer(self):
@@ -425,29 +427,31 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         track = {
             'name': 'YGLABN',
             'artists': [{'name': 'Bon Jovi'}, {'name': 'Unknown'}],
-            'images': [
-                { 'height': 200, 'width': 200, 'url': 'B200url' },
-                { 'height': 300, 'width': 300, 'url': 'B300url' },
-            ]
+            'album': {
+                'images': [
+                    { 'height': 200, 'width': 200, 'url': 'B200url' },
+                    { 'height': 300, 'width': 300, 'url': 'B300url' },
+                ]
+            }
         }
         quiz = Quiz.objects.create(user_id="cash")
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = create_track_choice(question=question, track=track, answer=True)
 
-        self.assertEquals(ret.primary_text, 'YGLABN')
-        self.assertEquals(ret.secondary_text, 'Bon Jovi')
+        self.assertEqual(ret.primary_text, 'YGLABN')
+        self.assertEqual(ret.secondary_text, 'Bon Jovi')
         self.assertTrue(ret.answer)
-        self.assertEquals(ret.question, question)
-        self.assertIsNone(ret.image_url)
+        self.assertEqual(ret.question, question)
+        self.assertEqual(ret.image_url, 'B300url')
 
-        self.assertEquals(Choice.objects.count(), 1)
+        self.assertEqual(Choice.objects.count(), 1)
 
         q = Choice.objects.all()[0]
-        self.assertEquals(q.primary_text, 'YGLABN')
-        self.assertEquals(q.secondary_text, 'Bon Jovi')
+        self.assertEqual(q.primary_text, 'YGLABN')
+        self.assertEqual(q.secondary_text, 'Bon Jovi')
         self.assertTrue(q.answer)
-        self.assertEquals(q.question, question)
-        self.assertIsNone(q.image_url)
+        self.assertEqual(q.question, question)
+        self.assertEqual(q.image_url, 'B300url')
 
 
     def test_create_track_choices_not_answers(self):
@@ -461,44 +465,48 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         {
             'name': 'YGLABN',
             'artists': [{'name': 'Bon Jovi'}, {'name': 'Unknown'}],
-            'images': [
-                { 'height': 200, 'width': 200, 'url': 'B200url' },
-                { 'height': 300, 'width': 300, 'url': 'B300url' },
-            ]
+            'album': {
+                'images': [
+                    { 'height': 200, 'width': 200, 'url': 'B200url' },
+                    { 'height': 300, 'width': 300, 'url': 'B300url' },
+                ]
+            }
         },
         {
             'name': 'Country Song',
             'artists': [{'name': 'Cassius'}, {'name': 'Ben Jamin'}],
-            'images': [
-                { 'height': 200, 'width': 200, 'url': '200url' },
-                { 'height': 300, 'width': 300, 'url': '300url' },
-            ]
+            'album': {
+                'images': [
+                    { 'height': 200, 'width': 200, 'url': 'B200url' },
+                    { 'height': 300, 'width': 300, 'url': 'B300url' },
+                ]
+            }
         }]
 
         quiz = Quiz.objects.create(user_id="cash")
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = create_track_choices(question=question, tracks=tracks)
 
-        self.assertEquals(ret[0].primary_text, 'YGLABN')
-        self.assertEquals(ret[0].secondary_text, 'Bon Jovi')
+        self.assertEqual(ret[0].primary_text, 'YGLABN')
+        self.assertEqual(ret[0].secondary_text, 'Bon Jovi')
         self.assertFalse(ret[0].answer)
-        self.assertIsNone(ret[0].image_url)
-        self.assertEquals(ret[1].primary_text, 'Country Song')
-        self.assertEquals(ret[1].secondary_text, 'Cassius')
+        self.assertEqual(ret[0].image_url, 'B300url')
+        self.assertEqual(ret[1].primary_text, 'Country Song')
+        self.assertEqual(ret[1].secondary_text, 'Cassius')
         self.assertFalse(ret[1].answer)
-        self.assertIsNone(ret[1].image_url)
+        self.assertEqual(ret[1].image_url, 'B300url')
 
-        self.assertEquals(Choice.objects.count(), 2)
+        self.assertEqual(Choice.objects.count(), 2)
 
         objects = Choice.objects.all()
-        self.assertEquals(objects[0].primary_text, 'YGLABN')
-        self.assertEquals(objects[0].secondary_text, 'Bon Jovi')
+        self.assertEqual(objects[0].primary_text, 'YGLABN')
+        self.assertEqual(objects[0].secondary_text, 'Bon Jovi')
         self.assertFalse(objects[0].answer)
-        self.assertIsNone(objects[0].image_url)
-        self.assertEquals(objects[1].primary_text, 'Country Song')
-        self.assertEquals(objects[1].secondary_text, 'Cassius')
+        self.assertEqual(objects[0].image_url, 'B300url')
+        self.assertEqual(objects[1].primary_text, 'Country Song')
+        self.assertEqual(objects[1].secondary_text, 'Cassius')
         self.assertFalse(objects[1].answer)
-        self.assertIsNone(objects[1].image_url)
+        self.assertEqual(objects[1].image_url, 'B300url')
 
 
     def test_create_track_choices_are_answers(self):
@@ -512,44 +520,48 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         {
             'name': 'YGLABN',
             'artists': [{'name': 'Bon Jovi'}, {'name': 'Unknown'}],
-            'images': [
-                { 'height': 200, 'width': 200, 'url': '200url' },
-                { 'height': 300, 'width': 300, 'url': '300url' },
-            ]
+            'album': {
+                'images': [
+                    { 'height': 200, 'width': 200, 'url': 'B200url' },
+                    { 'height': 300, 'width': 300, 'url': 'B300url' },
+                ]
+            }
         },
         {
             'name': 'Country Song',
             'artists': [{'name': 'Cassius'}, {'name': 'Ben Jamin'}],
-            'images': [
-                { 'height': 200, 'width': 200, 'url': '200url' },
-                { 'height': 300, 'width': 300, 'url': '300url' },
-            ]
+            'album': {
+                'images': [
+                    { 'height': 200, 'width': 200, 'url': 'B200url' },
+                    { 'height': 300, 'width': 300, 'url': 'B300url' },
+                ]
+            }
         }]
 
         quiz = Quiz.objects.create(user_id="cash")
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = create_track_choices(question=question, tracks=tracks, answer=True)
 
-        self.assertEquals(ret[0].primary_text, 'YGLABN')
-        self.assertEquals(ret[0].secondary_text, 'Bon Jovi')
+        self.assertEqual(ret[0].primary_text, 'YGLABN')
+        self.assertEqual(ret[0].secondary_text, 'Bon Jovi')
         self.assertTrue(ret[0].answer)
-        self.assertIsNone(ret[0].image_url)
-        self.assertEquals(ret[1].primary_text, 'Country Song')
-        self.assertEquals(ret[1].secondary_text, 'Cassius')
+        self.assertEqual(ret[0].image_url, 'B300url')
+        self.assertEqual(ret[1].primary_text, 'Country Song')
+        self.assertEqual(ret[1].secondary_text, 'Cassius')
         self.assertTrue(ret[1].answer)
-        self.assertIsNone(ret[1].image_url)
+        self.assertEqual(ret[1].image_url, 'B300url')
 
-        self.assertEquals(Choice.objects.count(), 2)
+        self.assertEqual(Choice.objects.count(), 2)
 
         objects = Choice.objects.all()
-        self.assertEquals(objects[0].primary_text, 'YGLABN')
-        self.assertEquals(objects[0].secondary_text, 'Bon Jovi')
+        self.assertEqual(objects[0].primary_text, 'YGLABN')
+        self.assertEqual(objects[0].secondary_text, 'Bon Jovi')
         self.assertTrue(objects[0].answer)
-        self.assertIsNone(objects[0].image_url)
-        self.assertEquals(objects[1].primary_text, 'Country Song')
-        self.assertEquals(objects[1].secondary_text, 'Cassius')
+        self.assertEqual(objects[0].image_url, 'B300url')
+        self.assertEqual(objects[1].primary_text, 'Country Song')
+        self.assertEqual(objects[1].secondary_text, 'Cassius')
         self.assertTrue(objects[1].answer)
-        self.assertIsNone(objects[1].image_url)
+        self.assertEqual(objects[1].image_url, 'B300url')
 
 
     def test_create_genre_choice_not_answer(self):
@@ -564,18 +576,18 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = create_genre_choice(question=question, genre=genre)
 
-        self.assertEquals(ret.primary_text, 'Pop')
+        self.assertEqual(ret.primary_text, 'Pop')
         self.assertIsNone(ret.secondary_text)
         self.assertFalse(ret.answer)
-        self.assertEquals(ret.question, question)
+        self.assertEqual(ret.question, question)
 
-        self.assertEquals(Choice.objects.count(), 1)
+        self.assertEqual(Choice.objects.count(), 1)
 
         q = Choice.objects.all()[0]
-        self.assertEquals(q.primary_text, 'Pop')
+        self.assertEqual(q.primary_text, 'Pop')
         self.assertIsNone(q.secondary_text)
         self.assertFalse(q.answer)
-        self.assertEquals(q.question, question)
+        self.assertEqual(q.question, question)
 
 
     def test_create_genre_choice_is_answer(self):
@@ -590,18 +602,18 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = create_genre_choice(question=question, genre=genre, answer=True)
 
-        self.assertEquals(ret.primary_text, 'Pop')
+        self.assertEqual(ret.primary_text, 'Pop')
         self.assertIsNone(ret.secondary_text)
         self.assertTrue(ret.answer)
-        self.assertEquals(ret.question, question)
+        self.assertEqual(ret.question, question)
 
-        self.assertEquals(Choice.objects.count(), 1)
+        self.assertEqual(Choice.objects.count(), 1)
 
         q = Choice.objects.all()[0]
-        self.assertEquals(q.primary_text, 'Pop')
+        self.assertEqual(q.primary_text, 'Pop')
         self.assertIsNone(q.secondary_text)
         self.assertTrue(q.answer)
-        self.assertEquals(q.question, question)
+        self.assertEqual(q.question, question)
 
 
     def test_create_genre_choices_not_answers(self):
@@ -617,20 +629,20 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = create_genre_choices(question=question, genres=genres)
 
-        self.assertEquals(ret[0].primary_text, 'Pop')
+        self.assertEqual(ret[0].primary_text, 'Pop')
         self.assertIsNone(ret[0].secondary_text)
         self.assertFalse(ret[0].answer)
-        self.assertEquals(ret[1].primary_text, 'Rock')
+        self.assertEqual(ret[1].primary_text, 'Rock')
         self.assertIsNone(ret[1].secondary_text)
         self.assertFalse(ret[1].answer)
 
-        self.assertEquals(Choice.objects.count(), 2)
+        self.assertEqual(Choice.objects.count(), 2)
 
         objects = Choice.objects.all()
-        self.assertEquals(objects[0].primary_text, 'Pop')
+        self.assertEqual(objects[0].primary_text, 'Pop')
         self.assertIsNone(objects[0].secondary_text)
         self.assertFalse(objects[0].answer)
-        self.assertEquals(objects[1].primary_text, 'Rock')
+        self.assertEqual(objects[1].primary_text, 'Rock')
         self.assertIsNone(objects[1].secondary_text)
         self.assertFalse(objects[1].answer)
 
@@ -648,20 +660,20 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = create_genre_choices(question=question, genres=genres, answer=True)
 
-        self.assertEquals(ret[0].primary_text, 'Pop')
+        self.assertEqual(ret[0].primary_text, 'Pop')
         self.assertIsNone(ret[0].secondary_text)
         self.assertTrue(ret[0].answer)
-        self.assertEquals(ret[1].primary_text, 'Rock')
+        self.assertEqual(ret[1].primary_text, 'Rock')
         self.assertIsNone(ret[1].secondary_text)
         self.assertTrue(ret[1].answer)
 
-        self.assertEquals(Choice.objects.count(), 2)
+        self.assertEqual(Choice.objects.count(), 2)
 
         objects = Choice.objects.all()
-        self.assertEquals(objects[0].primary_text, 'Pop')
+        self.assertEqual(objects[0].primary_text, 'Pop')
         self.assertIsNone(objects[0].secondary_text)
         self.assertTrue(objects[0].answer)
-        self.assertEquals(objects[1].primary_text, 'Rock')
+        self.assertEqual(objects[1].primary_text, 'Rock')
         self.assertIsNone(objects[1].secondary_text)
         self.assertTrue(objects[1].answer)
 
@@ -684,19 +696,19 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = create_playlist_choice(question=question, playlist=playlist)
         
-        self.assertEquals(ret.primary_text, 'Bon Jovi')
+        self.assertEqual(ret.primary_text, 'Bon Jovi')
         self.assertIsNone(ret.secondary_text)
         self.assertFalse(ret.answer)
-        self.assertEquals(ret.question, question)
+        self.assertEqual(ret.question, question)
         self.assertIsNotNone(ret.image_url)
 
-        self.assertEquals(Choice.objects.count(), 1)
+        self.assertEqual(Choice.objects.count(), 1)
 
         q = Choice.objects.all()[0]
-        self.assertEquals(q.primary_text, 'Bon Jovi')
+        self.assertEqual(q.primary_text, 'Bon Jovi')
         self.assertIsNone(q.secondary_text)
         self.assertFalse(q.answer)
-        self.assertEquals(q.question, question)
+        self.assertEqual(q.question, question)
         self.assertIsNotNone(q.image_url)
 
 
@@ -718,19 +730,19 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = create_playlist_choice(question=question, playlist=playlist, answer=True)
 
-        self.assertEquals(ret.primary_text, 'Bon Jovi')
+        self.assertEqual(ret.primary_text, 'Bon Jovi')
         self.assertIsNone(ret.secondary_text)
         self.assertTrue(ret.answer)
-        self.assertEquals(ret.question, question)
+        self.assertEqual(ret.question, question)
         self.assertIsNotNone(ret.image_url)
 
-        self.assertEquals(Choice.objects.count(), 1)
+        self.assertEqual(Choice.objects.count(), 1)
 
         q = Choice.objects.all()[0]
-        self.assertEquals(q.primary_text, 'Bon Jovi')
+        self.assertEqual(q.primary_text, 'Bon Jovi')
         self.assertIsNone(q.secondary_text)
         self.assertTrue(q.answer)
-        self.assertEquals(q.question, question)
+        self.assertEqual(q.question, question)
         self.assertIsNotNone(q.image_url)
 
 
@@ -769,26 +781,26 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = create_playlist_choices(question=question, playlists=playlists)
 
-        self.assertEquals(ret[0].primary_text, 'Bon Jovi')
+        self.assertEqual(ret[0].primary_text, 'Bon Jovi')
         self.assertFalse(ret[0].answer)
         self.assertIsNotNone(ret[0].image_url)
-        self.assertEquals(ret[1].primary_text, 'Cassius')
+        self.assertEqual(ret[1].primary_text, 'Cassius')
         self.assertFalse(ret[1].answer)
         self.assertIsNotNone(ret[1].image_url)
-        self.assertEquals(ret[2].primary_text, 'Bon Jamin')
+        self.assertEqual(ret[2].primary_text, 'Bon Jamin')
         self.assertFalse(ret[2].answer)
         self.assertIsNotNone(ret[2].image_url)
 
-        self.assertEquals(Choice.objects.count(), 3)
+        self.assertEqual(Choice.objects.count(), 3)
 
         objects = Choice.objects.all()
-        self.assertEquals(objects[0].primary_text, 'Bon Jovi')
+        self.assertEqual(objects[0].primary_text, 'Bon Jovi')
         self.assertFalse(objects[0].answer)
         self.assertIsNotNone(objects[0].image_url)
-        self.assertEquals(objects[1].primary_text, 'Cassius')
+        self.assertEqual(objects[1].primary_text, 'Cassius')
         self.assertFalse(objects[1].answer)
         self.assertIsNotNone(objects[1].image_url)
-        self.assertEquals(objects[2].primary_text, 'Bon Jamin')
+        self.assertEqual(objects[2].primary_text, 'Bon Jamin')
         self.assertFalse(objects[2].answer)
         self.assertIsNotNone(objects[2].image_url)
 
@@ -828,26 +840,26 @@ class ChoiceCreationFunctionTests(TransactionTestCase):
         question = CheckboxQuestion.objects.create(quiz=quiz)
         ret = create_playlist_choices(question=question, playlists=playlists, answer=True)
 
-        self.assertEquals(ret[0].primary_text, 'Bon Jovi')
+        self.assertEqual(ret[0].primary_text, 'Bon Jovi')
         self.assertTrue(ret[0].answer)
         self.assertIsNotNone(ret[0].image_url)
-        self.assertEquals(ret[1].primary_text, 'Cassius')
+        self.assertEqual(ret[1].primary_text, 'Cassius')
         self.assertTrue(ret[1].answer)
         self.assertIsNotNone(ret[1].image_url)
-        self.assertEquals(ret[2].primary_text, 'Bon Jamin')
+        self.assertEqual(ret[2].primary_text, 'Bon Jamin')
         self.assertTrue(ret[2].answer)
         self.assertIsNotNone(ret[2].image_url)
 
-        self.assertEquals(Choice.objects.count(), 3)
+        self.assertEqual(Choice.objects.count(), 3)
 
         objects = Choice.objects.all()
-        self.assertEquals(objects[0].primary_text, 'Bon Jovi')
+        self.assertEqual(objects[0].primary_text, 'Bon Jovi')
         self.assertTrue(objects[0].answer)
         self.assertIsNotNone(objects[0].image_url)
-        self.assertEquals(objects[1].primary_text, 'Cassius')
+        self.assertEqual(objects[1].primary_text, 'Cassius')
         self.assertTrue(objects[1].answer)
         self.assertIsNotNone(objects[1].image_url)
-        self.assertEquals(objects[2].primary_text, 'Bon Jamin')
+        self.assertEqual(objects[2].primary_text, 'Bon Jamin')
         self.assertTrue(objects[2].answer)
         self.assertIsNotNone(objects[2].image_url)
 

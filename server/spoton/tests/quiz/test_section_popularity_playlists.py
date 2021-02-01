@@ -323,36 +323,58 @@ class QuestionPlaylistTracksTests(StaticLiveServerTestCase):
         u = UserData(None)
         u._playlists = [
             { 'name': 'name1', 'id': 1, 'public':True, 'tracks': { 'total': 5, 'items': [
-                {'track': {'name':'t11', 'artists':[{'name':'Cash'}]}},
-                {'track': {'name':'t12', 'artists':[{'name':'Cash'}]}},
-                {'track': {'name':'t13', 'artists':[{'name':'Cash'}]}},
-                {'track': {'name':'t14', 'artists':[{'name':'Cash'}]}},
-                {'track': {'name':'t15', 'artists':[{'name':'Cash'}]}},
+                {'track': {'name':'t11', 'artists':[{'name':'Cash'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
+                {'track': {'name':'t12', 'artists':[{'name':'Cash'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
+                {'track': {'name':'t13', 'artists':[{'name':'Cash'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
+                {'track': {'name':'t14', 'artists':[{'name':'Cash'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
+                {'track': {'name':'t15', 'artists':[{'name':'Cash'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
             ]}},
             { 'name': 'name2', 'id': 2, 'public':True, 'tracks': { 'total': 5, 'items': [
-                {'track': {'name':'t21', 'artists':[{'name':'Ben'}]}},
-                {'track': {'name':'t22', 'artists':[{'name':'Ben'}]}},
-                {'track': {'name':'t23', 'artists':[{'name':'Ben'}]}},
-                {'track': {'name':'t24', 'artists':[{'name':'Ben'}]}},
-                {'track': {'name':'t25', 'artists':[{'name':'Ben'}]}},
+                {'track': {'name':'t21', 'artists':[{'name':'Ben'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
+                {'track': {'name':'t22', 'artists':[{'name':'Ben'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
+                {'track': {'name':'t23', 'artists':[{'name':'Ben'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
+                {'track': {'name':'t24', 'artists':[{'name':'Ben'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
+                {'track': {'name':'t25', 'artists':[{'name':'Ben'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
             ]}},
             { 'name': 'name3', 'id': 3, 'public':True, 'tracks': { 'total': 5, 'items': [
-                {'track': {'name':'t31', 'artists':[{'name':'Julia'}]}},
-                {'track': {'name':'t32', 'artists':[{'name':'Julia'}]}},
-                {'track': {'name':'t33', 'artists':[{'name':'Julia'}]}},
-                {'track': {'name':'t34', 'artists':[{'name':'Julia'}]}},
-                {'track': {'name':'t35', 'artists':[{'name':'Julia'}]}},
+                {'track': {'name':'t31', 'artists':[{'name':'Julia'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
+                {'track': {'name':'t32', 'artists':[{'name':'Julia'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
+                {'track': {'name':'t33', 'artists':[{'name':'Julia'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
+                {'track': {'name':'t34', 'artists':[{'name':'Julia'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
+                {'track': {'name':'t35', 'artists':[{'name':'Julia'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
             ]}},
         ]
 
         u._music_taste = [
-            {'name':'t15', 'artists':[{'name':'Cash'}]},
-            {'name':'t25', 'artists':[{'name':'Ben'}]},
-            {'name':'t35', 'artists':[{'name':'Julia'}]},
-            {'name':'t41', 'artists':[{'name':'Velma'}]},
-            {'name':'t42', 'artists':[{'name':'Velma'}]},
-            {'name':'t43', 'artists':[{'name':'Velma'}]},
-            {'name':'t44', 'artists':[{'name':'Velma'}]},
+            {'name':'t15', 'artists':[{'name':'Cash'}],
+		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'name':'t25', 'artists':[{'name':'Ben'}],
+		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'name':'t35', 'artists':[{'name':'Julia'}],
+		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'name':'t41', 'artists':[{'name':'Velma'}],
+		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'name':'t42', 'artists':[{'name':'Velma'}],
+		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'name':'t43', 'artists':[{'name':'Velma'}],
+		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'name':'t44', 'artists':[{'name':'Velma'}],
+		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
         ]
 
         quiz = Quiz.objects.create(user_id='Cassius')
@@ -372,11 +394,11 @@ class QuestionPlaylistTracksTests(StaticLiveServerTestCase):
         artist_name = question.answers()[0].secondary_text
         for a in question.answers():
             self.assertEqual(a.secondary_text, artist_name)
-            self.assertIsNone(a.image_url)
+            self.assertEqual(a.image_url, '200url')
 
         for a in question.incorrect_answers():
             self.assertNotEqual(a.secondary_text, artist_name)
-            self.assertIsNone(a.image_url)
+            self.assertEqual(a.image_url, '200url')
 
 
     def test_question_playlist_tracks_real_request(self):
@@ -394,7 +416,7 @@ class QuestionPlaylistTracksTests(StaticLiveServerTestCase):
         self.assertGreaterEqual(question.answers().count(), 1)
         self.assertEqual(question.incorrect_answers().count(), 4-question.answers().count())
         for c in question.choices.all():
-            self.assertIsNone(c.image_url)
+            self.assertIsNotNone(c.image_url)
 
 
     def test_question_playlist_tracks_not_enough_tracks(self):
@@ -405,25 +427,38 @@ class QuestionPlaylistTracksTests(StaticLiveServerTestCase):
         u = UserData(None)
         u._playlists = [
             { 'id': 1, 'public':True, 'tracks': { 'total': 3, 'items': [
-                {'track': {'name':'t11', 'artists':[{'name':'Cash'}]}},
-                {'track': {'name':'t12', 'artists':[{'name':'Cash'}]}},
-                {'track': {'name':'t13', 'artists':[{'name':'Cash'}]}},
+                {'track': {'name':'t11', 'artists':[{'name':'Cash'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
+                {'track': {'name':'t12', 'artists':[{'name':'Cash'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
+                {'track': {'name':'t13', 'artists':[{'name':'Cash'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
             ]}},
             { 'id': 2, 'public':True, 'tracks': { 'total': 3, 'items': [
-                {'track': {'name':'t21', 'artists':[{'name':'Ben'}]}},
-                {'track': {'name':'t22', 'artists':[{'name':'Ben'}]}},
-                {'track': {'name':'t23', 'artists':[{'name':'Ben'}]}},
+                {'track': {'name':'t21', 'artists':[{'name':'Ben'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
+                {'track': {'name':'t22', 'artists':[{'name':'Ben'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
+                {'track': {'name':'t23', 'artists':[{'name':'Ben'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
             ]}},
             { 'id': 3, 'public':True, 'tracks': { 'total': 3, 'items': [
-                {'track': {'name':'t31', 'artists':[{'name':'Julia'}]}},
-                {'track': {'name':'t32', 'artists':[{'name':'Julia'}]}},
-                {'track': {'name':'t33', 'artists':[{'name':'Julia'}]}},
+                {'track': {'name':'t31', 'artists':[{'name':'Julia'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
+                {'track': {'name':'t32', 'artists':[{'name':'Julia'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
+                {'track': {'name':'t33', 'artists':[{'name':'Julia'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
             ]}},
             { 'id': 4, 'public':False, 'tracks': { 'total': 4, 'items': [
-                {'track': {'name':'t41', 'artists':[{'name':'Julia'}]}},
-                {'track': {'name':'t42', 'artists':[{'name':'Julia'}]}},
-                {'track': {'name':'t43', 'artists':[{'name':'Julia'}]}},
-                {'track': {'name':'t44', 'artists':[{'name':'Julia'}]}},
+                {'track': {'name':'t41', 'artists':[{'name':'Julia'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
+                {'track': {'name':'t42', 'artists':[{'name':'Julia'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
+                {'track': {'name':'t43', 'artists':[{'name':'Julia'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
+                {'track': {'name':'t44', 'artists':[{'name':'Julia'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
             ]}},
         ]
 
@@ -441,32 +476,49 @@ class QuestionPlaylistTracksTests(StaticLiveServerTestCase):
         u = UserData(None)
         u._playlists = [
             { 'name': 'name1', 'id': 1, 'public':True, 'tracks': { 'total': 3, 'items': [
-                {'track': {'name':'t11', 'artists':[{'name':'Cash'}]}},
-                {'track': {'name':'t12', 'artists':[{'name':'Cash'}]}},
-                {'track': {'name':'t13', 'artists':[{'name':'Cash'}]}},
+                {'track': {'name':'t11', 'artists':[{'name':'Cash'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
+                {'track': {'name':'t12', 'artists':[{'name':'Cash'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
+                {'track': {'name':'t13', 'artists':[{'name':'Cash'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
             ]}},
             { 'name': 'name2', 'id': 2, 'public':True, 'tracks': { 'total': 3, 'items': [
-                {'track': {'name':'t21', 'artists':[{'name':'Ben'}]}},
-                {'track': {'name':'t22', 'artists':[{'name':'Ben'}]}},
-                {'track': {'name':'t23', 'artists':[{'name':'Ben'}]}},
+                {'track': {'name':'t21', 'artists':[{'name':'Ben'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
+                {'track': {'name':'t22', 'artists':[{'name':'Ben'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
+                {'track': {'name':'t23', 'artists':[{'name':'Ben'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
             ]}},
             { 'name': 'name3', 'id': 3, 'public':True, 'tracks': { 'total': 3, 'items': [
-                {'track': {'name':'t31', 'artists':[{'name':'Julia'}]}},
-                {'track': {'name':'t32', 'artists':[{'name':'Julia'}]}},
-                {'track': {'name':'t33', 'artists':[{'name':'Julia'}]}},
+                {'track': {'name':'t31', 'artists':[{'name':'Julia'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
+                {'track': {'name':'t32', 'artists':[{'name':'Julia'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
+                {'track': {'name':'t33', 'artists':[{'name':'Julia'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
             ]}},
             { 'name': 'name4', 'id': 4, 'public':True, 'tracks': { 'total': 4, 'items': [
-                {'track': {'name':'t41', 'artists':[{'name':'Jim'}]}},
-                {'track': {'name':'t42', 'artists':[{'name':'Jim'}]}},
-                {'track': {'name':'t43', 'artists':[{'name':'Jim'}]}},
-                {'track': {'name':'t44', 'artists':[{'name':'Jim'}]}},
+                {'track': {'name':'t41', 'artists':[{'name':'Jim'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
+                {'track': {'name':'t42', 'artists':[{'name':'Jim'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
+                {'track': {'name':'t43', 'artists':[{'name':'Jim'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
+                {'track': {'name':'t44', 'artists':[{'name':'Jim'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
             ]}},
         ]
         u._music_taste = [
-            {'name':'t41', 'artists':[{'name':'Velma'}]},
-            {'name':'t42', 'artists':[{'name':'Velma'}]},
-            {'name':'t43', 'artists':[{'name':'Velma'}]},
-            {'name':'t44', 'artists':[{'name':'Velma'}]},
+            {'name':'t41', 'artists':[{'name':'Velma'}],
+		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'name':'t42', 'artists':[{'name':'Velma'}],
+		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'name':'t43', 'artists':[{'name':'Velma'}],
+		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'name':'t44', 'artists':[{'name':'Velma'}],
+		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
         ]
 
         quiz = Quiz.objects.create(user_id='Cassius')
@@ -480,7 +532,7 @@ class QuestionPlaylistTracksTests(StaticLiveServerTestCase):
 
         for a in question.answers():
             self.assertEqual(a.secondary_text, 'Jim')
-            self.assertIsNone(a.image_url)
+            self.assertEqual(a.image_url, '200url')
         for a in question.incorrect_answers():
             self.assertEqual(a.secondary_text, 'Velma')
-            self.assertIsNone(a.image_url)
+            self.assertEqual(a.image_url, '200url')

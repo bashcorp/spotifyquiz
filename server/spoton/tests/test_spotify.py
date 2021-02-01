@@ -115,7 +115,7 @@ class AuthAccessTokenTests(StaticLiveServerTestCase):
         """
         session = self.client.session
         spotify._set_auth_access_token(session, 'token123', 1)
-        self.assertEquals(session.get(spotify.AUTH_ACCESS_TOKEN), 'token123')
+        self.assertEqual(session.get(spotify.AUTH_ACCESS_TOKEN), 'token123')
 
 
     def test_clear_auth_access_token(self):
@@ -158,7 +158,7 @@ class AuthAccessTokenTests(StaticLiveServerTestCase):
         """
         session = self.client.session
         spotify._set_auth_access_token(session, 'token123', 1)
-        self.assertEquals(spotify._get_auth_access_token(session),'token123')
+        self.assertEqual(spotify._get_auth_access_token(session),'token123')
 
 
     def test_get_auth_access_token_doesnt_exist_no_login(self):
@@ -217,7 +217,7 @@ class UserIdTests(TestCase):
         """
         session = self.client.session
         session[spotify.USER_ID] = 'user_id_1'
-        self.assertEquals(spotify.get_user_id(session), 'user_id_1')
+        self.assertEqual(spotify.get_user_id(session), 'user_id_1')
 
 
     def test_get_user_id_none(self):
@@ -245,7 +245,7 @@ class NoauthAccessTokenTests(TestCase):
         spotify._clear_noauth_access_token()
         
         spotify._set_noauth_access_token('token123', 1)
-        self.assertEquals(spotify.noauth_access_token, 'token123')
+        self.assertEqual(spotify.noauth_access_token, 'token123')
 
 
     def test_clear_noauth_access_token(self):
@@ -283,7 +283,7 @@ class NoauthAccessTokenTests(TestCase):
         spotify._clear_noauth_access_token()
         
         spotify._set_noauth_access_token('token123', 1)
-        self.assertEquals(spotify._get_noauth_access_token(),'token123')
+        self.assertEqual(spotify._get_noauth_access_token(),'token123')
 
 
     def test_get_noauth_access_token_doesnt_exist(self):
@@ -762,7 +762,7 @@ class SpotifyUtilsTests(TestCase):
         ids = ['s1532', '123ab', 'absdf2']
         result = spotify.create_id_querystr(ids)
         querystr = 's1532,123ab,absdf2'
-        self.assertEquals(result, querystr)
+        self.assertEqual(result, querystr)
     
 
     def test_create_id_querystr_one_id(self):
@@ -772,7 +772,7 @@ class SpotifyUtilsTests(TestCase):
         """
         ids = ['s1532']
         result = spotify.create_id_querystr(ids)
-        self.assertEquals(result, 's1532')
+        self.assertEqual(result, 's1532')
 
 
     def test_create_id_querystr_empty(self):
@@ -781,7 +781,7 @@ class SpotifyUtilsTests(TestCase):
         an empty string.
         """
         result = spotify.create_id_querystr([])
-        self.assertEquals(result, "")
+        self.assertEqual(result, "")
         
 
 

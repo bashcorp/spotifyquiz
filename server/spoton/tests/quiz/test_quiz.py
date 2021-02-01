@@ -118,36 +118,39 @@ class PickQuestionsTests(TransactionTestCase):
 
         u = UserData(None)
         u._saved_albums = [
-            {'name': 'Country Album 1', 'id': 1, 'artists': [{'name': 'Cassius'}]},
-            {'name': 'Country Album 2', 'id': 2, 'artists': [{'name': 'Benjamin'}]},
-            {'name': 'Country Album 3', 'id': 3, 'artists': [{'name': 'James'}]},
+            {'name': 'Country Album 1', 'id': 1, 'artists': [{'name': 'Cassius'}],'images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'Country Album 2', 'id': 2, 'artists': [{'name': 'Benjamin'}],'images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'Country Album 3', 'id': 3, 'artists': [{'name': 'James'}],'images':[{'height':200,'width':200,'url':'200url'}]},
         ]
         u._saved_tracks = [
-            {'name': 'Country Track 1', 'id': 1, 'artists': [{'name': 'Cassius'}]},
-            {'name': 'Country Track 2', 'id': 2, 'artists': [{'name': 'Benjamin'}]},
-            {'name': 'Country Track 3', 'id': 3, 'artists': [{'name': 'James'}]},
+            {'name': 'Country Track 1', 'id': 1, 'artists': [{'name': 'Cassius'}],
+		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'name': 'Country Track 2', 'id': 2, 'artists': [{'name': 'Benjamin'}],
+		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'name': 'Country Track 3', 'id': 3, 'artists': [{'name': 'James'}],
+		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
         ]
         u._music_taste = [
             {'name': 'Country Track 1', 'id': 1, 'artists': [{'name': 'Cassius'}],
                 'album':
-                {'name': 'Country Album 1', 'id': 1, 'artists': [{'name': 'Cassius'}]},},
+                {'name': 'Country Album 1', 'id': 1, 'artists': [{'name': 'Cassius'}], 'images':[{'height':200,'width':200,'url':'200url'}]}},
             {'name': 'Country Track 2', 'id': 2, 'artists': [{'name': 'Benjamin'}],
                 'album':
-                {'name': 'Country Album 2', 'id': 2, 'artists': [{'name': 'Benjamin'}]},},
+                {'name': 'Country Album 2', 'id': 2, 'artists': [{'name': 'Benjamin'}], 'images':[{'height':200,'width':200,'url':'200url'}]}},
             {'name': 'Country Track 3', 'id': 3, 'artists': [{'name': 'James'}],
                 'album':
-                {'name': 'Country Album 3', 'id': 3, 'artists': [{'name': 'James'}]},},
+                {'name': 'Country Album 3', 'id': 3, 'artists': [{'name': 'James'}], 'images':[{'height':200,'width':200,'url':'200url'}]}},
         ]
         u._followed_artists = [
-            {'name': 'Cassius'},
-            {'name': 'Benjamin'},
-            {'name': 'James'},
+            {'name': 'Cassius','images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'Benjamin','images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'James','images':[{'height':200,'width':200,'url':'200url'}]},
         ]
 
         u._top_artists['long_term'] = [
-            {'name': 'Cassius'},
-            {'name': 'Benjamin'},
-            {'name': 'James'},
+            {'name': 'Cassius','images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'Benjamin','images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'James','images':[{'height':200,'width':200,'url':'200url'}]},
         ]
 
         quiz = Quiz.objects.create(user_id='cassius')
@@ -167,14 +170,17 @@ class PickQuestionsTests(TransactionTestCase):
 
         for time_range in ['short_term', 'medium_term', 'long_term']:
             u._top_tracks[time_range] = [
-                {'name': 'Country Album 1', 'id': 1, 'artists': [{'name': 'Cash'}]},
-                {'name': 'Country Album 2', 'id': 2, 'artists': [{'name': 'Ben'}]},
-                {'name': 'Country Album 3', 'id': 3, 'artists': [{'name': 'Cassius'}]},
+                {'name': 'Country Album 1', 'id': 1, 'artists': [{'name': 'Cash'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+                {'name': 'Country Album 2', 'id': 2, 'artists': [{'name': 'Ben'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+                {'name': 'Country Album 3', 'id': 3, 'artists': [{'name': 'Cassius'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
             ]
             u._top_artists[time_range] = [
-                {'name': 'Cash', 'id': 1},
-                {'name': 'Ben', 'id': 1},
-                {'name': 'Jim', 'id': 1}
+                {'name': 'Cash', 'id': 1,'images':[{'height':200,'width':200,'url':'200url'}]},
+                {'name': 'Ben', 'id': 1,'images':[{'height':200,'width':200,'url':'200url'}]},
+                {'name': 'Jim', 'id': 1,'images':[{'height':200,'width':200,'url':'200url'}]},
             ]
             u._top_genres[time_range] = [
                 ['pop', 'opo'],
@@ -206,7 +212,8 @@ class PickQuestionsTests(TransactionTestCase):
         }
         u._playlists = [
                 {'name': 'p1', 'public': 'false', 'followers': {'total': 0},
-                    'tracks': {'total': 0, 'items': []}
+                    'tracks': {'total': 0, 'items': []},
+                    'images':[{'height':200,'width':200,'url':'200url'}]
                 }
         ]
 
@@ -216,74 +223,95 @@ class PickQuestionsTests(TransactionTestCase):
                 'danceability': 0.52, 'duration_ms': 2.5*60000,
                 'popularity': 99, 'name': 'Track1', 'artists': [{'name': 'Cash'}],
                 'album':
-                {'name': 'a1', 'id': 1, 'release_date': '1954-10-02', 'artists': [{'name': 'Cash'}]}},
+                {'name': 'a1', 'id': 1, 'release_date': '1954-10-02', 'artists': [{'name': 'Cash'}], 'images':[{'height':200,'width':200,'url':'200url'}]}},
             {'id': 'Track2', 'explicit': 'false', 'energy': 0.12,
                 'acousticness': 0.12, 'valence': 0.12,
                 'danceability': 0.12, 'duration_ms': 2.3*60000,
                 'popularity': 0, 'name': 'Track2', 'artists': [{'name': 'Cash'}],
                 'album':
-                {'name': 'a2', 'id': 2, 'release_date': '1998-04-04', 'artists': [{'name': 'Cash'}]}},
+                {'name': 'a2', 'id': 2, 'release_date': '1998-04-04', 'artists': [{'name': 'Cash'}], 'images':[{'height':200,'width':200,'url':'200url'}]}},
             {'id': 'Track3', 'explicit': 'true', 'energy': 0.25,
                 'acousticness': 0.25, 'valence': 0.25,
                 'danceability': 0.25, 'duration_ms': 3.4*60000,
                 'popularity': 14, 'name': 'Track3', 'artists': [{'name': 'Cash'}],
                 'album':
-                {'name': 'a3', 'id': 3, 'release_date': '2020-01-10', 'artists': [{'name': 'Cash'}]}},
+                {'name': 'a3', 'id': 3, 'release_date': '2020-01-10', 'artists': [{'name': 'Cash'}], 'images':[{'height':200,'width':200,'url':'200url'}]}},
             {'id': 'Track4', 'explicit': 'false', 'energy': 0.983,
                 'acousticness': 0.983, 'valence': 0.983,
                 'danceability': 0.983, 'duration_ms': 8.3*60000,
                 'popularity': 25, 'name': 'Track4', 'artists': [{'name': 'Cash'}],
                 'album':
-                {'name': 'a4', 'id': 4, 'release_date': '2005-12-25', 'artists': [{'name': 'Cash'}]}},
+                {'name': 'a4', 'id': 4, 'release_date': '2005-12-25', 'artists': [{'name': 'Cash'}], 'images':[{'height':200,'width':200,'url':'200url'}]}},
             {'id': 'Track5', 'explicit': 'true', 'energy': 0.253,
                 'acousticness': 0.253, 'valence': 0.253,
                 'danceability': 0.253, 'duration_ms': 5.6*60000,
                 'popularity': 73, 'name': 'Track5', 'artists': [{'name': 'Cash'}],
                 'album':
-                {'name': 'a5', 'id': 5, 'release_date': '1977-07-17', 'artists': [{'name': 'Cash'}]}},
+                {'name': 'a5', 'id': 5, 'release_date': '1977-07-17', 'artists': [{'name': 'Cash'}], 'images':[{'height':200,'width':200,'url':'200url'}]}},
         ]
         u._saved_albums = [
-            {'name': 'Country Album 1', 'id': 1, 'artists': [{'name': 'Cash'}]},
-            {'name': 'Country Album 2', 'id': 2, 'artists': [{'name': 'Ben'}]},
-            {'name': 'Country Album 3', 'id': 3, 'artists': [{'name': 'Cassius'}]},
-            {'name': 'Country Album 4', 'id': 4, 'artists': [{'name': 'Benjamin'}]},
-            {'name': 'Country Album 5', 'id': 5, 'artists': [{'name': 'James'}]},
-            {'name': 'Country Album 6', 'id': 6, 'artists': [{'name': 'Jim'}]},
-            {'name': 'Country Album 7', 'id': 7, 'artists': [{'name': 'John'}]},
+            {'name': 'Country Album 1', 'id': 1, 'artists': [{'name': 'Cash'}],
+		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'name': 'Country Album 2', 'id': 2, 'artists': [{'name': 'Ben'}],
+		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'name': 'Country Album 3', 'id': 3, 'artists': [{'name': 'Cassius'}],
+		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'name': 'Country Album 4', 'id': 4, 'artists': [{'name': 'Benjamin'}],
+		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'name': 'Country Album 5', 'id': 5, 'artists': [{'name': 'James'}],
+		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'name': 'Country Album 6', 'id': 6, 'artists': [{'name': 'Jim'}],
+		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'name': 'Country Album 7', 'id': 7, 'artists': [{'name': 'John'}],
+		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
         ]
         u._saved_tracks = [
-            {'name': 'Country Track 1', 'id': 1, 'artists': [{'name': 'Cash'}]},
-            {'name': 'Country Track 2', 'id': 2, 'artists': [{'name': 'Ben'}]},
-            {'name': 'Country Track 3', 'id': 3, 'artists': [{'name': 'Cassius'}]},
-            {'name': 'Country Track 4', 'id': 4, 'artists': [{'name': 'Benjamin'}]},
-            {'name': 'Country Track 5', 'id': 5, 'artists': [{'name': 'James'}]},
-            {'name': 'Country Track 6', 'id': 6, 'artists': [{'name': 'Jim'}]},
-            {'name': 'Country Track 7', 'id': 7, 'artists': [{'name': 'John'}]},
+            {'name': 'Country Track 1', 'id': 1, 'artists': [{'name': 'Cash'}],
+		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'name': 'Country Track 2', 'id': 2, 'artists': [{'name': 'Ben'}],
+		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'name': 'Country Track 3', 'id': 3, 'artists': [{'name': 'Cassius'}],
+		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'name': 'Country Track 4', 'id': 4, 'artists': [{'name': 'Benjamin'}],
+		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'name': 'Country Track 5', 'id': 5, 'artists': [{'name': 'James'}],
+		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'name': 'Country Track 6', 'id': 6, 'artists': [{'name': 'Jim'}],
+		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'name': 'Country Track 7', 'id': 7, 'artists': [{'name': 'John'}],
+		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
         ]
         u._followed_artists = [
-            {'name': 'Cassius'},
-            {'name': 'Cash'},
-            {'name': 'Ben'},
-            {'name': 'Benjamin'},
-            {'name': 'James'},
-            {'name': 'Jimmy'},
-            {'name': 'John'},
+            {'name': 'Cassius','images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'Cash','images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'Ben','images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'Benjamin','images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'James','images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'Jimmy','images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'John','images':[{'height':200,'width':200,'url':'200url'}]},
         ]
         for time_range in ['long_term', 'medium_term', 'short_term']:
             u._top_tracks[time_range] = [
-                {'name': 'Country Track 1', 'id': 1, 'artists': [{'name': 'Cash'}]},
-                {'name': 'Country Track 2', 'id': 2, 'artists': [{'name': 'Ben'}]},
-                {'name': 'Country Track 3', 'id': 3, 'artists': [{'name': 'Cassius'}]},
-                {'name': 'Country Track 4', 'id': 4, 'artists': [{'name': 'Benjamin'}]},
-                {'name': 'Country Track 5', 'id': 5, 'artists': [{'name': 'James'}]},
-                {'name': 'Country Track 6', 'id': 6, 'artists': [{'name': 'Jim'}]},
-                {'name': 'Country Track 7', 'id': 7, 'artists': [{'name': 'John'}]},
+                {'name': 'Country Track 1', 'id': 1, 'artists': [{'name': 'Cash'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+                {'name': 'Country Track 2', 'id': 2, 'artists': [{'name': 'Ben'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+                {'name': 'Country Track 3', 'id': 3, 'artists': [{'name': 'Cassius'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+                {'name': 'Country Track 4', 'id': 4, 'artists': [{'name': 'Benjamin'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+                {'name': 'Country Track 5', 'id': 5, 'artists': [{'name': 'James'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+                {'name': 'Country Track 6', 'id': 6, 'artists': [{'name': 'Jim'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+                {'name': 'Country Track 7', 'id': 7, 'artists': [{'name': 'John'}],
+		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
             ]
             u._top_artists[time_range] = [
-                {'name': 'Cash', 'id': 1},
-                {'name': 'Ben', 'id': 2},
-                {'name': 'Cassius', 'id': 3},
-                {'name': 'Benjamin', 'id': 4},
+                {'name': 'Cash', 'id': 1,'images':[{'height':200,'width':200,'url':'200url'}]},
+                {'name': 'Ben', 'id': 2,'images':[{'height':200,'width':200,'url':'200url'}]},
+                {'name': 'Cassius', 'id': 3,'images':[{'height':200,'width':200,'url':'200url'}]},
+                {'name': 'Benjamin', 'id': 4,'images':[{'height':200,'width':200,'url':'200url'}]},
             ]
             u._top_genres[time_range] = [
                 ['pop', 'opo'],

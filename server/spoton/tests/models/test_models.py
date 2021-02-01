@@ -52,9 +52,9 @@ class DeleteModelsTests(TransactionTestCase):
 
         Quiz.objects.all().delete()
 
-        self.assertEquals(Quiz.objects.count(), 0)
-        self.assertEquals(Question.objects.count(), 0)
-        self.assertEquals(Response.objects.count(), 0)
+        self.assertEqual(Quiz.objects.count(), 0)
+        self.assertEqual(Question.objects.count(), 0)
+        self.assertEqual(Response.objects.count(), 0)
 
 
     def test_delete_questions(self):
@@ -68,10 +68,10 @@ class DeleteModelsTests(TransactionTestCase):
 
         Question.objects.all().delete()
 
-        self.assertEquals(Quiz.objects.count(), quiz_count)
-        self.assertEquals(Question.objects.count(), 0)
-        self.assertEquals(Choice.objects.count(), 0)
-        self.assertEquals(QuestionResponse.objects.count(), 0)
+        self.assertEqual(Quiz.objects.count(), quiz_count)
+        self.assertEqual(Question.objects.count(), 0)
+        self.assertEqual(Choice.objects.count(), 0)
+        self.assertEqual(QuestionResponse.objects.count(), 0)
 
 
     def test_delete_checkbox_questions(self):
@@ -85,10 +85,10 @@ class DeleteModelsTests(TransactionTestCase):
 
         CheckboxQuestion.objects.all().delete()
 
-        self.assertEquals(CheckboxQuestion.objects.count(), 0)
-        self.assertEquals(Choice.objects.count(), 0)
-        self.assertEquals(CheckboxResponse.objects.count(), 0)
-        self.assertEquals(Quiz.objects.count(), quiz_count)
+        self.assertEqual(CheckboxQuestion.objects.count(), 0)
+        self.assertEqual(Choice.objects.count(), 0)
+        self.assertEqual(CheckboxResponse.objects.count(), 0)
+        self.assertEqual(Quiz.objects.count(), quiz_count)
 
 
     def test_delete_choices(self):
@@ -102,9 +102,9 @@ class DeleteModelsTests(TransactionTestCase):
 
         Choice.objects.all().delete()
 
-        self.assertEquals(Choice.objects.count(), 0)
-        self.assertEquals(Question.objects.count(), question_count)
-        self.assertEquals(QuestionResponse.objects.count(), response_count)
+        self.assertEqual(Choice.objects.count(), 0)
+        self.assertEqual(Question.objects.count(), question_count)
+        self.assertEqual(QuestionResponse.objects.count(), response_count)
 
 
     def test_delete_slider_questions(self):
@@ -117,9 +117,9 @@ class DeleteModelsTests(TransactionTestCase):
 
         SliderQuestion.objects.all().delete()
 
-        self.assertEquals(SliderQuestion.objects.count(), 0)
-        self.assertEquals(SliderResponse.objects.count(), 0)
-        self.assertEquals(Quiz.objects.count(), quiz_count)
+        self.assertEqual(SliderQuestion.objects.count(), 0)
+        self.assertEqual(SliderResponse.objects.count(), 0)
+        self.assertEqual(Quiz.objects.count(), quiz_count)
 
 
     def test_delete_responses(self):
@@ -132,9 +132,9 @@ class DeleteModelsTests(TransactionTestCase):
 
         Response.objects.all().delete()
 
-        self.assertEquals(Response.objects.count(), 0)
-        self.assertEquals(QuestionResponse.objects.count(), 0)
-        self.assertEquals(Quiz.objects.count(), quiz_count)
+        self.assertEqual(Response.objects.count(), 0)
+        self.assertEqual(QuestionResponse.objects.count(), 0)
+        self.assertEqual(Quiz.objects.count(), quiz_count)
 
 
     def test_delete_question_responses(self):
@@ -150,10 +150,10 @@ class DeleteModelsTests(TransactionTestCase):
 
         QuestionResponse.objects.all().delete()
 
-        self.assertEquals(QuestionResponse.objects.count(), 0)
-        self.assertEquals(Response.objects.count(), response_count)
-        self.assertEquals(Question.objects.count(), question_count)
-        self.assertEquals(Choice.objects.count(), choice_count)
+        self.assertEqual(QuestionResponse.objects.count(), 0)
+        self.assertEqual(Response.objects.count(), response_count)
+        self.assertEqual(Question.objects.count(), question_count)
+        self.assertEqual(Choice.objects.count(), choice_count)
 
 
     def test_delete_checkbox_responses(self):
@@ -169,10 +169,10 @@ class DeleteModelsTests(TransactionTestCase):
 
         CheckboxResponse.objects.all().delete()
 
-        self.assertEquals(CheckboxResponse.objects.count(), 0)
-        self.assertEquals(Question.objects.count(), question_count)
-        self.assertEquals(Response.objects.count(), response_count)
-        self.assertEquals(Choice.objects.count(), choice_count)
+        self.assertEqual(CheckboxResponse.objects.count(), 0)
+        self.assertEqual(Question.objects.count(), question_count)
+        self.assertEqual(Response.objects.count(), response_count)
+        self.assertEqual(Choice.objects.count(), choice_count)
 
 
     def test_delete_slider_responses(self):
@@ -186,9 +186,9 @@ class DeleteModelsTests(TransactionTestCase):
 
         SliderResponse.objects.all().delete()
 
-        self.assertEquals(SliderResponse.objects.count(), 0)
-        self.assertEquals(Question.objects.count(), question_count)
-        self.assertEquals(Response.objects.count(), response_count)
+        self.assertEqual(SliderResponse.objects.count(), 0)
+        self.assertEqual(Question.objects.count(), question_count)
+        self.assertEqual(Response.objects.count(), response_count)
 
 
 

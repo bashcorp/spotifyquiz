@@ -64,7 +64,7 @@ def quiz(request, uuid):
 @require_POST
 def handle_response(request):
     data = json.loads(request.body)
-    print(data)
+    import pprint; pprint.pprint(data)
 
     return redirect('index')
 
