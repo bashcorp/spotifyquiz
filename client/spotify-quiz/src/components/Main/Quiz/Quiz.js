@@ -106,7 +106,7 @@ const [questionNumber, setQuestionNumber] = React.useState(0);
 
   function postRequest() {
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", '/response', true);
+    xhr.open("POST", '/response/', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify({
     'quiz_id': quiz.user_id,
