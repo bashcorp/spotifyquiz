@@ -28,7 +28,7 @@ function Select(props) {
 				className="content"
 				style={props.isSelected ? button__select : button__unSelect}
 			>
-				<div className="bgImg__style" id="choice__bgImg" />
+				<div className="bgImg__style"id="choice__bgImg" />
 				<div
 					className="list-item"
 					id={"question__choice_" + props.index}

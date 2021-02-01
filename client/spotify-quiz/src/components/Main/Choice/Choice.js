@@ -10,13 +10,12 @@ function Choice(props) {
 		transform: "scale(104%)",
 	};
 
-	const button__select = {
-		transform: "scale(104%)",
+	const button__unSelect = {
+		filter: "brightness(60%)",
 	};
 
 	const bgImg__style = {
 		  background: url(props.choice.image_url);
-
 	};
 
 	function handleChange(key) {
