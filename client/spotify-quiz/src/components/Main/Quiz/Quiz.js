@@ -4,12 +4,8 @@ import Question from "../Question/Question.js";
 import QuestionSlider from "../QuestionSlider/QuestionSlider.js";
 import Glide from "@glidejs/glide";
 
-const Quiz = () => {
-  //let quiz = window.context.quiz;
-
-  let answer = [];
-
-  let quiz = {
+let answers = [];
+/*let quiz = {
     user_id: "21a452hnlj6ppe3gcvy3yx3di",
     questions: [
       {
@@ -82,22 +78,50 @@ const Quiz = () => {
             answer: false,
           },
         ],
-      },
-    ],
-  };
+      }
+    ], };*/
+let quiz = window.context.quiz;
+let id_list = quiz.questions.map(question => question.id);  
 
-  var questions = {
-    questions: [
-      { id: 0, text: "plan 0", price: 0 },
-      { id: 1, text: "plan 1", price: 1 },
-      { id: 2, text: "plan 2", price: 2 },
-      { id: 3, text: "plan 2", price: 3 },
-      { id: 4, text: "plan 2", price: 4 },
-      { id: 5, text: "plan 2", price: 5 },
-      { id: 6, text: "plan 2", price: 6 },
-      { id: 7, text: "plan 3", price: 7 },
-    ],
-  };
+const Quiz = () => {
+  const [questionNumber, setQuestionNumber] = React.useState(0);
+
+
+  //Store answers as the user completes quiz
+  let answer_send = {
+    'questions': answers
+  }  
+
+  function handleAnswer(newValue, questionNumber) {
+    //Update Quiz component's question number
+    setQuestionNumber(questionNumber);
+    //Pull data from child component with user answer selections
+    answer_send.questions[questionNumber] = {
+      'question_id': id_list[questionNumber],
+      'answer': newValue
+    }
+  }
+
+  function postRequest() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", '/response', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({
+    'quiz_id': quiz.user_id,
+    'name': "ben",
+    'emoji': "😃",
+    'background_color':'333333',
+    answer_send
+}));
+
+    console.log(JSON.stringify({
+    'quiz_id': quiz.user_id,
+    'name': "ben",
+    'emoji': "😃",
+    'background_color':'333333',
+    answer_send
+}))
+  }
 
   const carouselOptions = {
     type: "track",
@@ -115,12 +139,6 @@ const Quiz = () => {
       },
     },
   };
-
-
-  function handleAnswer(newValue, questionNumber) {
-    answer[questionNumber] = newValue;
-    console.log(answer);
-  }
 
   return (
     <div className="Quiz">
@@ -140,7 +158,12 @@ const Quiz = () => {
           </div>
         </div>
         <div className="quiz__nav left-shadow-nav">
-          <i onClick={e => document.getElementById("right-butt").click()} className="fas fa-chevron-circle-right"></i>
+        {console.log(questionNumber === quiz.questions.length)}
+        {console.log("currQuestion: "+ questionNumber)}
+        {console.log(quiz.questions.length - 1)}
+          {questionNumber !== quiz.questions.length - 1 ?
+          (<i onClick={e => document.getElementById("right-butt").click()} className="fas fa-chevron-circle-right"></i>):
+          (<i onClick={postRequest} className="fas fa-check"> Finish</i>)}
         </div>
         <div className="quiz__right-nav left-shadow-nav"></div>
       </div>
