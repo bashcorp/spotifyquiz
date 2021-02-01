@@ -45,22 +45,35 @@ class QuestionSavedAlbumsTests(StaticLiveServerTestCase):
         """
         u = UserData(self.session)
         u._saved_albums = [
-            {'name': 'Country Album 1', 'id': 1, 'artists': [{'name': 'Cash'}]}, {'name': 'Country Album 2', 'id': 2, 'artists': [{'name': 'Ben'}]}, {'name': 'Country Album 3', 'id': 3, 'artists': [{'name': 'Cassius'}]},
-            {'name': 'Country Album 4', 'id': 4, 'artists': [{'name': 'Benjamin'}]},
-            {'name': 'Country Album 5', 'id': 5, 'artists': [{'name': 'James'}]},
-            {'name': 'Country Album 6', 'id': 6, 'artists': [{'name': 'Jim'}]},
-            {'name': 'Country Album 7', 'id': 7, 'artists': [{'name': 'John'}]},
+            {'name': 'Country Album 1', 'id': 1, 'artists': [{'name': 'Cash'}],
+		'images':[{'height':200,'width':200,'url':'200url'}]}, {'name': 'Country Album 2', 'id': 2, 'artists': [{'name': 'Ben'}]}, {'name': 'Country Album 3', 'id': 3, 'artists': [{'name': 'Cassius'}]},
+            {'name': 'Country Album 4', 'id': 4, 'artists': [{'name': 'Benjamin'}],
+		'images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'Country Album 5', 'id': 5, 'artists': [{'name': 'James'}],
+		'images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'Country Album 6', 'id': 6, 'artists': [{'name': 'Jim'}],
+		'images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'Country Album 7', 'id': 7, 'artists': [{'name': 'John'}],
+		'images':[{'height':200,'width':200,'url':'200url'}]},
         ]
 
         u._music_taste = [
-            {'album': {'name': 'Rock Album 1', 'id': 8, 'artists': [{'name': 'Lucy'}]}},
-            {'album': {'name': 'Rock Album 2', 'id': 9, 'artists': [{'name': 'Lewis'}]}},
-            {'album': {'name': 'Rock Album 3', 'id': 10, 'artists': [{'name': 'Lucifer'}]}},
-            {'album': {'name': 'Rock Album 1', 'id': 11, 'artists': [{'name': 'Lewd'}]}},
-            {'album': {'name': 'Country Album 3', 'id': 3, 'artists': [{'name': 'Cassius'}]},},
-            {'album': {'name': 'Country Album 4', 'id': 4, 'artists': [{'name': 'Benjamin'}]},},
-            {'album': {'name': 'Country Album 5', 'id': 5, 'artists': [{'name': 'James'}]},},
-            {'album': {'name': 'Country Album 6', 'id': 6, 'artists': [{'name': 'Jim'}]},},
+            {'album': {'name': 'Rock Album 1', 'id': 8, 'artists': [{'name': 'Lucy'}],
+			'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'album': {'name': 'Rock Album 2', 'id': 9, 'artists': [{'name': 'Lewis'}],
+			'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'album': {'name': 'Rock Album 3', 'id': 10, 'artists': [{'name': 'Lucifer'}],
+			'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'album': {'name': 'Rock Album 1', 'id': 11, 'artists': [{'name': 'Lewd'}],
+			'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'album': {'name': 'Country Album 3', 'id': 3, 'artists': [{'name': 'Cassius'}],
+			'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'album': {'name': 'Country Album 4', 'id': 4, 'artists': [{'name': 'Benjamin'}],
+			'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'album': {'name': 'Country Album 5', 'id': 5, 'artists': [{'name': 'James'}],
+			'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'album': {'name': 'Country Album 6', 'id': 6, 'artists': [{'name': 'Jim'}],
+			'images':[{'height':200,'width':200,'url':'200url'}]}},
         ]
 
         quiz = Quiz.objects.create(user_id='cassius')
@@ -80,6 +93,7 @@ class QuestionSavedAlbumsTests(StaticLiveServerTestCase):
                 if a['name'] == title and a['artists'][0]['name'] == artist:
                     found = True
             self.assertTrue(found)
+            self.assertEqual(c.image_url, '200url')
         
         for c in q.incorrect_answers():
             title = c.primary_text
@@ -89,6 +103,7 @@ class QuestionSavedAlbumsTests(StaticLiveServerTestCase):
                 if t['album']['name'] == title and t['album']['artists'][0]['name'] == artist:
                     found = True
             self.assertTrue(found)
+            self.assertEqual(c.image_url, '200url')
 
 
     def test_question_saved_albums_real_request(self):
@@ -106,6 +121,8 @@ class QuestionSavedAlbumsTests(StaticLiveServerTestCase):
         self.assertGreater(q.answers().count(), 0)
         self.assertLessEqual(q.answers().count(), 4)
         self.assertEqual(q.incorrect_answers().count(), 4-q.answers().count())
+        for c in q.choices.all():
+            self.assertIsNotNone(c.image_url)
 
 
     def test_question_saved_albums_only_one_correct_answer(self):
@@ -117,13 +134,13 @@ class QuestionSavedAlbumsTests(StaticLiveServerTestCase):
         """
         u = UserData(self.session)
         u._saved_albums = [
-            {'name': 'Country Album 1', 'id': 1, 'artists': [{'name': 'Cassius'}]},
+                {'name': 'Country Album 1', 'id': 1, 'artists': [{'name': 'Cassius'}], 'images':[{'height':200,'width':200,'url':'200url'}]},
         ]
 
         u._music_taste = [
-            {'album': {'name': 'Country Album 2', 'id': 2, 'artists': [{'name': 'Cassius'}]},},
-            {'album': {'name': 'Country Album 3', 'id': 3, 'artists': [{'name': 'Benjamin'}]},},
-            {'album': {'name': 'Country Album 4', 'id': 4, 'artists': [{'name': 'James'}]},},
+            {'album': {'name': 'Country Album 2', 'id': 2, 'artists': [{'name': 'Cassius'}],'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'album': {'name': 'Country Album 3', 'id': 3, 'artists': [{'name': 'Benjamin'}],'images':[{'height':200,'width':200,'url':'200url'}]}},
+            {'album': {'name': 'Country Album 4', 'id': 4, 'artists': [{'name': 'James'}],'images':[{'height':200,'width':200,'url':'200url'}]}},
         ]
 
         quiz = Quiz.objects.create(user_id='cassius')
@@ -136,6 +153,9 @@ class QuestionSavedAlbumsTests(StaticLiveServerTestCase):
         c = q.answers()[0]
         self.assertEqual(u._saved_albums[0]['name'], c.primary_text)
         self.assertEqual(u._saved_albums[0]['artists'][0]['name'], c.secondary_text)
+
+        for c in q.choices.all():
+            self.assertEqual(c.image_url, '200url')
         
         for c in q.incorrect_answers():
             title = c.primary_text
@@ -239,6 +259,7 @@ class QuestionSavedTracksTests(StaticLiveServerTestCase):
                 if t['name'] == title and t['artists'][0]['name'] == artist:
                     found = True
             self.assertTrue(found)
+            self.assertIsNone(c.image_url)
         
         for c in q.incorrect_answers():
             title = c.primary_text
@@ -248,6 +269,7 @@ class QuestionSavedTracksTests(StaticLiveServerTestCase):
                 if t['name'] == title and t['artists'][0]['name'] == artist:
                     found = True
             self.assertTrue(found)
+            self.assertIsNone(c.image_url)
 
 
     def test_question_saved_tracks_real_request(self):
@@ -265,6 +287,8 @@ class QuestionSavedTracksTests(StaticLiveServerTestCase):
         self.assertGreater(q.answers().count(), 0)
         self.assertLessEqual(q.answers().count(), 4)
         self.assertEqual(q.incorrect_answers().count(), 4-q.answers().count())
+        for c in q.choices.all():
+            self.assertIsNone(c.image_url)
 
 
     def test_question_saved_tracks_only_one_correct_answer(self):
@@ -296,6 +320,9 @@ class QuestionSavedTracksTests(StaticLiveServerTestCase):
         self.assertEqual(u._saved_tracks[0]['name'], c.primary_text)
         self.assertEqual(u._saved_tracks[0]['artists'][0]['name'], c.secondary_text)
         
+        for c in q.choices.all():
+            self.assertIsNone(c.image_url)
+
         for c in q.incorrect_answers():
             title = c.primary_text
             artist = c.secondary_text
@@ -364,21 +391,21 @@ class QuestionFollowedArtistsTests(StaticLiveServerTestCase):
         """
         u = UserData(self.session)
         u._followed_artists = [
-            {'name': 'Cassius'},
-            {'name': 'Cash'},
-            {'name': 'Ben'},
-            {'name': 'Benjamin'},
-            {'name': 'James'},
-            {'name': 'Jimmy'},
-            {'name': 'John'},
+            {'name': 'Cassius','images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'Cash','images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'Ben','images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'Benjamin','images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'James','images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'Jimmy','images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'John','images':[{'height':200,'width':200,'url':'200url'}]},
         ]
 
         u._top_artists['long_term'] = [
-            {'name': 'Lucy'},
-            {'name': 'Lewis'},
-            {'name': 'Lucifer'},
-            {'name': 'Luny'},
-            {'name': 'Lewd'},
+            {'name': 'Lucy','images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'Lewis','images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'Lucifer','images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'Luny','images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'Lewd','images':[{'height':200,'width':200,'url':'200url'}]},
         ]
 
         quiz = Quiz.objects.create(user_id='cassius')
@@ -397,6 +424,7 @@ class QuestionFollowedArtistsTests(StaticLiveServerTestCase):
                 if t['name'] == title:
                     found = True
             self.assertTrue(found)
+            self.assertEquals(c.image_url, '200url')
         
         for c in q.incorrect_answers():
             title = c.primary_text
@@ -405,6 +433,7 @@ class QuestionFollowedArtistsTests(StaticLiveServerTestCase):
                 if a['name'] == title:
                     found = True
             self.assertTrue(found)
+            self.assertEquals(c.image_url, '200url')
 
 
     def test_question_followed_artists_real_request(self):
@@ -422,6 +451,8 @@ class QuestionFollowedArtistsTests(StaticLiveServerTestCase):
         self.assertGreater(q.answers().count(), 0)
         self.assertLessEqual(q.answers().count(), 4)
         self.assertEqual(q.incorrect_answers().count(), 4-q.answers().count())
+        for c in q.choices.all():
+            self.assertIsNotNone(c.image_url)
 
 
     def test_question_followed_artists_only_one_correct_answer(self):
@@ -433,13 +464,13 @@ class QuestionFollowedArtistsTests(StaticLiveServerTestCase):
         """
         u = UserData(self.session)
         u._followed_artists = [
-            {'name': 'Cassius'},
+            {'name': 'Cassius','images':[{'height':200,'width':200,'url':'200url'}]},
         ]
 
         u._top_artists['long_term'] = [
-            {'name': 'Ben'},
-            {'name': 'John'},
-            {'name': 'Jim'},
+            {'name': 'Ben','images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'John','images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'Jim','images':[{'height':200,'width':200,'url':'200url'}]},
         ]
 
         quiz = Quiz.objects.create(user_id='cassius')
@@ -451,6 +482,9 @@ class QuestionFollowedArtistsTests(StaticLiveServerTestCase):
 
         c = q.answers()[0]
         self.assertEqual(u._followed_artists[0]['name'], c.primary_text)
+
+        for c in q.choices.all():
+            self.assertIsNotNone(c.image_url)
         
         for c in q.incorrect_answers():
             title = c.primary_text

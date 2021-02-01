@@ -57,6 +57,7 @@ def create_album_choice(question, album, answer=False):
         question = question,
         primary_text = album['name'],
         secondary_text = album['artists'][0]['name'],
+        image_url = get_largest_image(album),
         answer = answer
     )
 
@@ -112,6 +113,7 @@ def create_artist_choice(question, artist, answer=False):
     return Choice.objects.create(
         question = question,
         primary_text = artist['name'],
+        image_url = get_largest_image(artist),
         answer = answer
     )
 
@@ -276,6 +278,7 @@ def create_playlist_choice(question, playlist, answer=False):
     return Choice.objects.create(
             question = question,
             primary_text = playlist['name'],
+            image_url = get_largest_image(playlist),
             answer = answer
     )
 

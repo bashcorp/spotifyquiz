@@ -54,6 +54,8 @@ def quiz(request, uuid):
     # If no quiz with that uuid was found,
     #TODO Add error page
     context = {"user_id": "testing123"}
+
+
     return render(request, react_mainpage, context={"quiz": json.dumps(context)})
 
 

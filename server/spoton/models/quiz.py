@@ -314,6 +314,7 @@ class Choice(CleanOnSaveMixin, models.Model):
     answer = models.BooleanField(default=False)
     primary_text = models.CharField(default="default choice", max_length=100)
     secondary_text = models.CharField(blank=True, null=True, max_length=100)
+    image_url = models.CharField(blank=True, null=True, max_length=300)
 
     ### Attributes defined implicitly (reverse-FK relationships)
     # picks (ChoiceAnswer objects)
@@ -337,6 +338,9 @@ class Choice(CleanOnSaveMixin, models.Model):
 
         if self.secondary_text:
             dict["secondary_text"] = self.secondary_text
+
+        if self.image_url:
+            dict["image_url"] = self.image_url
 
         return dict
 

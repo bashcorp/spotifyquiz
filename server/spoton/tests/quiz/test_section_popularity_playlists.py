@@ -147,7 +147,8 @@ class QuestionPopularPlaylistTests(StaticLiveServerTestCase):
             u._playlists.append({
                 'name': 'p'+str(i),
                 'public': True,
-                'followers': {'total': follower_counts[i]}
+                'followers': {'total': follower_counts[i]},
+                'images': [{'height':200, 'width':200, 'url':'200url'}]
             })
 
         follower_counts = follower_counts[1:]
@@ -167,6 +168,9 @@ class QuestionPopularPlaylistTests(StaticLiveServerTestCase):
                     break
             self.assertTrue(found)
 
+        for c in question.choices.all():
+            self.assertEqual(c.image_url, '200url')
+
 
 
     def test_question_popular_playlist_real_request(self):
@@ -183,6 +187,9 @@ class QuestionPopularPlaylistTests(StaticLiveServerTestCase):
         self.assertEqual(question.answers().count(), 1)
         self.assertEqual(question.incorrect_answers().count(), 3)
 
+        for c in question.choices.all():
+            self.assertIsNotNone(c.image_url)
+
 
     def test_question_popular_playlist_not_enough_public_playlists(self):
         """
@@ -197,7 +204,8 @@ class QuestionPopularPlaylistTests(StaticLiveServerTestCase):
             u._playlists.append({
                 'name': 'p'+str(i),
                 'public': True,
-                'followers': {'total': follower_counts[i]}
+                'followers': {'total': follower_counts[i]},
+                'images': [{'height':200, 'width':200, 'url':'200url'}]
             })
         u._playlists.append({'name': 'p11', 'public': 'false', 'followers':{'total': 1}})
         u._playlists.append({'name': 'p12', 'public': 'false', 'followers':{'total': 2}})
@@ -223,7 +231,8 @@ class QuestionPopularPlaylistTests(StaticLiveServerTestCase):
             u._playlists.append({
                 'name': 'p'+str(i),
                 'public': True,
-                'followers': {'total': follower_counts[i]}
+                'followers': {'total': follower_counts[i]},
+                'images': [{'height':200, 'width':200, 'url':'200url'}]
             })
 
         quiz = Quiz.objects.create(user_id='Cassius')
@@ -245,7 +254,8 @@ class QuestionPopularPlaylistTests(StaticLiveServerTestCase):
             u._playlists.append({
                 'name': 'p'+str(i),
                 'public': True,
-                'followers': {'total': follower_counts[i]}
+                'followers': {'total': follower_counts[i]},
+                'images': [{'height':200, 'width':200, 'url':'200url'}]
             })
 
         quiz = Quiz.objects.create(user_id='Cassius')
@@ -268,7 +278,8 @@ class QuestionPopularPlaylistTests(StaticLiveServerTestCase):
             u._playlists.append({
                 'name': 'p'+str(i),
                 'public': True,
-                'followers': {'total': follower_counts[i]}
+                'followers': {'total': follower_counts[i]},
+                'images': [{'height':200, 'width':200, 'url':'200url'}]
             })
 
         quiz = Quiz.objects.create(user_id='Cassius')
@@ -361,9 +372,11 @@ class QuestionPlaylistTracksTests(StaticLiveServerTestCase):
         artist_name = question.answers()[0].secondary_text
         for a in question.answers():
             self.assertEqual(a.secondary_text, artist_name)
+            self.assertIsNone(a.image_url)
 
         for a in question.incorrect_answers():
             self.assertNotEqual(a.secondary_text, artist_name)
+            self.assertIsNone(a.image_url)
 
 
     def test_question_playlist_tracks_real_request(self):
@@ -380,6 +393,8 @@ class QuestionPlaylistTracksTests(StaticLiveServerTestCase):
         self.assertLessEqual(question.answers().count(), 4)
         self.assertGreaterEqual(question.answers().count(), 1)
         self.assertEqual(question.incorrect_answers().count(), 4-question.answers().count())
+        for c in question.choices.all():
+            self.assertIsNone(c.image_url)
 
 
     def test_question_playlist_tracks_not_enough_tracks(self):
@@ -465,5 +480,7 @@ class QuestionPlaylistTracksTests(StaticLiveServerTestCase):
 
         for a in question.answers():
             self.assertEqual(a.secondary_text, 'Jim')
+            self.assertIsNone(a.image_url)
         for a in question.incorrect_answers():
             self.assertEqual(a.secondary_text, 'Velma')
+            self.assertIsNone(a.image_url)

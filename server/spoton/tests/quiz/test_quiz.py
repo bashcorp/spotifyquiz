@@ -41,11 +41,20 @@ class CreateQuizTests(StaticLiveServerTestCase):
         spotify.cleanup_timers()
 
 
+    def setUp(self):
+        """Setting up an authorized session creates a quiz, so delete
+        it before each test."""
+
+        Quiz.objects.delete()
+
+
     def test_create_quiz(self):
         """
         create_quiz() should create a taste about the user logged in
         to the given session.
         """
+
+        Quiz.objects.delete()
 
         quiz = create_quiz(self.session)
 
@@ -54,7 +63,7 @@ class CreateQuizTests(StaticLiveServerTestCase):
         self.assertEqual(quiz.questions.count(), 10)
 
 
-    def test_create_quiz(self):
+    def test_create_quiz_no_user_logged_in(self):
         """
         create_quiz() should return None if there is no user logged in
         to the given session.

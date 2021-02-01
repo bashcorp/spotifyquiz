@@ -95,6 +95,9 @@ class QuestionTopTrackTests(StaticLiveServerTestCase):
         c = q.answers()[0]
         self.assertEqual(c.primary_text, 'Country Track 1')
         self.assertEqual(c.secondary_text, 'Cash')
+
+        for c in q.choices.all():
+            self.assertIsNone(c.image_url)
         
         for c in q.incorrect_answers():
             title = c.primary_text
@@ -150,6 +153,8 @@ class QuestionTopTrackTests(StaticLiveServerTestCase):
         self.assertEqual(q.choices.count(), 4)
         self.assertEqual(q.answers().count(), 1)
         self.assertEqual(q.incorrect_answers().count(), 3)
+        for c in q.choices.all():
+            self.assertIsNone(c.image_url)
 
 
 
@@ -261,10 +266,10 @@ class QuestionTopArtistTests(StaticLiveServerTestCase):
         """
         u = UserData(self.session)
         u._top_artists[time_range] = [
-            {'name': 'Cash', 'id': 1},
-            {'name': 'Ben', 'id': 2},
-            {'name': 'Cassius', 'id': 3},
-            {'name': 'Benjamin', 'id': 4},
+            {'name': 'Cash', 'id': 1,'images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'Ben', 'id': 2,'images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'Cassius', 'id': 3,'images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'Benjamin', 'id': 4,'images':[{'height':200,'width':200,'url':'200url'}]},
         ]
 
         quiz = Quiz.objects.create(user_id='cassius')
@@ -276,6 +281,9 @@ class QuestionTopArtistTests(StaticLiveServerTestCase):
 
         c = q.answers()[0]
         self.assertEqual(c.primary_text, u._top_artists[time_range][0]['name'])
+
+        for c in q.choices.all():
+            self.assertEqual(c.image_url, '200url')
         
         for c in q.incorrect_answers():
             name = c.primary_text
@@ -328,6 +336,8 @@ class QuestionTopArtistTests(StaticLiveServerTestCase):
         self.assertEqual(q.choices.count(), 4)
         self.assertEqual(q.answers().count(), 1)
         self.assertEqual(q.incorrect_answers().count(), 3)
+        for c in q.choices.all():
+            self.assertIsNotNone(c.image_url)
 
 
 
@@ -366,9 +376,9 @@ class QuestionTopArtistTests(StaticLiveServerTestCase):
         """
         u = UserData(self.session)
         u._top_artists[time_range] = [
-            {'name': 'Cash', 'id': 1},
-            {'name': 'Ben', 'id': 1},
-            {'name': 'Jim', 'id': 1}
+            {'name': 'Cash', 'id': 1,'images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'Ben', 'id': 1,'images':[{'height':200,'width':200,'url':'200url'}]},
+            {'name': 'Jim', 'id': 1,'images':[{'height':200,'width':200,'url':'200url'}]},
         ]
 
         quiz = Quiz.objects.create(user_id='cassius')
@@ -456,7 +466,10 @@ class QuestionTopGenreTests(StaticLiveServerTestCase):
 
         c = q.answers()[0]
         self.assertIn(c.primary_text, u._top_genres[time_range][0])
-        
+
+        for c in q.choices.all():
+            self.assertIsNone(c.image_url)
+
         for c in q.incorrect_answers():
             title = c.primary_text
             found = False
@@ -507,6 +520,10 @@ class QuestionTopGenreTests(StaticLiveServerTestCase):
         self.assertEqual(q.choices.count(), 4)
         self.assertEqual(q.answers().count(), 1)
         self.assertEqual(q.incorrect_answers().count(), 3)
+
+        for c in q.choices.all():
+            self.assertIsNone(c.image_url)
+
 
 
 
@@ -566,6 +583,10 @@ class QuestionTopGenreTests(StaticLiveServerTestCase):
 
         c = q.answers()[0]
         self.assertIn(c.primary_text, u._top_genres[time_range][0])
+
+        for c in q.choices.all():
+            self.assertIsNone(c.image_url)
+
         
         for c in q.incorrect_answers():
             title = c.primary_text

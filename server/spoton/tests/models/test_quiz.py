@@ -253,12 +253,13 @@ class ChoiceTests(TransactionTestCase):
 
         quiz = Quiz.objects.create(user_id='cassius')
         q = CheckboxQuestion.objects.create(quiz=quiz)
-        c = Choice.objects.create(question=q, primary_text="choice text", secondary_text="subtext", answer=False)
+        c = Choice.objects.create(question=q, primary_text="choice text", secondary_text="subtext", answer=False, image_url='url')
 
         json = {
             'id': c.id,
             'primary_text': 'choice text',
             'secondary_text': 'subtext',
+            'image_url': 'url',
         }
         self.assertEquals(c.json(), json)
         
@@ -271,11 +272,30 @@ class ChoiceTests(TransactionTestCase):
 
         quiz = Quiz.objects.create(user_id='cassius')
         q = CheckboxQuestion.objects.create(quiz=quiz)
-        c = Choice.objects.create(question=q, primary_text="choice text", answer=False)
+        c = Choice.objects.create(question=q, primary_text="choice text", answer=False, image_url='url')
 
         json = {
             'id': c.id,
             'primary_text': 'choice text',
+            'image_url': 'url',
+        }
+        self.assertEquals(c.json(), json)
+
+
+    def test_question_choice_json_no_image_url(self):
+        """
+        If image_url is not set, then json() should return a dict
+        without an image_url field.
+        """
+
+        quiz = Quiz.objects.create(user_id='cassius')
+        q = CheckboxQuestion.objects.create(quiz=quiz)
+        c = Choice.objects.create(question=q, primary_text="choice text", secondary_text='subtext', answer=False)
+
+        json = {
+            'id': c.id,
+            'primary_text': 'choice text',
+            'secondary_text': 'subtext',
         }
         self.assertEquals(c.json(), json)
 
@@ -288,12 +308,13 @@ class ChoiceTests(TransactionTestCase):
 
         quiz = Quiz.objects.create(user_id='cassius')
         q = CheckboxQuestion.objects.create(quiz=quiz)
-        c = Choice.objects.create(question=q, primary_text="choice text", secondary_text="subtext", answer=True)
+        c = Choice.objects.create(question=q, primary_text="choice text", secondary_text="subtext", answer=True, image_url='url')
 
         json = {
             'id': c.id,
             'primary_text': 'choice text',
             'secondary_text': 'subtext',
+            'image_url': 'url',
         }
         self.assertEquals(c.json(), json)
 

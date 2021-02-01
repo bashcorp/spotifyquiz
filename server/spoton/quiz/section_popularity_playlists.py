@@ -2,6 +2,7 @@ import random
 
 from spoton import spotify
 from spoton.models.quiz import *
+from spoton.models.creators import *
 
 from .utils import *
 

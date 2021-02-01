@@ -336,39 +336,3 @@ def call_rand_functions_arg_sets(functions, args, num):
         return None
 
     return results
-
-
-
-def get_largest_image(data):
-    """Returns the URL of the largest image in the given Spotify JSON.
-    
-    Using JSON returned from the Spotify API, finds the largest image
-    (by height) specified the given dict and returns its URL. This can
-    be passed a track object, and album object, any Spotify JSON dict
-    that contains an 'images' field.
-
-    Parameters
-    ----------
-    data : dict
-        Spotify JSON to search in for images.
-
-    Returns
-    -------
-    str
-        The URL of the largest image found within the data, or None
-        if there were no images listed.
-    """
-    
-    if data.get('images') is None:
-            return None
-
-    url = None
-    maxheight = 0
-    
-    for image in data.get('images'):
-        if image.get('height') and image.get('height') > maxheight:
-            maxheight = image.get('height')
-            url = image.get('url')
-
-    return url
-
