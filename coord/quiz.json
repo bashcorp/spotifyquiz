@@ -39,22 +39,26 @@
                 {
                     "id": 110,
                     "primary_text": "Skee-Lo",
-                    "answer": true
+                    "answer": true,
+                    "image_url": "some_url"
                 },
                 {
                     "id": 111,
                     "primary_text": "100 gecs",
-                    "answer": false
+                    "answer": false,
+                    "image_url": "some_url"
                 },
                 {
                     "id": 112,
                     "primary_text": "Hozier",
-                    "answer": false
+                    "answer": false,
+                    "image_url": "some_url"
                 },
                 {
                     "id": 113,
                     "primary_text": "Willie Peyote",
-                    "answer": false
+                    "answer": false,
+                    "image_url": "some_url"
                 }
             ],
             "type": "mc"
