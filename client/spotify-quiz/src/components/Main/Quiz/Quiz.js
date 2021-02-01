@@ -80,10 +80,11 @@ let answers = [];
         ],
       }
     ], };*/
-let quiz = window.context.quiz;
-let id_list = quiz.questions.map(question => question.id);  
+
 
 const Quiz = () => {
+let quiz = window.context.quiz;
+let id_list = quiz.questions.map(question => question.id);  
   const [questionNumber, setQuestionNumber] = React.useState(0);
 
 

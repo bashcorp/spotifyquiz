@@ -5,11 +5,9 @@
   <meta charset="utf-8" />
   <script type="text/javascript">
 
-  if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-    
-} else {
+  
     {% load static %}
-}
+    
 </script>
   <link rel="stylesheet" type="text/css" href="{% static 'reset.css' %}">
   <link rel="stylesheet" href="node_modules/@glidejs/glide/dist/css/glide.core.min.css">
@@ -54,6 +52,17 @@
       } catch {
             // no binding or parameter to handle it
       }
+
+    {% else %}
+      try {
+        window.context = {
+          quiz: null,
+        };
+
+      } catch {
+            // no binding or parameter to handle it
+      }
+
     {% endif %}
 
     </script>
