@@ -201,7 +201,7 @@ def question_followed_artists(quiz, user_data):
 
     # Create the database items at the end, once all the data has been
     # successfully assembled.
-    question = CheckboxQuestion.objects.create(quiz=quiz, text="Which of these tracks does the user have saved to their library")
+    question = CheckboxQuestion.objects.create(quiz=quiz, text="Which of these artists does the user follow?")
 
     create_artist_choices(question, correct_choices, answer=True)
     create_artist_choices(question, incorrect_choices)
