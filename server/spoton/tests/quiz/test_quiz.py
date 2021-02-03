@@ -14,6 +14,7 @@ from spoton.quiz.section_popularity_playlists import pick_questions_popularity_p
 from spoton.quiz.section_saved_followed import pick_questions_saved_followed
 from spoton.quiz.section_top_played import pick_questions_top_played
 from spoton.tests.setup_tests import create_authorized_session, create_session_store
+from spoton.tests.data_creation import *
 
 
 class CreateQuizTests(StaticLiveServerTestCase):
@@ -94,14 +95,13 @@ class PickQuestionsTests(TransactionTestCase):
         """
 
         u = UserData(None)
-        u._personal_data = {
-            'followers': {'total': 0}
-        }
-        u._playlists = [
-                {'name': 'p1', 'public': 'false', 'followers': {'total': 0},
-                    'tracks': {'total': 0, 'items': []}
-                }
-        ]
+        u._personal_data = { 'followers': create_followers(0) }
+
+        u._playlists = create_playlists(1)
+        json_add_field(u._playlists, 'name', 'Playlist 1')
+        json_add_field(u._playlists, 'public', 'false')
+        json_add_field(u._playlists, 'followers', create_followers(0))
+
 
         quiz = Quiz.objects.create(user_id='cassius')
         questions = pick_questions_popularity_playlists(quiz, u)
@@ -117,41 +117,27 @@ class PickQuestionsTests(TransactionTestCase):
         """
 
         u = UserData(None)
-        u._saved_albums = [
-            {'name': 'Country Album 1', 'id': 1, 'artists': [{'name': 'Cassius'}],'images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'Country Album 2', 'id': 2, 'artists': [{'name': 'Benjamin'}],'images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'Country Album 3', 'id': 3, 'artists': [{'name': 'James'}],'images':[{'height':200,'width':200,'url':'200url'}]},
-        ]
-        u._saved_tracks = [
-            {'name': 'Country Track 1', 'id': 1, 'artists': [{'name': 'Cassius'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Track 2', 'id': 2, 'artists': [{'name': 'Benjamin'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Track 3', 'id': 3, 'artists': [{'name': 'James'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-        ]
-        u._music_taste = [
-            {'name': 'Country Track 1', 'id': 1, 'artists': [{'name': 'Cassius'}],
-                'album':
-                {'name': 'Country Album 1', 'id': 1, 'artists': [{'name': 'Cassius'}], 'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Track 2', 'id': 2, 'artists': [{'name': 'Benjamin'}],
-                'album':
-                {'name': 'Country Album 2', 'id': 2, 'artists': [{'name': 'Benjamin'}], 'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Track 3', 'id': 3, 'artists': [{'name': 'James'}],
-                'album':
-                {'name': 'Country Album 3', 'id': 3, 'artists': [{'name': 'James'}], 'images':[{'height':200,'width':200,'url':'200url'}]}},
-        ]
-        u._followed_artists = [
-            {'name': 'Cassius','images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'Benjamin','images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'James','images':[{'height':200,'width':200,'url':'200url'}]},
-        ]
 
-        u._top_artists['long_term'] = [
-            {'name': 'Cassius','images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'Benjamin','images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'James','images':[{'height':200,'width':200,'url':'200url'}]},
-        ]
+
+        artists = create_artists(3)
+        json_add_field(artists, 'name', ['Cassius', 'Benjamin', 'James'], arr=True)
+        json_add_to_field(artists, 'images', create_image())
+
+        u._saved_albums = create_albums(3)
+        json_add_name(u._saved_albums, 'Country Album ')
+        json_add_to_field(u._saved_albums, 'artists', artists, arr=True)
+        json_add_to_field(u._saved_albums, 'images', create_image())
+
+        u._saved_tracks = create_tracks(3)
+        json_add_name(u._saved_tracks, 'Country Track ')
+        json_add_to_field(u._saved_tracks, 'artists', artists, arr=True)
+        json_add_field(u._saved_tracks, 'album', u._saved_albums, arr=True)
+
+        u._music_taste = u._saved_tracks
+
+        u._followed_artists = artists
+        u._top_artists['long_term'] = artists
+
 
         quiz = Quiz.objects.create(user_id='cassius')
         questions = pick_questions_saved_followed(quiz, u)
@@ -168,27 +154,32 @@ class PickQuestionsTests(TransactionTestCase):
 
         u = UserData(None)
 
+
+        artists = create_artists(3)
+        json_add_field(artists, 'name', ['Cash', 'Ben', 'Cassius'])
+        json_add_to_field(artists, 'images', create_image())
+
+        albums = create_albums(3)
+        json_add_to_field(albums, 'images', create_image())
+
+        tracks = create_tracks(3)
+        json_add_name(tracks, 'Country Track ')
+        json_add_to_field(tracks, 'artists', artists, arr=True)
+        json_add_field(tracks, 'album', albums, arr=True)
+
+        genres = [
+            ['pop', 'opo'],
+            ['rock', 'stone', 'pebble'],
+            ['punk', 'munk', 'lunk', 'dunk'],
+            [],
+            [],
+        ]
+
+
         for time_range in ['short_term', 'medium_term', 'long_term']:
-            u._top_tracks[time_range] = [
-                {'name': 'Country Album 1', 'id': 1, 'artists': [{'name': 'Cash'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-                {'name': 'Country Album 2', 'id': 2, 'artists': [{'name': 'Ben'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-                {'name': 'Country Album 3', 'id': 3, 'artists': [{'name': 'Cassius'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            ]
-            u._top_artists[time_range] = [
-                {'name': 'Cash', 'id': 1,'images':[{'height':200,'width':200,'url':'200url'}]},
-                {'name': 'Ben', 'id': 1,'images':[{'height':200,'width':200,'url':'200url'}]},
-                {'name': 'Jim', 'id': 1,'images':[{'height':200,'width':200,'url':'200url'}]},
-            ]
-            u._top_genres[time_range] = [
-                ['pop', 'opo'],
-                ['rock', 'stone', 'pebble'],
-                ['punk', 'munk', 'lunk', 'dunk'],
-                [],
-                [],
-            ]
+            u._top_tracks[time_range] = tracks
+            u._top_artists[time_range] = artists
+            u._top_genres[time_range] = genres
 
         quiz = Quiz.objects.create(user_id='cassius')
         questions = pick_questions_top_played(quiz, u)
@@ -207,112 +198,76 @@ class PickQuestionsTests(TransactionTestCase):
         # section returns None
 
         u = UserData(None)
-        u._personal_data = {
-            'followers': {'total': 0}
-        }
-        u._playlists = [
-                {'name': 'p1', 'public': 'false', 'followers': {'total': 0},
-                    'tracks': {'total': 0, 'items': []},
-                    'images':[{'height':200,'width':200,'url':'200url'}]
-                }
-        ]
+        u._personal_data = {'followers': create_followers(0)}
 
-        u._music_taste = [
-            {'id': 'Track1', 'explicit': 'true', 'energy': 0.52,
-                'acousticness': 0.52, 'valence': 0.52,
-                'danceability': 0.52, 'duration_ms': 2.5*60000,
-                'popularity': 99, 'name': 'Track1', 'artists': [{'name': 'Cash'}],
-                'album':
-                {'name': 'a1', 'id': 1, 'release_date': '1954-10-02', 'artists': [{'name': 'Cash'}], 'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'id': 'Track2', 'explicit': 'false', 'energy': 0.12,
-                'acousticness': 0.12, 'valence': 0.12,
-                'danceability': 0.12, 'duration_ms': 2.3*60000,
-                'popularity': 0, 'name': 'Track2', 'artists': [{'name': 'Cash'}],
-                'album':
-                {'name': 'a2', 'id': 2, 'release_date': '1998-04-04', 'artists': [{'name': 'Cash'}], 'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'id': 'Track3', 'explicit': 'true', 'energy': 0.25,
-                'acousticness': 0.25, 'valence': 0.25,
-                'danceability': 0.25, 'duration_ms': 3.4*60000,
-                'popularity': 14, 'name': 'Track3', 'artists': [{'name': 'Cash'}],
-                'album':
-                {'name': 'a3', 'id': 3, 'release_date': '2020-01-10', 'artists': [{'name': 'Cash'}], 'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'id': 'Track4', 'explicit': 'false', 'energy': 0.983,
-                'acousticness': 0.983, 'valence': 0.983,
-                'danceability': 0.983, 'duration_ms': 8.3*60000,
-                'popularity': 25, 'name': 'Track4', 'artists': [{'name': 'Cash'}],
-                'album':
-                {'name': 'a4', 'id': 4, 'release_date': '2005-12-25', 'artists': [{'name': 'Cash'}], 'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'id': 'Track5', 'explicit': 'true', 'energy': 0.253,
-                'acousticness': 0.253, 'valence': 0.253,
-                'danceability': 0.253, 'duration_ms': 5.6*60000,
-                'popularity': 73, 'name': 'Track5', 'artists': [{'name': 'Cash'}],
-                'album':
-                {'name': 'a5', 'id': 5, 'release_date': '1977-07-17', 'artists': [{'name': 'Cash'}], 'images':[{'height':200,'width':200,'url':'200url'}]}},
-        ]
-        u._saved_albums = [
-            {'name': 'Country Album 1', 'id': 1, 'artists': [{'name': 'Cash'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Album 2', 'id': 2, 'artists': [{'name': 'Ben'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Album 3', 'id': 3, 'artists': [{'name': 'Cassius'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Album 4', 'id': 4, 'artists': [{'name': 'Benjamin'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Album 5', 'id': 5, 'artists': [{'name': 'James'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Album 6', 'id': 6, 'artists': [{'name': 'Jim'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Album 7', 'id': 7, 'artists': [{'name': 'John'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-        ]
-        u._saved_tracks = [
-            {'name': 'Country Track 1', 'id': 1, 'artists': [{'name': 'Cash'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Track 2', 'id': 2, 'artists': [{'name': 'Ben'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Track 3', 'id': 3, 'artists': [{'name': 'Cassius'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Track 4', 'id': 4, 'artists': [{'name': 'Benjamin'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Track 5', 'id': 5, 'artists': [{'name': 'James'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Track 6', 'id': 6, 'artists': [{'name': 'Jim'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Track 7', 'id': 7, 'artists': [{'name': 'John'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-        ]
-        u._followed_artists = [
-            {'name': 'Cassius','images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'Cash','images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'Ben','images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'Benjamin','images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'James','images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'Jimmy','images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'John','images':[{'height':200,'width':200,'url':'200url'}]},
-        ]
+        u._playlists = create_playlists(1)
+        json_add_field(u._playlists, 'public', 'false')
+        json_add_field(u._playlists, 'followers', create_followers(0))
+        json_add_to_field(u._playlists, 'images', create_image())
+
+        artists = create_artists(1)
+        json_add_field(artists, 'name', 'Cash')
+
+        u._music_taste = create_tracks(5)
+        json_add_field(u._music_taste, 'explicit',
+                ['true', 'false', 'true', 'false', 'true'], arr=True)
+        json_add_name(u._music_taste, 'Track')
+        json_add_field(u._music_taste, 'energy',
+                [0.52, 0.12, 0.25, 0.983, 0.253], arr=True)
+        json_add_field(u._music_taste, 'acousticness',
+                [0.52, 0.12, 0.25, 0.983, 0.253], arr=True)
+        json_add_field(u._music_taste, 'valence',
+                [0.52, 0.12, 0.25, 0.983, 0.253], arr=True)
+        json_add_field(u._music_taste, 'danceability',
+                [0.52, 0.12, 0.25, 0.983, 0.253], arr=True)
+        json_add_field(u._music_taste, 'duration_ms',
+                [2.5*60000, 2.3*60000, 3.4*60000, 8.3*60000, 5.6*60000],
+                arr=True)
+        json_add_field(u._music_taste, 'popularity',
+                [99, 0, 14, 25, 73], arr=True)
+        json_add_to_field(u._music_taste, 'artists', artists[0])
+
+        albums = create_albums(5)
+        json_add_name(albums, 'Album')
+        json_add_field(albums, 'release_date',
+                ['1954-10-02', '1998-04-04', '2020-01-10', '2005-12-25',
+                    '1977-07-17'], arr=True)
+        json_add_to_field(albums, 'artists', artists[0])
+        json_add_to_field(albums, 'images', create_image())
+        json_add_field(u._music_taste, 'album', albums, arr=True)
+
+
+        u._saved_albums = create_albums(7, id=5)
+        json_add_name(u._saved_albums, 'Country Album ')
+        artists = create_artists(7, id=1)
+        json_add_field(artists, 'name', ['Cash', 'Ben', 'Cassius', 'Benjamin',
+            'James', 'Jim', 'John'], arr=True)
+        json_add_to_field(u._saved_albums, 'artists', artists, arr=True)
+        json_add_to_field(u._saved_albums, 'images', create_image())
+
+
+        u._saved_tracks = create_tracks(7, id=5)
+        json_add_name(u._saved_tracks, 'Country Track ')
+        json_add_to_field(u._saved_tracks, 'artists', artists, arr=True)
+        albums = create_albums(7, id=12)
+        json_add_to_field(albums, 'images', create_image())
+        json_add_field(u._saved_tracks, 'album', albums, arr=True)
+
+
+        u._followed_artists = create_artists(7, id=8)
+        json_add_field(u._followed_artists, 'name', ['Cassius', 'Cash',
+            'Ben', 'Benjamin', 'James', 'Jimmy', 'John'], arr=True)
+        json_add_to_field(u._followed_artists, 'images', create_image())
+
+
         for time_range in ['long_term', 'medium_term', 'short_term']:
-            u._top_tracks[time_range] = [
-                {'name': 'Country Track 1', 'id': 1, 'artists': [{'name': 'Cash'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-                {'name': 'Country Track 2', 'id': 2, 'artists': [{'name': 'Ben'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-                {'name': 'Country Track 3', 'id': 3, 'artists': [{'name': 'Cassius'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-                {'name': 'Country Track 4', 'id': 4, 'artists': [{'name': 'Benjamin'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-                {'name': 'Country Track 5', 'id': 5, 'artists': [{'name': 'James'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-                {'name': 'Country Track 6', 'id': 6, 'artists': [{'name': 'Jim'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-                {'name': 'Country Track 7', 'id': 7, 'artists': [{'name': 'John'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            ]
-            u._top_artists[time_range] = [
-                {'name': 'Cash', 'id': 1,'images':[{'height':200,'width':200,'url':'200url'}]},
-                {'name': 'Ben', 'id': 2,'images':[{'height':200,'width':200,'url':'200url'}]},
-                {'name': 'Cassius', 'id': 3,'images':[{'height':200,'width':200,'url':'200url'}]},
-                {'name': 'Benjamin', 'id': 4,'images':[{'height':200,'width':200,'url':'200url'}]},
-            ]
+            u._top_tracks[time_range] = u._saved_tracks.copy()
+
+            u._top_artists[time_range] = create_artists(4, id=15)
+            json_add_field(u._top_artists[time_range], 'name',
+                    ['Cash', 'Ben', 'Cassius', 'Benjamin'], arr=True)
+            json_add_to_field(u._top_artists[time_range], 'images', create_image())
+
             u._top_genres[time_range] = [
                 ['pop', 'opo'],
                 ['rock', 'stone', 'pebble'],

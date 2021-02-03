@@ -11,6 +11,7 @@ from django.test import TestCase
 from spoton.quiz import UserData
 from spoton.quiz.section_music_taste_features import *
 from spoton.tests.setup_tests import create_authorized_session
+from spoton.tests.data_creation import *
 
 
 class QuestionExplicitnessTests(StaticLiveServerTestCase):
@@ -44,23 +45,11 @@ class QuestionExplicitnessTests(StaticLiveServerTestCase):
         percentage of the user's music taste is explicit.
         """
         u = UserData(None)
-        u._music_taste = [
-            {'id': 'Track1', 'explicit': 'true'},
-            {'id': 'Track2', 'explicit': 'false'},
-            {'id': 'Track3', 'explicit': 'true'},
-            {'id': 'Track4', 'explicit': 'false'},
-            {'id': 'Track5', 'explicit': 'true'},
-            {'id': 'Track6', 'explicit': 'false'},
-            {'id': 'Track7', 'explicit': 'false'},
-            {'id': 'Track8', 'explicit': 'false'},
-            {'id': 'Track9', 'explicit': 'true'},
-            {'id': 'Track10', 'explicit': 'true'},
-            {'id': 'Track11', 'explicit': 'false'},
-            {'id': 'Track12', 'explicit': 'false'},
-            {'id': 'Track13', 'explicit': 'true'},
-            {'id': 'Track14', 'explicit': 'false'},
-            {'id': 'Track15', 'explicit': 'true'},
-        ]
+        u._music_taste = create_tracks(15)
+        json_add_field(u._music_taste, 'explicit',
+                ['true', 'false', 'true', 'false', 'true', 'false',
+                    'false', 'false', 'true', 'true', 'false', 'false',
+                    'true', 'false', 'true'], arr=True)
 
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_explicitness(quiz, u)
@@ -94,12 +83,8 @@ class QuestionExplicitnessTests(StaticLiveServerTestCase):
         all the user's music taste is explicit.
         """
         u = UserData(None)
-        u._music_taste = [
-            {'id': 'Track1', 'explicit': 'true'},
-            {'id': 'Track2', 'explicit': 'true'},
-            {'id': 'Track3', 'explicit': 'true'},
-            {'id': 'Track4', 'explicit': 'true'},
-        ]
+        u._music_taste = create_tracks(4)
+        json_add_field(u._music_taste, 'explicit', 'true')
 
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_explicitness(quiz, u)
@@ -116,13 +101,9 @@ class QuestionExplicitnessTests(StaticLiveServerTestCase):
         none of the user's music taste is explicit.
         """
         u = UserData(None)
-        u._music_taste = [
-            {'id': 'Track1', 'explicit': 'false'},
-            {'id': 'Track2', 'explicit': 'false'},
-            {'id': 'Track3', 'explicit': 'false'},
-            {'id': 'Track4', 'explicit': 'false'},
-        ]
-
+        u._music_taste = create_tracks(4)
+        json_add_field(u._music_taste, 'explicit', 'false')
+        
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_explicitness(quiz, u)
 
@@ -163,9 +144,10 @@ class QuestionEnergyTests(StaticLiveServerTestCase):
         energetic the user's music taste is, on a scale of 0 to 100.
         """
         u = UserData(None)
-        energies = [0.52, 0.12, 0.25, 0.983, 0.253, 0.534, 0.235]
 
-        u._music_taste = [{'energy': energy} for energy in energies]
+        energies = [0.52, 0.12, 0.25, 0.983, 0.253, 0.534, 0.235]
+        u._music_taste = create_tracks(len(energies))
+        json_add_field(u._music_taste, 'energy', energies, arr=True)
 
         avg = int(100*sum(energies)/len(energies))
 
@@ -201,12 +183,8 @@ class QuestionEnergyTests(StaticLiveServerTestCase):
         This tests it when the energy average is 0.
         """
         u = UserData(None)
-        u._music_taste = [
-            {'id': 'Track1', 'energy': 0},
-            {'id': 'Track2', 'energy': 0}, 
-            {'id': 'Track3', 'energy': 0},
-            {'id': 'Track4', 'energy': 0},
-        ]
+        u._music_taste = create_tracks(4)
+        json_add_field(u._music_taste, 'energy', 0)
 
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_energy(quiz, u)
@@ -223,12 +201,8 @@ class QuestionEnergyTests(StaticLiveServerTestCase):
         This tests it when the energy average is 1.
         """
         u = UserData(None)
-        u._music_taste = [
-            {'id': 'Track1', 'energy': 1},
-            {'id': 'Track2', 'energy': 1},
-            {'id': 'Track3', 'energy': 1},
-            {'id': 'Track4', 'energy': 1},
-        ]
+        u._music_taste = create_tracks(4)
+        json_add_field(u._music_taste, 'energy', 1)
 
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_energy(quiz, u)
@@ -273,9 +247,9 @@ class QuestionAcousticnessTests(StaticLiveServerTestCase):
         u._music_taste = []
 
         acousticnesses = [0.52, 0.12, 0.25, 0.983, 0.253, 0.534, 0.635]
-        count = 0
-        for i in range(len(acousticnesses)):
-            u._music_taste.append({'id': i, 'energy': 0, 'acousticness': acousticnesses[i]})
+        u._music_taste = create_tracks(len(acousticnesses))
+        json_add_field(u._music_taste, 'energy', 0)
+        json_add_field(u._music_taste, 'acousticness', acousticnesses, arr=True)
 
         percentage = int(100*4/7)
 
@@ -310,12 +284,10 @@ class QuestionAcousticnessTests(StaticLiveServerTestCase):
         percentage of the user's music taste is acoustic.
         """
         u = UserData(None)
-        u._music_taste = [
-            {'id': 'Track1', 'energy': 0, 'acousticness': 0.56},
-            {'id': 'Track2', 'energy': 0, 'acousticness': 0.93}, 
-            {'id': 'Track3', 'energy': 0, 'acousticness': 0.77},
-            {'id': 'Track4', 'energy': 0, 'acousticness': 0.72},
-        ]
+        acousticnesses = [0.56, 0.93, 0.77, 0.72]
+        u._music_taste = create_tracks(len(acousticnesses))
+        json_add_field(u._music_taste, 'energy', 0)
+        json_add_field(u._music_taste, 'acousticness', acousticnesses, arr=True)
 
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_acousticness(quiz, u)
@@ -331,12 +303,10 @@ class QuestionAcousticnessTests(StaticLiveServerTestCase):
         percentage of the user's music taste is acoustic.
         """
         u = UserData(None)
-        u._music_taste = [
-            {'id': 'Track1', 'energy': 0, 'acousticness': 0.26},
-            {'id': 'Track2', 'energy': 0, 'acousticness': 0.33}, 
-            {'id': 'Track3', 'energy': 0, 'acousticness': 0.47},
-            {'id': 'Track4', 'energy': 0, 'acousticness': 0.12},
-        ]
+        acousticnesses = [0.26, 0.33, 0.47, 0.12]
+        u._music_taste = create_tracks(len(acousticnesses))
+        json_add_field(u._music_taste, 'energy', 0)
+        json_add_field(u._music_taste, 'acousticness', acousticnesses, arr=True)
 
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_acousticness(quiz, u)
@@ -381,8 +351,9 @@ class QuestionHappinessTests(StaticLiveServerTestCase):
         u._music_taste = []
 
         happinesses = [0.52, 0.12, 0.25, 0.983, 0.253, 0.534, 0.635]
-        for i in range(len(happinesses)):
-            u._music_taste.append({'id': i, 'energy': 0, 'valence': happinesses[i]})
+        u._music_taste = create_tracks(len(happinesses))
+        json_add_field(u._music_taste, 'energy', 0)
+        json_add_field(u._music_taste, 'valence', happinesses, arr=True)
 
         avg = int(100*sum(happinesses)/len(happinesses))
 
@@ -417,12 +388,9 @@ class QuestionHappinessTests(StaticLiveServerTestCase):
         happy the user's music taste is, from 0 to 100.
         """
         u = UserData(None)
-        u._music_taste = [
-            {'id': 'Track1', 'energy': 0, 'valence': 1},
-            {'id': 'Track2', 'energy': 0, 'valence': 1}, 
-            {'id': 'Track3', 'energy': 0, 'valence': 1},
-            {'id': 'Track4', 'energy': 0, 'valence': 1},
-        ]
+        u._music_taste = create_tracks(4)
+        json_add_field(u._music_taste, 'energy', 0)
+        json_add_field(u._music_taste, 'valence', 1)
 
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_happiness(quiz, u)
@@ -438,12 +406,9 @@ class QuestionHappinessTests(StaticLiveServerTestCase):
         happy the user's music taste is, from 0 to 100.
         """
         u = UserData(None)
-        u._music_taste = [
-            {'id': 'Track1', 'energy': 0, 'valence': 0},
-            {'id': 'Track2', 'energy': 0, 'valence': 0}, 
-            {'id': 'Track3', 'energy': 0, 'valence': 0},
-            {'id': 'Track4', 'energy': 0, 'valence': 0},
-        ]
+        u._music_taste = create_tracks(4)
+        json_add_field(u._music_taste, 'energy', 0)
+        json_add_field(u._music_taste, 'valence', 0)
 
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_happiness(quiz, u)
@@ -488,8 +453,9 @@ class QuestionDanceabilityTests(StaticLiveServerTestCase):
         u._music_taste = []
 
         danceabilities = [0.52, 0.12, 0.25, 0.983, 0.253, 0.534, 0.635]
-        for i in range(len(danceabilities)):
-            u._music_taste.append({'id': i, 'energy': 0, 'danceability': danceabilities[i]})
+        u._music_taste = create_tracks(len(danceabilities))
+        json_add_field(u._music_taste, 'energy', 0)
+        json_add_field(u._music_taste, 'danceability', danceabilities, arr=True)
 
         avg = int(100*sum(danceabilities)/len(danceabilities))
 
@@ -524,19 +490,16 @@ class QuestionDanceabilityTests(StaticLiveServerTestCase):
         danceable the user's music taste is, from 0 to 100.
         """
         u = UserData(None)
-        u._music_taste = [
-            {'id': 'Track1', 'energy': 0, 'danceability': 1},
-            {'id': 'Track2', 'energy': 0, 'danceability': 1}, 
-            {'id': 'Track3', 'energy': 0, 'danceability': 1},
-            {'id': 'Track4', 'energy': 0, 'danceability': 1},
-        ]
+        u._music_taste = create_tracks(3)
+        json_add_field(u._music_taste, 'energy', 0)
+        json_add_field(u._music_taste, 'danceability', 0)
 
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_danceability(quiz, u)
 
         self.assertEqual(question.slider_min, 0)
         self.assertEqual(question.slider_max, 100)
-        self.assertEqual(question.answer, 100)
+        self.assertEqual(question.answer, 0)
 
 
     def test_question_danceability_all_1(self):
@@ -545,12 +508,10 @@ class QuestionDanceabilityTests(StaticLiveServerTestCase):
         danceable the user's music taste is, from 0 to 100.
         """
         u = UserData(None)
-        u._music_taste = [
-            {'id': 'Track1', 'energy': 0, 'danceability': 1},
-            {'id': 'Track2', 'energy': 0, 'danceability': 1}, 
-            {'id': 'Track3', 'energy': 0, 'danceability': 1},
-            {'id': 'Track4', 'energy': 0, 'danceability': 1},
-        ]
+        u = UserData(None)
+        u._music_taste = create_tracks(3)
+        json_add_field(u._music_taste, 'energy', 0)
+        json_add_field(u._music_taste, 'danceability', 1)
 
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_danceability(quiz, u)
@@ -592,11 +553,11 @@ class QuestionDurationTests(StaticLiveServerTestCase):
         average length of a song in the user's music taste is.
         """
         u = UserData(None)
-        u._music_taste = []
 
         durations = [2.5*60*1000, 2.3*60*1000, 3.4*60*1000, 8.3*60*1000, 5.6*60*1000, 4.7*60*1000, 3.9*60*1000]
-        for i in range(len(durations)):
-            u._music_taste.append({'id': i, 'energy': 0, 'duration_ms': durations[i]})
+        u._music_taste = create_tracks(len(durations))
+        json_add_field(u._music_taste, 'energy', 0)
+        json_add_field(u._music_taste, 'duration_ms', durations, arr=True)
 
         avg = int((sum(durations)/len(durations))/1000)
 
@@ -634,8 +595,9 @@ class QuestionDurationTests(StaticLiveServerTestCase):
         u._music_taste = []
 
         durations = [30*1000, 50*1000, 20*1000, 40*1000]
-        for i in range(len(durations)):
-            u._music_taste.append({'id': i, 'energy': 0, 'duration_ms': durations[i]})
+        u._music_taste = create_tracks(len(durations))
+        json_add_field(u._music_taste, 'energy', 0)
+        json_add_field(u._music_taste, 'duration_ms', durations, arr=True)
 
         avg = int((sum(durations)/len(durations))/1000)
 
@@ -682,12 +644,11 @@ class QuestionAverageReleaseDateTests(StaticLiveServerTestCase):
         u._music_taste = []
 
         dates = ['1954-10-02', '1998-04-04', '2020-01-10', '2005-12-25']
-        for i in range(len(dates)):
-            u._music_taste.append(
-                    {
-                        'id': i, 'energy': 0,
-                        'album': {'release_date': dates[i]}
-                    })
+        u._music_taste = create_tracks(len(dates))
+        json_add_field(u._music_taste, 'energy', 0)
+        albums = create_albums(len(dates))
+        json_add_field(albums, 'release_date', dates, arr=True)
+        json_add_field(u._music_taste, 'album', albums, arr=True)
 
         avg = int((1954+1998+2020+2005)/len(dates))
 
@@ -725,12 +686,11 @@ class QuestionAverageReleaseDateTests(StaticLiveServerTestCase):
         u._music_taste = []
 
         dates = ['2015', '2013', '2014', '2012', '2011']
-        for i in range(len(dates)):
-            u._music_taste.append(
-                    {
-                        'id': i, 'energy': 0,
-                        'album': {'release_date': dates[i]}
-                    })
+        u._music_taste = create_tracks(len(dates))
+        json_add_field(u._music_taste, 'energy', 0)
+        albums = create_albums(len(dates))
+        json_add_field(albums, 'release_date', durations, arr=True)
+        json_add_field(u._music_taste, 'album', albums, arr=True)
 
         avg = 2013
 
@@ -753,12 +713,11 @@ class QuestionAverageReleaseDateTests(StaticLiveServerTestCase):
         u._music_taste = []
 
         dates = ['2017', '2013', '2014', '2016', '2015']
-        for i in range(len(dates)):
-            u._music_taste.append(
-                    {
-                        'id': i, 'energy': 0,
-                        'album': {'release_date': dates[i]}
-                    })
+        u._music_taste = create_tracks(len(dates))
+        json_add_field(u._music_taste, 'energy', 0)
+        albums = create_albums(len(dates))
+        json_add_field(albums, 'release_date', dates, arr=True)
+        json_add_field(u._music_taste, 'album', albums, arr=True)
 
         avg = 2015
 
@@ -807,12 +766,9 @@ class QuestionMusicPopularityTests(StaticLiveServerTestCase):
         u._music_taste = []
 
         popularities = [50, 99, 0, 14, 25, 73]
-        for i in range(len(popularities)):
-            u._music_taste.append(
-                    {
-                        'id': i, 'energy': 0,
-                        'popularity': popularities[i]
-                    })
+        u._music_taste = create_tracks(len(popularities))
+        json_add_field(u._music_taste, 'energy', 0)
+        json_add_field(u._music_taste, 'popularity', popularities, arr=True)
 
         avg = int(sum(popularities)/len(popularities))
 
@@ -849,13 +805,9 @@ class QuestionMusicPopularityTests(StaticLiveServerTestCase):
         u = UserData(None)
         u._music_taste = []
 
-        popularities = [0, 0, 0]
-        for i in range(len(popularities)):
-            u._music_taste.append(
-                    {
-                        'id': i, 'energy': 0,
-                        'popularity': popularities[i]
-                    })
+        u._music_taste = create_tracks(3)
+        json_add_field(u._music_taste, 'energy', 0)
+        json_add_field(u._music_taste, 'popularity', 0)
 
         avg = 0
 
@@ -875,13 +827,9 @@ class QuestionMusicPopularityTests(StaticLiveServerTestCase):
         u = UserData(None)
         u._music_taste = []
 
-        popularities = [100, 100, 100]
-        for i in range(len(popularities)):
-            u._music_taste.append(
-                    {
-                        'id': i, 'energy': 0,
-                        'popularity': popularities[i]
-                    })
+        u._music_taste = create_tracks(3)
+        json_add_field(u._music_taste, 'energy', 0)
+        json_add_field(u._music_taste, 'popularity', 100)
 
         avg = 100
 

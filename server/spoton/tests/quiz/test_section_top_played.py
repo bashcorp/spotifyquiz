@@ -12,6 +12,7 @@ from spoton.models.quiz import *
 from spoton.quiz.user_data import UserData
 from spoton.quiz.section_top_played import *
 from spoton.tests.setup_tests import create_authorized_session
+from spoton.tests.data_creation import *
 
 
 
@@ -74,22 +75,19 @@ class QuestionTopTrackTests(StaticLiveServerTestCase):
         methods, with different time_ranges.
         """
         u = UserData(self.session)
-        u._top_tracks[time_range] = [
-            {'name': 'Country Track 1', 'id': 1, 'artists': [{'name': 'Cash'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Track 2', 'id': 2, 'artists': [{'name': 'Ben'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Track 3', 'id': 3, 'artists': [{'name': 'Cassius'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Track 4', 'id': 4, 'artists': [{'name': 'Benjamin'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Track 5', 'id': 5, 'artists': [{'name': 'James'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Track 6', 'id': 6, 'artists': [{'name': 'Jim'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Track 7', 'id': 7, 'artists': [{'name': 'John'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-        ]
+
+        artists = create_artists(7)
+        json_add_field(artists, 'name', ['Cash', 'Ben', 'Cassius', 'Benjamin',
+            'James', 'Jim', 'John'], arr=True)
+
+        albums = create_albums(1)
+        json_add_to_field(albums, 'images', create_image())
+
+        u._top_tracks[time_range] = create_tracks(7)
+        json_add_name(u._top_tracks[time_range], 'Country Track ')
+        json_add_to_field(u._top_tracks[time_range], 'artists', artists, arr=True)
+        json_add_field(u._top_tracks[time_range], 'album', albums[0])
+
 
         quiz = Quiz.objects.create(user_id='cassius')
 
@@ -100,7 +98,7 @@ class QuestionTopTrackTests(StaticLiveServerTestCase):
         self.assertEqual(q.incorrect_answers().count(), 3)
 
         c = q.answers()[0]
-        self.assertEqual(c.primary_text, 'Country Track 1')
+        self.assertEqual(c.primary_text, 'Country Track 0')
         self.assertEqual(c.secondary_text, 'Cash')
 
         for c in q.choices.all():
@@ -109,7 +107,7 @@ class QuestionTopTrackTests(StaticLiveServerTestCase):
         for c in q.incorrect_answers():
             title = c.primary_text
             artist = c.secondary_text
-            self.assertNotEqual(title, 'Country Track 1')
+            self.assertNotEqual(title, 'Country Track 0')
             self.assertNotEqual(artist, 'Cash')
             found = False
             for t in u._top_tracks[time_range]:
@@ -198,14 +196,17 @@ class QuestionTopTrackTests(StaticLiveServerTestCase):
         time ranges.
         """
         u = UserData(self.session)
-        u._top_tracks[time_range] = [
-            {'name': 'Country Album 1', 'id': 1, 'artists': [{'name': 'Cash'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Album 2', 'id': 2, 'artists': [{'name': 'Ben'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Album 3', 'id': 3, 'artists': [{'name': 'Cassius'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-        ]
+
+        artists = create_artists(3)
+        json_add_field(artists, 'name', ['Cash', 'Ben', 'Cassius'])
+
+        albums = create_albums(3)
+        json_add_to_field(albums, 'images', create_image())
+
+        u._top_tracks[time_range] = create_albums(3)
+        json_add_to_field(u._top_tracks[time_range], 'artists', artists, arr=True)
+        json_add_field(u._top_tracks[time_range], 'album', albums[0])
+
 
         quiz = Quiz.objects.create(user_id='cassius')
         q = question_top_track(quiz, u, time_range)
@@ -275,12 +276,11 @@ class QuestionTopArtistTests(StaticLiveServerTestCase):
         time ranges.
         """
         u = UserData(self.session)
-        u._top_artists[time_range] = [
-            {'name': 'Cash', 'id': 1,'images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'Ben', 'id': 2,'images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'Cassius', 'id': 3,'images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'Benjamin', 'id': 4,'images':[{'height':200,'width':200,'url':'200url'}]},
-        ]
+        u._top_artists[time_range] = create_artists(4)
+        json_add_field(u._top_artists[time_range], 'name', ['Cash', 'Ben',
+            'Cassius', 'Benjamin'], arr=True)
+        json_add_to_field(u._top_artists[time_range], 'images', create_image())
+
 
         quiz = Quiz.objects.create(user_id='cassius')
         q = question_top_artist(quiz, u, time_range)
@@ -385,11 +385,10 @@ class QuestionTopArtistTests(StaticLiveServerTestCase):
         time ranges.
         """
         u = UserData(self.session)
-        u._top_artists[time_range] = [
-            {'name': 'Cash', 'id': 1,'images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'Ben', 'id': 1,'images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'Jim', 'id': 1,'images':[{'height':200,'width':200,'url':'200url'}]},
-        ]
+        u._top_artists[time_range] = create_artists(3)
+        json_add_field(u._top_artists[time_range], 'name', ['Cash', 'Ben', 'Jim'], arr=True)
+        json_add_to_field(u._top_artists[time_range], 'images', create_image())
+
 
         quiz = Quiz.objects.create(user_id='cassius')
         q = question_top_artist(quiz, u, time_range)

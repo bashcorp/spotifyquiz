@@ -10,6 +10,7 @@ from django.test import TestCase
 from spoton.quiz import UserData
 from spoton.quiz.section_popularity_playlists import *
 from spoton.tests.setup_tests import create_authorized_session
+from spoton.tests.data_creation import *
 
 
 class QuestionUserFollowersTests(StaticLiveServerTestCase):
@@ -143,13 +144,12 @@ class QuestionPopularPlaylistTests(StaticLiveServerTestCase):
         u._playlists = []
 
         follower_counts = [8, 2, 4, 7, 1, 0, 6]
-        for i in range(len(follower_counts)):
-            u._playlists.append({
-                'name': 'p'+str(i),
-                'public': True,
-                'followers': {'total': follower_counts[i]},
-                'images': [{'height':200, 'width':200, 'url':'200url'}]
-            })
+        u._playlists = create_playlists(len(follower_counts))
+        json_add_name(u._playlists, 'p')
+        json_add_field(u._playlists, 'public', True)
+        json_add_field(u._playlists, 'followers', [create_followers(f) for f in follower_counts], arr=True)
+        json_add_to_field(u._playlists, 'images', create_image())
+
 
         follower_counts = follower_counts[1:]
 
@@ -199,17 +199,13 @@ class QuestionPopularPlaylistTests(StaticLiveServerTestCase):
         u = UserData(None)
         u._playlists = []
 
-        follower_counts = [8, 2, 4]
-        for i in range(len(follower_counts)):
-            u._playlists.append({
-                'name': 'p'+str(i),
-                'public': True,
-                'followers': {'total': follower_counts[i]},
-                'images': [{'height':200, 'width':200, 'url':'200url'}]
-            })
-        u._playlists.append({'name': 'p11', 'public': 'false', 'followers':{'total': 1}})
-        u._playlists.append({'name': 'p12', 'public': 'false', 'followers':{'total': 2}})
-        u._playlists.append({'name': 'p13', 'public': 'false', 'followers':{'total': 3}})
+        follower_counts = [8, 2, 4, 1, 2, 3]
+        u._playlists = create_playlists(6)
+        json_add_name(u._playlists, 'p')
+        json_add_field(u._playlists[0:3], 'public', True)
+        json_add_field(u._playlists[3:6], 'public', False)
+        json_add_field(u._playlists, 'followers', [create_followers(f) for f in follower_counts], arr=True)
+        json_add_to_field(u._playlists, 'images', create_image())
 
 
         quiz = Quiz.objects.create(user_id='Cassius')
@@ -226,14 +222,12 @@ class QuestionPopularPlaylistTests(StaticLiveServerTestCase):
         u = UserData(None)
         u._playlists = []
 
-        follower_counts = [0, 0, 0]
-        for i in range(len(follower_counts)):
-            u._playlists.append({
-                'name': 'p'+str(i),
-                'public': True,
-                'followers': {'total': follower_counts[i]},
-                'images': [{'height':200, 'width':200, 'url':'200url'}]
-            })
+        u._playlists = create_playlists(3)
+        json_add_name(u._playlists, 'p')
+        json_add_field(u._playlists[0:3], 'public', True)
+        json_add_field(u._playlists[3:6], 'public', False)
+        json_add_field(u._playlists, 'followers', create_followers(0))
+        json_add_to_field(u._playlists, 'images', create_image())
 
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_popular_playlist(quiz, u)
@@ -250,13 +244,11 @@ class QuestionPopularPlaylistTests(StaticLiveServerTestCase):
         u._playlists = []
 
         follower_counts = [4, 2, 5, None]
-        for i in range(len(follower_counts)):
-            u._playlists.append({
-                'name': 'p'+str(i),
-                'public': True,
-                'followers': {'total': follower_counts[i]},
-                'images': [{'height':200, 'width':200, 'url':'200url'}]
-            })
+        u._playlists = create_playlists(len(follower_counts))
+        json_add_name(u._playlists, 'p')
+        json_add_field(u._playlists, 'public', True)
+        json_add_field(u._playlists, 'followers', [create_followers(f) for f in follower_counts], arr=True)
+        json_add_to_field(u._playlists, 'images', create_image())
 
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_popular_playlist(quiz, u)
@@ -274,13 +266,11 @@ class QuestionPopularPlaylistTests(StaticLiveServerTestCase):
         u._playlists = []
 
         follower_counts = [5, 5, 1, 2]
-        for i in range(len(follower_counts)):
-            u._playlists.append({
-                'name': 'p'+str(i),
-                'public': True,
-                'followers': {'total': follower_counts[i]},
-                'images': [{'height':200, 'width':200, 'url':'200url'}]
-            })
+        u._playlists = create_playlists(len(follower_counts))
+        json_add_name(u._playlists, 'p')
+        json_add_field(u._playlists, 'public', True)
+        json_add_field(u._playlists, 'followers', [create_followers(f) for f in follower_counts], arr=True)
+        json_add_to_field(u._playlists, 'images', create_image())
 
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_popular_playlist(quiz, u)
@@ -321,61 +311,42 @@ class QuestionPlaylistTracksTests(StaticLiveServerTestCase):
         which tracks are in one of the user's playlists.
         """
         u = UserData(None)
-        u._playlists = [
-            { 'name': 'name1', 'id': 1, 'public':True, 'tracks': { 'total': 5, 'items': [
-                {'track': {'name':'t11', 'artists':[{'name':'Cash'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-                {'track': {'name':'t12', 'artists':[{'name':'Cash'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-                {'track': {'name':'t13', 'artists':[{'name':'Cash'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-                {'track': {'name':'t14', 'artists':[{'name':'Cash'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-                {'track': {'name':'t15', 'artists':[{'name':'Cash'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-            ]}},
-            { 'name': 'name2', 'id': 2, 'public':True, 'tracks': { 'total': 5, 'items': [
-                {'track': {'name':'t21', 'artists':[{'name':'Ben'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-                {'track': {'name':'t22', 'artists':[{'name':'Ben'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-                {'track': {'name':'t23', 'artists':[{'name':'Ben'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-                {'track': {'name':'t24', 'artists':[{'name':'Ben'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-                {'track': {'name':'t25', 'artists':[{'name':'Ben'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-            ]}},
-            { 'name': 'name3', 'id': 3, 'public':True, 'tracks': { 'total': 5, 'items': [
-                {'track': {'name':'t31', 'artists':[{'name':'Julia'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-                {'track': {'name':'t32', 'artists':[{'name':'Julia'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-                {'track': {'name':'t33', 'artists':[{'name':'Julia'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-                {'track': {'name':'t34', 'artists':[{'name':'Julia'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-                {'track': {'name':'t35', 'artists':[{'name':'Julia'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-            ]}},
-        ]
+
+        artists = create_artists(3)
+        json_add_field(artists, 'name', ['Cash', 'Ben', 'Julia'], arr=True)
+
+        album = create_albums(1)
+        json_add_to_field(album, 'images', create_image())
+
+        tracks = create_tracks(15)
+        json_add_name(tracks, 't')
+        json_add_to_field(tracks[0:5], 'artists', artists[0])
+        json_add_to_field(tracks[5:10], 'artists', artists[1])
+        json_add_to_field(tracks[10:15], 'artists', artists[2])
+        json_add_field(tracks, 'album', album[0])
+
+        u._playlists = create_playlists(3)
+        json_add_name(u._playlists, 'playlist')
+        json_add_field(u._playlists, 'public', True)
+        playlist_add_track(u._playlists[0], tracks[0:5])
+        playlist_add_track(u._playlists[1], tracks[5:10])
+        playlist_add_track(u._playlists[2], tracks[10:15])
 
         u._music_taste = [
-            {'name':'t15', 'artists':[{'name':'Cash'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name':'t25', 'artists':[{'name':'Ben'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name':'t35', 'artists':[{'name':'Julia'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name':'t41', 'artists':[{'name':'Velma'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name':'t42', 'artists':[{'name':'Velma'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name':'t43', 'artists':[{'name':'Velma'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name':'t44', 'artists':[{'name':'Velma'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
+                u._playlists[0]['tracks']['items'][4]['track'],
+                u._playlists[1]['tracks']['items'][4]['track'],
+                u._playlists[2]['tracks']['items'][4]['track'],
         ]
+
+        tracks = create_tracks(4, id=15)
+        json_add_name(tracks, 't4')
+        artist = create_artists(1, id=3)
+        json_add_field(artist, 'name', 'Velma')
+        json_add_to_field(tracks, 'artists', artist[0])
+        json_add_field(tracks, 'album', album[0])
+
+        u._music_taste.extend(tracks)
+
 
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_playlist_tracks(quiz, u)
@@ -425,42 +396,27 @@ class QuestionPlaylistTracksTests(StaticLiveServerTestCase):
         available public playlists with at least 4 tracks.
         """
         u = UserData(None)
-        u._playlists = [
-            { 'id': 1, 'public':True, 'tracks': { 'total': 3, 'items': [
-                {'track': {'name':'t11', 'artists':[{'name':'Cash'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-                {'track': {'name':'t12', 'artists':[{'name':'Cash'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-                {'track': {'name':'t13', 'artists':[{'name':'Cash'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-            ]}},
-            { 'id': 2, 'public':True, 'tracks': { 'total': 3, 'items': [
-                {'track': {'name':'t21', 'artists':[{'name':'Ben'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-                {'track': {'name':'t22', 'artists':[{'name':'Ben'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-                {'track': {'name':'t23', 'artists':[{'name':'Ben'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-            ]}},
-            { 'id': 3, 'public':True, 'tracks': { 'total': 3, 'items': [
-                {'track': {'name':'t31', 'artists':[{'name':'Julia'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-                {'track': {'name':'t32', 'artists':[{'name':'Julia'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-                {'track': {'name':'t33', 'artists':[{'name':'Julia'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-            ]}},
-            { 'id': 4, 'public':False, 'tracks': { 'total': 4, 'items': [
-                {'track': {'name':'t41', 'artists':[{'name':'Julia'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-                {'track': {'name':'t42', 'artists':[{'name':'Julia'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-                {'track': {'name':'t43', 'artists':[{'name':'Julia'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-                {'track': {'name':'t44', 'artists':[{'name':'Julia'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-            ]}},
-        ]
+        
+        artists = create_artists(3)
+        json_add_field(artists, 'name', ['Cash', 'Ben', 'Julia'])
+
+        albums = create_albums(1)
+        json_add_to_field(albums, 'images', create_image())
+
+        tracks = create_tracks(13)
+        json_add_name(tracks, 't')
+        json_add_field(tracks, 'album', albums[0])
+        json_add_to_field(tracks[0:3], 'artists', artists[0])
+        json_add_to_field(tracks[3:6], 'artists', artists[1])
+        json_add_to_field(tracks[6:13], 'artists', artists[2])
+
+        u._playlists = create_playlists(4)
+        json_add_field(u._playlists[0:3], 'public', True)
+        json_add_field(u._playlists[3:4], 'public', False)
+        playlist_add_track(u._playlists[0], tracks[0:3])
+        playlist_add_track(u._playlists[1], tracks[3:6])
+        playlist_add_track(u._playlists[2], tracks[6:9])
+        playlist_add_track(u._playlists[3], tracks[9:13])
 
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_playlist_tracks(quiz, u)
@@ -474,52 +430,36 @@ class QuestionPlaylistTracksTests(StaticLiveServerTestCase):
         public playlists with at least 4 tracks.
         """
         u = UserData(None)
-        u._playlists = [
-            { 'name': 'name1', 'id': 1, 'public':True, 'tracks': { 'total': 3, 'items': [
-                {'track': {'name':'t11', 'artists':[{'name':'Cash'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-                {'track': {'name':'t12', 'artists':[{'name':'Cash'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-                {'track': {'name':'t13', 'artists':[{'name':'Cash'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-            ]}},
-            { 'name': 'name2', 'id': 2, 'public':True, 'tracks': { 'total': 3, 'items': [
-                {'track': {'name':'t21', 'artists':[{'name':'Ben'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-                {'track': {'name':'t22', 'artists':[{'name':'Ben'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-                {'track': {'name':'t23', 'artists':[{'name':'Ben'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-            ]}},
-            { 'name': 'name3', 'id': 3, 'public':True, 'tracks': { 'total': 3, 'items': [
-                {'track': {'name':'t31', 'artists':[{'name':'Julia'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-                {'track': {'name':'t32', 'artists':[{'name':'Julia'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-                {'track': {'name':'t33', 'artists':[{'name':'Julia'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-            ]}},
-            { 'name': 'name4', 'id': 4, 'public':True, 'tracks': { 'total': 4, 'items': [
-                {'track': {'name':'t41', 'artists':[{'name':'Jim'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-                {'track': {'name':'t42', 'artists':[{'name':'Jim'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-                {'track': {'name':'t43', 'artists':[{'name':'Jim'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-                {'track': {'name':'t44', 'artists':[{'name':'Jim'}],
-		    'album':{'images':[{'height':200,'width':200,'url':'200url'}]}}},
-            ]}},
-        ]
-        u._music_taste = [
-            {'name':'t41', 'artists':[{'name':'Velma'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name':'t42', 'artists':[{'name':'Velma'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name':'t43', 'artists':[{'name':'Velma'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name':'t44', 'artists':[{'name':'Velma'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-        ]
+        artists = create_artists(4)
+        json_add_field(artists, 'name', ['Cash', 'Ben', 'Julia', 'Jim'], arr=True)
+
+        albums = create_albums(1)
+        json_add_to_field(albums, 'images', create_image())
+
+        tracks = create_tracks(13)
+        json_add_name(tracks, 't')
+        json_add_field(tracks, 'album', albums[0])
+        json_add_to_field(tracks[0:3], 'artists', artists[0])
+        json_add_to_field(tracks[3:6], 'artists', artists[1])
+        json_add_to_field(tracks[6:9], 'artists', artists[2])
+        json_add_to_field(tracks[9:13], 'artists', artists[3])
+
+        u._playlists = create_playlists(4)
+        json_add_name(u._playlists, 'playlist')
+        json_add_field(u._playlists, 'public', True)
+        playlist_add_track(u._playlists[0], tracks[0:3])
+        playlist_add_track(u._playlists[1], tracks[3:6])
+        playlist_add_track(u._playlists[2], tracks[6:9])
+        playlist_add_track(u._playlists[3], tracks[9:13])
+
+        artists = create_artists(1, id=4)
+        json_add_field(artists, 'name', 'Velma')
+
+        u._music_taste = create_tracks(4, id=13)
+        json_add_name(u._music_taste, 'track')
+        json_add_to_field(u._music_taste, 'artists', artists[0])
+        json_add_field(u._music_taste, 'album', albums[0])
+
 
         quiz = Quiz.objects.create(user_id='Cassius')
         question = question_playlist_tracks(quiz, u)
@@ -528,7 +468,7 @@ class QuestionPlaylistTracksTests(StaticLiveServerTestCase):
         self.assertLessEqual(question.answers().count(), 4)
         self.assertEqual(question.incorrect_answers().count(), 4-question.answers().count())
 
-        self.assertIn('name4', question.text)
+        self.assertIn('playlist3', question.text)
 
         for a in question.answers():
             self.assertEqual(a.secondary_text, 'Jim')

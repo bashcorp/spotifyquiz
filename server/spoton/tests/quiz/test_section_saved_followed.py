@@ -11,6 +11,7 @@ from spoton.models.quiz import *
 from spoton.quiz.user_data import UserData
 from spoton.quiz.section_saved_followed import *
 from spoton.tests.setup_tests import create_authorized_session
+from spoton.tests.data_creation import *
 
 
 
@@ -44,41 +45,25 @@ class QuestionSavedAlbumsTests(StaticLiveServerTestCase):
         user's saved albums.
         """
         u = UserData(self.session)
-        u._saved_albums = [
-            {'name': 'Country Album 1', 'id': 1, 'artists': [{'name': 'Cash'}],
-		'images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'Country Album 2', 'id': 2, 'artists': [{'name': 'Ben'}],
-		'images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'Country Album 3', 'id': 3, 'artists': [{'name': 'Cassius'}],
-		'images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'Country Album 4', 'id': 4, 'artists': [{'name': 'Benjamin'}],
-		'images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'Country Album 5', 'id': 5, 'artists': [{'name': 'James'}],
-		'images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'Country Album 6', 'id': 6, 'artists': [{'name': 'Jim'}],
-		'images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'Country Album 7', 'id': 7, 'artists': [{'name': 'John'}],
-		'images':[{'height':200,'width':200,'url':'200url'}]},
-        ]
 
-        u._music_taste = [
-            {'album': {'name': 'Rock Album 1', 'id': 8, 'artists': [{'name': 'Lucy'}],
-			'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'album': {'name': 'Rock Album 2', 'id': 9, 'artists': [{'name': 'Lewis'}],
-			'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'album': {'name': 'Rock Album 3', 'id': 10, 'artists': [{'name': 'Lucifer'}],
-			'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'album': {'name': 'Rock Album 1', 'id': 11, 'artists': [{'name': 'Lewd'}],
-			'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'album': {'name': 'Country Album 3', 'id': 3, 'artists': [{'name': 'Cassius'}],
-			'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'album': {'name': 'Country Album 4', 'id': 4, 'artists': [{'name': 'Benjamin'}],
-			'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'album': {'name': 'Country Album 5', 'id': 5, 'artists': [{'name': 'James'}],
-			'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'album': {'name': 'Country Album 6', 'id': 6, 'artists': [{'name': 'Jim'}],
-			'images':[{'height':200,'width':200,'url':'200url'}]}},
-        ]
+        artists = create_artists(11)
+        json_add_field(artists, 'name', ['Cash', 'Ben', 'Cassius', 'Benjamin',
+            'James', 'Jim', 'John', 'Lucy', 'Lewis', 'Lucifer', 'Lewd'], arr=True)
+
+        u._saved_albums = create_albums(7)
+        json_add_name(u._saved_albums, 'Country Album ')
+        json_add_to_field(u._saved_albums, 'artists', artists[0:7], arr=True)
+        json_add_to_field(u._saved_albums, 'images', create_image())
+
+        u._music_taste = create_tracks(8)
+        albums = create_albums(4, id=7)
+        json_add_name(albums, 'Rock Album ')
+        json_add_to_field(albums, 'images', create_image())
+        json_add_to_field(albums, 'artists', artists[7:11], arr=True)
+
+        json_add_field(u._music_taste[0:4], 'album', albums, arr=True)
+        json_add_field(u._music_taste[4:8], 'album', u._saved_albums[2:6], arr=True)
+
 
         quiz = Quiz.objects.create(user_id='cassius')
 
@@ -137,15 +122,20 @@ class QuestionSavedAlbumsTests(StaticLiveServerTestCase):
         choices.
         """
         u = UserData(self.session)
-        u._saved_albums = [
-                {'name': 'Country Album 1', 'id': 1, 'artists': [{'name': 'Cassius'}], 'images':[{'height':200,'width':200,'url':'200url'}]},
-        ]
 
-        u._music_taste = [
-            {'album': {'name': 'Country Album 2', 'id': 2, 'artists': [{'name': 'Cassius'}],'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'album': {'name': 'Country Album 3', 'id': 3, 'artists': [{'name': 'Benjamin'}],'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'album': {'name': 'Country Album 4', 'id': 4, 'artists': [{'name': 'James'}],'images':[{'height':200,'width':200,'url':'200url'}]}},
-        ]
+        artists = create_artists(3)
+        json_add_field(artists, 'name', ['Cassius', 'Benjamin', 'James'], arr=True)
+
+        albums = create_albums(4)
+        json_add_name(albums, 'Country Album ')
+        json_add_to_field(albums[0:2], 'artists', artists[0])
+        json_add_to_field(albums[2:4], 'artists', artists[1:3], arr=True)
+        json_add_to_field(albums, 'images', create_image())
+
+        u._saved_albums = [albums[0]]
+
+        u._music_taste = create_tracks(3)
+        json_add_field(u._music_taste, 'album', albums[1:], arr=True)
 
         quiz = Quiz.objects.create(user_id='cassius')
         q = question_saved_albums(quiz, u)
@@ -177,17 +167,15 @@ class QuestionSavedAlbumsTests(StaticLiveServerTestCase):
         enough albums from "top_tracks" to fill incorrect choices.
         """
         u = UserData(self.session)
-        u._saved_albums = [
-            {'name': 'Country Album 1', 'id': 1, 'artists': [{'name': 'Cassius'}]},
-            {'name': 'Country Album 2', 'id': 2, 'artists': [{'name': 'Benjamin'}]},
-            {'name': 'Country Album 3', 'id': 3, 'artists': [{'name': 'James'}]},
-        ]
+        artists = create_artists(3)
+        json_add_field(artists, 'name', ['Cassius', 'Benjamin', 'James'], arr=True)
+        albums = create_albums(3)
+        json_add_name(albums, 'Country Album ')
+        json_add_to_field(albums, 'artists', artists, arr=True)
 
-        u._music_taste = [
-            {'album': {'name': 'Country Album 1', 'id': 1, 'artists': [{'name': 'Cassius'}]},},
-            {'album': {'name': 'Country Album 2', 'id': 2, 'artists': [{'name': 'Benjamin'}]},},
-            {'album': {'name': 'Country Album 3', 'id': 3, 'artists': [{'name': 'James'}]},},
-        ]
+        u._saved_albums = albums
+        u._music_taste = create_tracks(3)
+        json_add_field(u._music_taste, 'album', albums, arr=True)
 
         quiz = Quiz.objects.create(user_id='cassius')
         q = question_saved_albums(quiz, u)
@@ -228,35 +216,24 @@ class QuestionSavedTracksTests(StaticLiveServerTestCase):
         user's saved tracks.
         """
         u = UserData(self.session)
-        u._saved_tracks = [
-            {'name': 'Country Track 1', 'id': 1, 'artists': [{'name': 'Cash'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Track 2', 'id': 2, 'artists': [{'name': 'Ben'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Track 3', 'id': 3, 'artists': [{'name': 'Cassius'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Track 4', 'id': 4, 'artists': [{'name': 'Benjamin'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Track 5', 'id': 5, 'artists': [{'name': 'James'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Track 6', 'id': 6, 'artists': [{'name': 'Jim'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Track 7', 'id': 7, 'artists': [{'name': 'John'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-        ]
 
-        u._music_taste = [
-            { 'name': 'Rock Track 1', 'id': 8, 'artists': [{'name': 'Lucy'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            { 'name': 'Rock Track 2', 'id': 9, 'artists': [{'name': 'Lewis'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            { 'name': 'Rock Track 3', 'id': 10, 'artists': [{'name': 'Lucifer'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            { 'name': 'Rock Track 4', 'id': 11, 'artists': [{'name': 'Luny'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            { 'name': 'Rock Track 5', 'id': 12, 'artists': [{'name': 'Lewd'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-        ]
+        artists = create_artists(11)
+        json_add_field(artists, 'name', ['Cash', 'Ben', 'Cassius', 'Benjamin',
+            'James', 'Jim', 'John', 'Lucy', 'Lewis', 'Lucifer', 'Lewd'], arr=True)
+
+        albums = create_albums(1)
+        json_add_to_field(albums, 'images', create_image())
+
+        u._saved_tracks = create_tracks(7)
+        json_add_name(u._saved_tracks, 'Country Track ')
+        json_add_to_field(u._saved_tracks, 'artists', artists[0:7], arr=True)
+        json_add_field(u._saved_tracks, 'album', albums[0])
+
+        u._music_taste = create_tracks(4, id=7)
+        json_add_name(u._music_taste, 'Rock Track ')
+        json_add_to_field(u._music_taste, 'artists', artists[7:11], arr=True)
+        json_add_field(u._music_taste, 'album', albums[0])
+
 
         quiz = Quiz.objects.create(user_id='cassius')
 
@@ -315,19 +292,20 @@ class QuestionSavedTracksTests(StaticLiveServerTestCase):
         choices.
         """
         u = UserData(self.session)
-        u._saved_tracks = [
-            {'name': 'Country Track 1', 'id': 1, 'artists': [{'name': 'Cassius'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-        ]
 
-        u._music_taste = [
-            {'name': 'Country Track 2', 'id': 2, 'artists': [{'name': 'Ben'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Track 3', 'id': 3, 'artists': [{'name': 'John'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Track 4', 'id': 4, 'artists': [{'name': 'Jim'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-        ]
+        artists = create_artists(4)
+        json_add_field(artists, 'name', ['Cassius', 'Ben', 'John', 'Jim'], arr=True)
+
+        albums = create_albums(1)
+        json_add_to_field(albums, 'images', create_image())
+
+        tracks = create_tracks(4)
+        json_add_name(tracks, 'Country Track ')
+        json_add_to_field(tracks, 'artists', artists, arr=True)
+        json_add_field(tracks, 'album', albums[0])
+
+        u._saved_tracks = [tracks[0]]
+        u._music_taste = tracks[1:]
 
         quiz = Quiz.objects.create(user_id='cassius')
         q = question_saved_tracks(quiz, u)
@@ -359,23 +337,20 @@ class QuestionSavedTracksTests(StaticLiveServerTestCase):
         enough tracks from "top_tracks" to fill incorrect choices.
         """
         u = UserData(self.session)
-        u._saved_tracks = [
-            {'name': 'Country Track 1', 'id': 1, 'artists': [{'name': 'Cassius'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Track 2', 'id': 2, 'artists': [{'name': 'Benjamin'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Track 3', 'id': 3, 'artists': [{'name': 'James'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-        ]
 
-        u._music_taste = [
-            {'name': 'Country Track 1', 'id': 1, 'artists': [{'name': 'Cassius'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Track 2', 'id': 2, 'artists': [{'name': 'Benjamin'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-            {'name': 'Country Track 3', 'id': 3, 'artists': [{'name': 'James'}],
-		'album':{'images':[{'height':200,'width':200,'url':'200url'}]}},
-        ]
+        artists = create_artists(3)
+        json_add_field(artists, 'name', ['Cassius', 'Benjamin', 'James'])
+
+        albums = create_albums(1)
+        json_add_to_field(albums, 'images', create_image())
+
+        tracks = create_tracks(3)
+        json_add_name(tracks, 'Country Track ')
+        json_add_to_field(tracks, 'artists', artists, arr=True)
+        json_add_field(tracks, 'album', albums[0])
+
+        u._saved_tracks = [tracks[0]]
+        u._music_taste = tracks[1:]
 
         quiz = Quiz.objects.create(user_id='cassius')
         q = question_saved_tracks(quiz, u)
@@ -416,23 +391,14 @@ class QuestionFollowedArtistsTests(StaticLiveServerTestCase):
         user's followed artists.
         """
         u = UserData(self.session)
-        u._followed_artists = [
-            {'name': 'Cassius','images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'Cash','images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'Ben','images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'Benjamin','images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'James','images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'Jimmy','images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'John','images':[{'height':200,'width':200,'url':'200url'}]},
-        ]
 
-        u._top_artists['long_term'] = [
-            {'name': 'Lucy','images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'Lewis','images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'Lucifer','images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'Luny','images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'Lewd','images':[{'height':200,'width':200,'url':'200url'}]},
-        ]
+        artists = create_artists(11)
+        json_add_field(artists, 'name', ['Cash', 'Ben', 'Cassius', 'Benjamin',
+            'James', 'Jim', 'John', 'Lucy', 'Lewis', 'Lucifer', 'Lewd'], arr=True)
+        json_add_to_field(artists, 'images', create_image())
+        
+        u._followed_artists = artists[:7]
+        u._top_artists['long_term'] = artists[7:]
 
         quiz = Quiz.objects.create(user_id='cassius')
 
@@ -489,15 +455,13 @@ class QuestionFollowedArtistsTests(StaticLiveServerTestCase):
         incorrect choices.
         """
         u = UserData(self.session)
-        u._followed_artists = [
-            {'name': 'Cassius','images':[{'height':200,'width':200,'url':'200url'}]},
-        ]
 
-        u._top_artists['long_term'] = [
-            {'name': 'Ben','images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'John','images':[{'height':200,'width':200,'url':'200url'}]},
-            {'name': 'Jim','images':[{'height':200,'width':200,'url':'200url'}]},
-        ]
+        artists = create_artists(4)
+        json_add_field(artists, 'name', ['Cassius', 'Ben', 'John', 'Jim'], arr=True)
+        json_add_to_field(artists, 'images', create_image())
+
+        u._followed_artists = [artists[0]]
+        u._top_artists['long_term'] = artists[1:]
 
         quiz = Quiz.objects.create(user_id='cassius')
         q = question_followed_artists(quiz, u)
@@ -527,17 +491,12 @@ class QuestionFollowedArtistsTests(StaticLiveServerTestCase):
         enough artists from "top_artists" to fill incorrect choices.
         """
         u = UserData(self.session)
-        u._followed_artists = [
-            {'name': 'Cassius'},
-            {'name': 'Benjamin'},
-            {'name': 'James'},
-        ]
 
-        u._top_artists['long_term'] = [
-            {'name': 'Cassius'},
-            {'name': 'Benjamin'},
-            {'name': 'James'},
-        ]
+        artists = create_artists(3)
+        json_add_field(artists, 'name', ['Cassius', 'Ben', 'James'], arr=True)
+
+        u._followed_artists = artists
+        u._top_artists['long_term'] = artists
 
         quiz = Quiz.objects.create(user_id='cassius')
         q = question_followed_artists(quiz, u)
