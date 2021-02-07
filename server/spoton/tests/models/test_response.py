@@ -77,7 +77,7 @@ class CheckboxResponseTests(TransactionTestCase):
         """
 
         quiz = Quiz.objects.create(user_id='cassius')
-        q1 = CheckboxQuestion.objects.create(quiz=quiz)
+        q1 = CheckboxQuestion.objects.create(quiz=quiz, multiselect=True)
         c1 = Choice.objects.create(question=q1)
         c2 = Choice.objects.create(question=q1)
         response = Response.objects.create(quiz=quiz)
@@ -100,6 +100,24 @@ class CheckboxResponseTests(TransactionTestCase):
         c2 = Choice.objects.create(question=q2)
         response = Response.objects.create(quiz=quiz)
         answer = CheckboxResponse.objects.create(response=response,question=q1)
+        with self.assertRaises(ValidationError):
+            answer.choices.add(c2)
+
+
+    def test_add_too_many_choices(self):
+        """
+        Adding multiple Choices to a CheckboxResponse about a
+        single-select CheckboxQuestion should raise a ValidationError.
+        """
+
+        quiz = Quiz.objects.create(user_id='cassius')
+        q = CheckboxQuestion.objects.create(quiz=quiz)
+        c1 = Choice.objects.create(question=q, answer=True)
+        c2 = Choice.objects.create(question=q)
+        r = Response.objects.create(quiz=quiz)
+
+        answer = CheckboxResponse.objects.create(response=r, question=q)
+        answer.choices.add(c1)
         with self.assertRaises(ValidationError):
             answer.choices.add(c2)
     

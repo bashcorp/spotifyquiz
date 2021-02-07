@@ -195,6 +195,11 @@ def clean_choices(sender, **kwargs):
                     "Tried to add a Choice to a CheckboxResponse that " +
                     "doesn't belong to the CheckboxQuestion the " +
                     "CheckboxResponse is to.")
+    if instance.choices.count() > 1 and instance.question.multiselect is False:
+            raise ValidationError(
+                    "Tried to add multiple Choices to a CheckboxResponse " +
+                    " associated with a single-select CheckboxQuestion.")
+
 
 
 
