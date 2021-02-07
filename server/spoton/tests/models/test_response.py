@@ -60,6 +60,39 @@ class QuestionResponseTests(TransactionTestCase):
                 response=response, question=q1)
 
 
+    def test_background_color_validation(self):
+        """
+        The Response background_color field should be an int in between
+        0x000000 and 0xFFFFFF.
+        """
+        quiz = Quiz.objects.create(user_id='cassius')
+        self.assertRaises(ValidationError, Response.objects.create,
+                quiz=quiz, background_color=int('-1', 16))
+        self.assertRaises(ValidationError, Response.objects.create,
+                quiz=quiz, background_color=int('1000000', 16))
+        r = Response.objects.create(quiz=quiz,
+                background_color=int('000000', 16))
+        r = Response.objects.create(quiz=quiz,
+                background_color=int('FFFFFF', 16))
+        r = Response.objects.create(quiz=quiz,
+                background_color=int('724FA8', 16))
+
+
+    def test_emoji_validation(self):
+        """
+        This tests that the Response's emoji field can handle an emoji
+        character. It also tests the field only allows one character.
+        """
+        quiz = Quiz.objects.create(user_id='cassius')
+        r = Response.objects.create(quiz=quiz,
+                emoji='🤓')
+        r = Response.objects.create(quiz=quiz,
+                emoji='🖕')
+        self.assertRaises(ValidationError, Response.objects.create,
+                quiz=quiz, emoji='😾😱')
+
+
+
 
 class CheckboxResponseTests(TransactionTestCase):
     """

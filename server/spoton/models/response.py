@@ -1,6 +1,7 @@
 """Holds models for users' responses (their answers) to a quiz."""
 
 from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.dispatch import receiver
 from django.utils.html import format_html_join, format_html
@@ -43,14 +44,22 @@ class Response(CleanOnSaveMixin, models.Model):
     # a set of Responses is deleted.
     objects = PolyOwnerQuerySet.as_manager()
 
-    # The user's name
-    name = models.CharField(max_length=50, default="Ben")
 
     quiz = models.ForeignKey('Quiz', related_name='responses', null=False,
             on_delete=models.CASCADE)    
 
+    # The user's name
+    name = models.CharField(max_length=50, default="Ben")
+
+    emoji = models.CharField(max_length=1, null=False, blank=False,
+            default='😀')
+    background_color = models.IntegerField(null=False, blank=False,
+            default=0,
+            validators=[MinValueValidator(0), MaxValueValidator(int('FFFFFF', 16))])
+
     ### Attributes defined implicitly (reverse-FK relationships)
     # answers (QuestionResponse objects)
+
 
 
     def delete(self, *args, **kwargs):

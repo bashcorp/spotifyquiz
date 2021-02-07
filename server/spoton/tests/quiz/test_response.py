@@ -1,3 +1,7 @@
+"""Tests functions that save a user's response to a quiz.
+
+Tests the file spoton/quiz/response.py.
+"""
 
 from django.test import TransactionTestCase
 
@@ -53,7 +57,7 @@ class SaveResponseTests(TransactionTestCase):
             'quiz_id': self.quiz.user_id,
             'name': 'Benjamin',
             'emoji': '😀',
-            'background_color': 0x333333,
+            'background_color': '333333',
             'questions': [
                 {
                     'question_id': self.q1.id,
@@ -116,7 +120,7 @@ class SaveResponseTests(TransactionTestCase):
             'quiz_id': 'none',
             'name': 'Benjamin',
             'emoji': '😀',
-            'background_color': 0x333333,
+            'background_color': '333333',
             'questions': []
         }
          
@@ -127,6 +131,97 @@ class SaveResponseTests(TransactionTestCase):
         self.assertEqual(Response.objects.count(), 0)
         self.assertEqual(QuestionResponse.objects.count(), 0)
 
+
+    def test_save_response_empty_emoji(self):
+        """
+        save_response() should fail when there is no emoji field. This
+        means it should return false and no response object should be
+        saved in the database.
+        """
+
+        data = {
+            'quiz_id': 'none',
+            'name': 'Benjamin',
+            'emoji': '',
+            'background_color': '333333',
+            'questions': []
+        }
+         
+        result = save_response(data)
+
+        self.assertFalse(result)
+
+        self.assertEqual(Response.objects.count(), 0)
+        self.assertEqual(QuestionResponse.objects.count(), 0)
+
+
+    def test_save_response_bad_emoji(self):
+        """
+        save_response() should fail when there is an improper emoji.
+        This means it should return false and no response object should
+        be saved in the database.
+        """
+
+        data = {
+            'quiz_id': 'none',
+            'name': 'Benjamin',
+            'emoji': 'af',
+            'background_color': '333333',
+            'questions': []
+        }
+         
+        result = save_response(data)
+
+        self.assertFalse(result)
+
+        self.assertEqual(Response.objects.count(), 0)
+        self.assertEqual(QuestionResponse.objects.count(), 0)
+
+
+    def test_save_response_empty_bg_color(self):
+        """
+        save_response() should fail when there is no background_color
+        field. This means it should return false and no response object
+        should be saved in the database.
+        """
+
+        data = {
+            'quiz_id': 'none',
+            'name': 'Benjamin',
+            'emoji': '😀',
+            'background_color': '',
+            'questions': []
+        }
+         
+        result = save_response(data)
+
+        self.assertFalse(result)
+
+        self.assertEqual(Response.objects.count(), 0)
+        self.assertEqual(QuestionResponse.objects.count(), 0)
+
+
+    def test_save_response_bad_bg_color(self):
+        """
+        save_response() should fail when there is an improper
+        background color. This means it should return false and no
+        response object should be saved in the database.
+        """
+
+        data = {
+            'quiz_id': 'none',
+            'name': 'Benjamin',
+            'emoji': '😀',
+            'background_color': '1000000',
+            'questions': []
+        }
+         
+        result = save_response(data)
+
+        self.assertFalse(result)
+
+        self.assertEqual(Response.objects.count(), 0)
+        self.assertEqual(QuestionResponse.objects.count(), 0)
 
     def test_save_response_checkbox_no_answer_field(self):
         """
@@ -139,7 +234,7 @@ class SaveResponseTests(TransactionTestCase):
             'quiz_id': self.quiz.user_id,
             'name': 'Benjamin',
             'emoji': '😀',
-            'background_color': 0x333333,
+            'background_color': '333333',
             'questions': [
                 {
                     'question_id': self.q1.id,
@@ -174,7 +269,7 @@ class SaveResponseTests(TransactionTestCase):
             'quiz_id': self.quiz.user_id,
             'name': 'Benjamin',
             'emoji': '😀',
-            'background_color': 0x333333,
+            'background_color': '333333',
             'questions': [
                 {
                     'question_id': self.q1.id,
@@ -209,7 +304,7 @@ class SaveResponseTests(TransactionTestCase):
             'quiz_id': self.quiz.user_id,
             'name': 'Benjamin',
             'emoji': '😀',
-            'background_color': 0x333333,
+            'background_color': '333333',
             'questions': [
                 {
                     'question_id': self.q1.id,
@@ -248,7 +343,7 @@ class SaveResponseTests(TransactionTestCase):
             'quiz_id': self.quiz.user_id,
             'name': 'Benjamin',
             'emoji': '😀',
-            'background_color': 0x333333,
+            'background_color': '333333',
             'questions': [
                 {
                     'question_id': self.q1.id,
@@ -283,7 +378,7 @@ class SaveResponseTests(TransactionTestCase):
             'quiz_id': self.quiz.user_id,
             'name': 'Benjamin',
             'emoji': '😀',
-            'background_color': 0x333333,
+            'background_color': '333333',
             'questions': [
                 {
                     'question_id': self.q1.id,
@@ -325,7 +420,7 @@ class SaveResponseTests(TransactionTestCase):
             'quiz_id': self.quiz.user_id,
             'name': 'Benjamin',
             'emoji': '😀',
-            'background_color': 0x333333,
+            'background_color': '333333',
             'questions': [
                 {
                     'question_id': self.q1.id,
@@ -366,7 +461,7 @@ class SaveResponseTests(TransactionTestCase):
             'quiz_id': self.quiz.user_id,
             'name': 'Benjamin',
             'emoji': '😀',
-            'background_color': 0x333333,
+            'background_color': '333333',
             'questions': [
                 {
                     'question_id': self.q1.id,
@@ -407,7 +502,7 @@ class SaveResponseTests(TransactionTestCase):
             'quiz_id': self.quiz.user_id,
             'name': 'Benjamin',
             'emoji': '😀',
-            'background_color': 0x333333,
+            'background_color': '333333',
             'questions': [
                 {
                     'question_id': self.q1.id,

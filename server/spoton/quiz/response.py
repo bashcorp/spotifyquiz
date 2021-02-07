@@ -1,3 +1,10 @@
+"""Functions for processing a user's response to a Spotify quiz.
+
+This holds functions that process a user's response to a quiz sent from
+the client. This will put the data into the Response and associated
+models and save them to the database.
+"""
+
 import logging
 import types
 
@@ -41,10 +48,19 @@ def save_response(data):
 
     # Load in general response data and create response object
     name = data.get('name')
-    # emoji
-    # background color
 
-    response = Response.objects.create(quiz=quiz, name=name)
+    emoji = data.get('emoji')
+
+    background_color = int(data.get('background_color'), 16)
+
+    try:
+        response = Response.objects.create(quiz=quiz, name=name,
+                emoji=emoji, background_color=background_color)
+    except ValidationError as e:
+        logger.error(e)
+        logger.error('Processing Response: ValidationError when creating '
+                + ' Response object. This is an internal error.')
+        return False
 
 
 
