@@ -84,7 +84,7 @@ class CheckboxQuestionTests(TransactionTestCase):
         """
 
         quiz = Quiz.objects.create(user_id='cassius')
-        q = CheckboxQuestion.objects.create(quiz=quiz)
+        q = CheckboxQuestion.objects.create(quiz=quiz, multiselect=True)
         c1 = Choice.objects.create(question=q)
         c2 = Choice.objects.create(question=q)
         c3 = Choice.objects.create(question=q)
@@ -134,59 +134,13 @@ class CheckboxQuestionTests(TransactionTestCase):
         """
 
         quiz = Quiz.objects.create(user_id='cassius')
-        q = CheckboxQuestion.objects.create(quiz=quiz)
+        q = CheckboxQuestion.objects.create(quiz=quiz, multiselect=True)
         c1 = Choice.objects.create(question=q, answer=True)
         c2 = Choice.objects.create(question=q, answer=True)
         c3 = Choice.objects.create(question=q, answer=True)
         
         self.assertCountEqual(q.incorrect_answers(), [])
 
-
-    def test_is_mc_question_true(self):
-        """
-        is_mc_question() returns true if the given CheckboxQuestion
-        has only one correct answer.
-        """
-
-        quiz = Quiz.objects.create(user_id='cassius')
-        q = CheckboxQuestion.objects.create(quiz=quiz)
-        c1 = Choice.objects.create(question=q)
-        c2 = Choice.objects.create(question=q)
-        c3 = Choice.objects.create(question=q)
-        c4 = Choice.objects.create(question=q, answer=True)
-        
-        self.assertTrue(q.is_mc_question())
-
-
-    def test_is_mc_question_false(self):
-        """
-        is_mc_question() returns false if the given CheckboxQuestion
-        has multiple correct answers.
-        """
-
-        quiz = Quiz.objects.create(user_id='cassius')
-        q = CheckboxQuestion.objects.create(quiz=quiz)
-        c1 = Choice.objects.create(question=q)
-        c2 = Choice.objects.create(question=q)
-        c3 = Choice.objects.create(question=q, answer=True)
-        c4 = Choice.objects.create(question=q, answer=True)
-        
-        self.assertFalse(q.is_mc_question())
-
-
-    def test_is_mc_question_no_answers(self):
-        """
-        is_mc_question() should raise an error if no choices
-        are marked as correct answers, since each question should have
-        at least one correct answer.
-        """
-        quiz = Quiz.objects.create(user_id='cassius')
-        q = CheckboxQuestion.objects.create(quiz=quiz)
-        c1 = Choice.objects.create(question=q)
-        c2 = Choice.objects.create(question=q)
-        c3 = Choice.objects.create(question=q)
-        
-        self.assertRaises(ValidationError, q.is_mc_question)
 
 
     def test_json_with_choices_single_answer(self):
@@ -221,7 +175,8 @@ class CheckboxQuestionTests(TransactionTestCase):
         """
 
         quiz = Quiz.objects.create(user_id='cassius')
-        q = CheckboxQuestion.objects.create(quiz=quiz, text="question")
+        q = CheckboxQuestion.objects.create(quiz=quiz, text="question",
+                multiselect=True)
         c1 = Choice.objects.create(question=q, primary_text="choice1", answer=True)
         c2 = Choice.objects.create(question=q, primary_text="choice2", answer=True)
         c3 = Choice.objects.create(question=q, primary_text="choice3")

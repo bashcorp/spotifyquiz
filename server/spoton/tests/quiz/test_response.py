@@ -18,13 +18,15 @@ class SaveResponseTests(TransactionTestCase):
         cls.c13 = Choice.objects.create(question=cls.q1)
         cls.c14 = Choice.objects.create(question=cls.q1)
 
-        cls.q2 = CheckboxQuestion.objects.create(quiz=cls.quiz, text="q2")
+        cls.q2 = CheckboxQuestion.objects.create(quiz=cls.quiz, text="q2",
+                multiselect=True)
         cls.c21 = Choice.objects.create(question=cls.q2)
         cls.c22 = Choice.objects.create(question=cls.q2)
         cls.c23 = Choice.objects.create(question=cls.q2, answer=True)
         cls.c24 = Choice.objects.create(question=cls.q2)
         
-        cls.q3 = CheckboxQuestion.objects.create(quiz=cls.quiz, text="q3")
+        cls.q3 = CheckboxQuestion.objects.create(quiz=cls.quiz, text="q3",
+                multiselect=True)
         cls.c31 = Choice.objects.create(question=cls.q3)
         cls.c32 = Choice.objects.create(question=cls.q3, answer=True)
         cls.c33 = Choice.objects.create(question=cls.q3, answer=True)

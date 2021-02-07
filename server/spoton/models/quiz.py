@@ -175,13 +175,19 @@ class CheckboxQuestion(Question):
 
     Attributes
     ----------
+    multiselect : django.db.models.BooleanField
+        A boolean storing whether or not the question supports
+        selecting multiple choices at once.
     choices
         A set of the possible answers of this question, (Choice
         model objects)
     """
 
+    multiselect = models.BooleanField(default=False)
+
     ### Attributes defined implicitly (reverse-FK relationships)
     # choices (Choice objects)
+
 
     def answers(self):
         """Returns the question's correct answers (Choice objects)
@@ -211,25 +217,6 @@ class CheckboxQuestion(Question):
         return self.choices.filter(answer=False)
 
 
-    def is_mc_question(self):
-        """Returns whether the question is a multiple choice question.
-
-        Returns true if the question has multiple correct answers,
-        false otherwise. Raises an error if the question has no correct
-        answers.
-
-        Returns
-        -------
-        bool
-            Whether the question is a checkbox or multiple choice
-        """
-
-        choices = self.answers()
-        if len(choices) == 1:
-            return True
-        return False
-
-
     def json(self):
         """Returns this question's data in JSON format.
 
@@ -247,7 +234,7 @@ class CheckboxQuestion(Question):
             "id": self.id,
             "text": self.text,
             "choices": choices,
-            "type": ("mc" if self.is_mc_question() else "check")
+            "type": ("check" if self.multiselect else "mc")
         }
 
 
