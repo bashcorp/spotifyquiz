@@ -4,6 +4,7 @@ Tests the file spoton/quiz/quiz.py, as well as some functions in the
 files section_*.py.
 """
 
+from django.conf import settings
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.test import TransactionTestCase, TestCase
 
@@ -23,7 +24,7 @@ class CreateQuizTests(StaticLiveServerTestCase):
     music taste of the user logged into the given session.
     """
 
-    port = 8000 
+    port = settings.TESTING_PORT
 
     @classmethod 
     def setUpClass(cls):
@@ -294,7 +295,7 @@ class PickQuestionsRealRequestsTests(StaticLiveServerTestCase):
     Spotify.
     """
 
-    port = 8000 
+    port = settings.TESTING_PORT 
 
     @classmethod 
     def setUpClass(cls):

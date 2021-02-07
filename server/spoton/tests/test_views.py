@@ -12,8 +12,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.conf import settings
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.test.client import Client
 from django.urls import reverse
 
@@ -32,7 +32,7 @@ class LoginTests(StaticLiveServerTestCase):
     page.
     """
 
-    port = 8000
+    port = settings.TESTING_PORT
 
     def setUp(self):
         """

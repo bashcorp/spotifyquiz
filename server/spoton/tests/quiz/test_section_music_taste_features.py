@@ -5,6 +5,7 @@ Tests the file spoton/quiz/section_music_taste.py.
 
 import datetime
 
+from django.conf import settings
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.test import TestCase
 
@@ -20,7 +21,7 @@ class QuestionExplicitnessTests(StaticLiveServerTestCase):
     what percentage of the user's music taste is explicit.
     """
 
-    port = 8000 
+    port = settings.TESTING_PORT 
 
     @classmethod 
     def setUpClass(cls):
@@ -119,7 +120,7 @@ class QuestionEnergyTests(StaticLiveServerTestCase):
     how energetic the user's music taste is, on a scale of 0 to 100.
     """
 
-    port = 8000 
+    port = settings.TESTING_PORT 
 
     @classmethod 
     def setUpClass(cls):
@@ -219,7 +220,7 @@ class QuestionAcousticnessTests(StaticLiveServerTestCase):
     asks what percentage of the user's music taste is acoustic.
     """
 
-    port = 8000 
+    port = settings.TESTING_PORT 
 
     @classmethod 
     def setUpClass(cls):
@@ -323,7 +324,7 @@ class QuestionHappinessTests(StaticLiveServerTestCase):
     asks how happy the user's music taste is, from 0 to 100.
     """
 
-    port = 8000 
+    port = settings.TESTING_PORT 
 
     @classmethod 
     def setUpClass(cls):
@@ -425,7 +426,7 @@ class QuestionDanceabilityTests(StaticLiveServerTestCase):
     asks how danceable the user's music taste is, from 0 to 100.
     """
 
-    port = 8000 
+    port = settings.TESTING_PORT 
 
     @classmethod 
     def setUpClass(cls):
@@ -528,7 +529,7 @@ class QuestionDurationTests(StaticLiveServerTestCase):
     what the average length of a song in the user's music taste is.
     """
 
-    port = 8000 
+    port = settings.TESTING_PORT 
 
     @classmethod 
     def setUpClass(cls):
@@ -616,7 +617,7 @@ class QuestionAverageReleaseDateTests(StaticLiveServerTestCase):
     question that asks the average release year of the user's music
     taste.
     """
-    port = 8000 
+    port = settings.TESTING_PORT 
 
     @classmethod 
     def setUpClass(cls):
@@ -738,7 +739,7 @@ class QuestionMusicPopularityTests(StaticLiveServerTestCase):
     Tests question_music_popularity(), which should return a question
     that asks the average popularity of the user's music taste.
     """
-    port = 8000 
+    port = settings.TESTING_PORT 
 
     @classmethod 
     def setUpClass(cls):

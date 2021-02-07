@@ -3,7 +3,7 @@
 Tests the file spoton/quiz/section_saved_followed.py.
 """
 
-
+from django.conf import settings
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.test import TestCase
 
@@ -19,7 +19,7 @@ class QuestionUserFollowersTests(StaticLiveServerTestCase):
     asking how many followers the user has.
     """
 
-    port = 8000 
+    port = settings.TESTING_PORT 
 
     @classmethod 
     def setUpClass(cls):
@@ -115,7 +115,7 @@ class QuestionPopularPlaylistTests(StaticLiveServerTestCase):
     followers.
     """
 
-    port = 8000 
+    port = settings.TESTING_PORT 
 
     @classmethod 
     def setUpClass(cls):
@@ -286,7 +286,7 @@ class QuestionPlaylistTracksTests(StaticLiveServerTestCase):
     asking which tracks are in one of the user's playlists.
     """
 
-    port = 8000 
+    port = settings.TESTING_PORT 
 
     @classmethod 
     def setUpClass(cls):

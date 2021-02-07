@@ -31,6 +31,8 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+TESTING_PORT = 8000
+
 # Application definition
 
 INSTALLED_APPS = [

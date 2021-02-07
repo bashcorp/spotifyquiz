@@ -3,8 +3,7 @@
 Tests the file spoton/quiz/user_data.py
 """
 
-
-
+from django.conf import settings
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.test import TransactionTestCase, TestCase
 
@@ -253,7 +252,7 @@ class UserDataCompilationTests(StaticLiveServerTestCase):
     functions will compile the data and then return it. 
     """
 
-    port = 8000 
+    port = settings.TESTING_PORT 
 
     @classmethod 
     def setUpClass(cls):
@@ -556,7 +555,7 @@ class UserDataErrorTests(StaticLiveServerTestCase):
     in the UserData class.
     """
 
-    port = 8000 
+    port = settings.TESTING_PORT 
 
     @classmethod 
     def setUpClass(cls):

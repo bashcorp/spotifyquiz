@@ -3,7 +3,7 @@
 Tests the file spoton/quiz/section_top_played.py.
 """
 
-
+from django.conf import settings
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.test import TransactionTestCase, TestCase
 
@@ -22,7 +22,7 @@ class QuestionTopTrackTests(StaticLiveServerTestCase):
     the user's top listned to track.
     """
 
-    port = 8000 
+    port = settings.TESTING_PORT 
 
     @classmethod 
     def setUpClass(cls):
@@ -222,7 +222,7 @@ class QuestionTopArtistTests(StaticLiveServerTestCase):
     the user's top listned to artist.
     """
 
-    port = 8000 
+    port = settings.TESTING_PORT 
 
     @classmethod 
     def setUpClass(cls):
@@ -404,7 +404,7 @@ class QuestionTopGenreTests(StaticLiveServerTestCase):
     the user's top listened to genre.
     """
 
-    port = 8000 
+    port = settings.TESTING_PORT 
 
     @classmethod 
     def setUpClass(cls):

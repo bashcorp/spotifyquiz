@@ -60,7 +60,7 @@ class AuthAccessTokenTests(StaticLiveServerTestCase):
     for getting and setting this token.
     """
 
-    port = 8000
+    port = settings.TESTING_PORT
 
     @classmethod 
     def setUpClass(cls):
@@ -304,7 +304,7 @@ class IsUserLoggedInTests(StaticLiveServerTestCase):
     have a valid Refresh Token and their User ID saved in the session.
     """
 
-    port = 8000
+    port = settings.TESTING_PORT
 
     @classmethod 
     def setUpClass(cls):
@@ -480,7 +480,7 @@ class MakeAuthorizedRequestTests(StaticLiveServerTestCase):
     request a user's personal Spotify data.
     """
 
-    port = 8000
+    port = settings.TESTING_PORT
 
     @classmethod 
     def setUpClass(cls):
@@ -646,7 +646,7 @@ class RequestAuthorizedTokenTests(StaticLiveServerTestCase):
     currently stored Refresh Token to request this access token.
     """
 
-    port = 8000
+    port = settings.TESTING_PORT
 
     @classmethod 
     def setUpClass(cls):
