@@ -154,7 +154,6 @@ class CheckboxResponse(QuestionResponse):
         A set of the chosen answers for this question, (Choice model)
     """
 
-    ### Attributes defined implicitly (reverse-FK relationships)
     choices = models.ManyToManyField('Choice', related_name='choice_responses')
 
     def clean(self):

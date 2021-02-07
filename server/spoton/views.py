@@ -4,12 +4,13 @@ import logging
 import requests
 import urllib
 
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_POST
 
 from spoton.models.quiz import Quiz
 from spoton.quiz import create_quiz, SCOPES
+from spoton.quiz import save_response
 
 from . import spotify
 
@@ -64,9 +65,10 @@ def quiz(request, uuid):
 @require_POST
 def handle_response(request):
     data = json.loads(request.body)
-    import pprint; pprint.pprint(data)
 
-    return redirect('index')
+    if save_response(data):
+        return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'error'})
 
 
 
