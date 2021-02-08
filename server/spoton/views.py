@@ -29,6 +29,8 @@ react_mainpage = 'index.html'
 def index(request):
     """A Django view function that returns the home page of the site"""
 
+    import pdb; pdb.set_trace()
+
     return render(request, react_mainpage)
 
 
@@ -114,7 +116,7 @@ def login(request):
         'client_id': '70be5e3cac9044b4951ace6b5d2475e1',
         'response_type': 'code',
         'show_dialog': 'true',
-        'redirect_uri': 'http://localhost:8000/logged_in?redirect='+redirect_view,
+        'redirect_uri': request.get_absolute_uri() + 'logged_in?redirect='+redirect_view,
         'scope': SCOPES
     }
     query_string = urllib.parse.urlencode(query_args)
@@ -188,7 +190,7 @@ def logged_in(request):
 
     # Log into Spotify (get access codes and etc.)
     if not spotify.login(request.session, code,
-            'http://localhost:8000/logged_in?redirect='+redirect_uri):
+            request.get_absolute_uri() + 'logged_in?redirect='+redirect_uri):
         # TODO
         # Error handling, login failed
         logger.error("Logging into session failed")
