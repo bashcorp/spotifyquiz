@@ -51,7 +51,7 @@
     "react": "^16.13.1",
     "react-app-polyfill": "^1.0.6",
     "react-beforeunload": "^2.2.2",
-    "react-dev-utils": "^10.2.1",
+    "react-dev-utils": "^11.0.4",
     "react-dom": "^16.13.1",
     "react-modal": "^3.11.2",
     "react-rangeslider": "^2.2.0",
